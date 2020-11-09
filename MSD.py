@@ -39,21 +39,11 @@ def printenergy(a=atoms):  # store a reference to atoms in the definition.
     ekin = a.get_kinetic_energy() / len(a)
     print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
           'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
-eq = False
-
-def equilibrium():
-    epot = a.get_potential_energy() / len(a)
-    ekin = a.get_kinetic_energy() / len(a)
-    e_diff = epot - ekin
-    if e_diff < 0.001:
-        eq = True
-    else:
-        eq = False
 
 def MSD_calc(a): 
     """Function to print the length of the vector to an atom."""
     traj_MSD = Trajectory("atoms.traj")
-    pos_eq = traj_MSD[500].get_positions()
+    pos_eq = traj_MSD[100].get_positions()
     pos_t = traj_MSD[1].get_positions()
     diff = pos_t - pos_eq
     diff_sq = np.absolute(diff)**2
@@ -64,5 +54,5 @@ def MSD_calc(a):
 #traj = Trajectory("atoms.traj", "w", atoms)
 
 #dyn.attach(MSD_calc(atoms), interval=10)
-dyn.run(2000)
+dyn.run(200)
 MSD_calc(atoms)

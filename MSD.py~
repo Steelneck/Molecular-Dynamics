@@ -1,0 +1,74 @@
+"""Calculator for time averaged Mean Square Displacement"""
+"""Unclear if MSD should be calculated from t after equilibrium or from equilibrium to t=0"""
+
+from ase.lattice.cubic import FaceCenteredCubic
+from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+from ase.md.verlet import VelocityVerlet
+from ase import units
+import numpy as np
+
+# Use Asap for a huge performance increase if it is installed
+use_asap = True
+
+if use_asap:
+    from asap3 import EMT
+    size = 3
+else:
+    from ase.calculators.emt import EMT
+    size = 3
+
+
+    
+# Set up a crystal
+atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+                          symbol="Cu",
+                          size=(size, size, size),
+                          pbc=True)
+
+# Describe the interatomic interactions with the Effective Medium Theory
+atoms.calc = EMT()
+
+# Set the momenta corresponding to T=300K
+MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
+
+# We want to run MD with constant energy using the VelocityVerlet algorithm.
+dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+
+
+def printenergy(a=atoms):  # store a reference to atoms in the definition.
+    """Function to print the potential, kinetic and total energy."""
+    epot = a.get_potential_energy() / len(a)
+    ekin = a.get_kinetic_energy() / len(a)
+    print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
+          'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
+
+
+r_t = []
+
+def MSD_calc(a): 
+    """Function to print the length of the vector to an atom."""
+    npart = len(atoms)
+    r = []
+    r_norm = []
+    diff_sq = 0
+    for i in range(npart):
+        r = a[i].position
+        r_norm.append(np.linalg.norm(r))
+    r_t.append(r_norm)
+    """Här vill jag ha en if-sats för att se att vi har equilibrium
+    if equilibrium then.... else..."""
+    r_t_eq = np.flip(r_t)
+    for i in r_t:
+        diff = (np.subtract(i, r_t[0]))**2
+    for i in diff:
+        diff_sq += i
+    MSD = np.divide(diff_sq, npart)
+    print(MSD)
+
+
+# Now run the dynamics
+
+MSD_calc(atoms)
+for i in range(200):
+    dyn.run(10)
+    MSD_calc(atoms)
