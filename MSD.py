@@ -9,7 +9,7 @@ import numpy as np
 import tkinter
 
 # Use Asap for a huge performance increase if it is installed
-from asap3 import EMT
+from asap3 import EMT, Trajectory, FullNeighborList
 from asap3 import Trajectory
 from asap3.io.trajectory import *
 
@@ -50,9 +50,20 @@ def MSD_calc(a):
     MSD = np.sum(diff_sq)/len(a)
     print(MSD)
 
+def Lindemann(a, MSD):
+     traj_MSD = Trajectory("atoms.traj")
+     pos_eq = traj_MSD[100]
+     nblist = FullNeighborList(3.61491, atoms=a)
+     d = traj_MSD[1].get_positions()
+     L = MSD/d
+
+
+
 # Now run the dynamics
 #traj = Trajectory("atoms.traj", "w", atoms)
 
 #dyn.attach(MSD_calc(atoms), interval=10)
 dyn.run(200)
-MSD_calc(atoms)
+MSD = MSD_calc(atoms)
+Neighbors = FullNeighborList(3.61491, atoms, 0.05)
+print(Neighbors.get_neighbors(1, -1))
