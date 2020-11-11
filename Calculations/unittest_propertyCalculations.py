@@ -1,7 +1,7 @@
 import sys, unittest
 from ase.lattice.cubic import FaceCenteredCubic
 from calculations import Specific_Heat
-import numpy as np
+import numpy
 """ 
     # Example From hands-on-3, delete later
 from ase.lattice.cubic import FaceCenteredCubic
@@ -20,7 +20,7 @@ class PropertyCalculationTests(unittest.TestCase):
  
 
     def test_specific_heat(self):
-        self.assertIsInstance(Specific_Heat(atoms), np.float64)
+        self.assertIsInstance(Specific_Heat(atoms), numpy.float64)
         
     def test_specific_heat_not_bravice_lattice(self):
         self.assertIsNone(Specific_Heat(not_bravice_lattice))
