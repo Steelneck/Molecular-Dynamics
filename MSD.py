@@ -40,30 +40,39 @@ def printenergy(a=atoms):  # store a reference to atoms in the definition.
     print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
           'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-def MSD_calc(a): 
-    """Function to print the length of the vector to an atom."""
-    traj_MSD = Trajectory("atoms.traj")
-    pos_eq = traj_MSD[100].get_positions()
-    pos_t = traj_MSD[1].get_positions()
-    diff = pos_t - pos_eq
-    diff_sq = np.absolute(diff)**2
-    MSD = np.sum(diff_sq)/len(a)
-    print(MSD)
+def MSD_calc(a, t): 
+    """Function to calculate and print the time average of the mean square displacement (MSD) at time t. Also calculates and prints the self-diffusion coefficient(D)."""
+    traj_MSD = Trajectory("atoms.traj")  #Fetch atom trajectories from file.
+    time = len(traj_MSD)-t
+    pos_eq = traj_MSD[100].get_positions() #position of all atoms at equilibrium
+    pos_t = traj_MSD[time].get_positions() #position of all atoms at time t
+    diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
+    diff_sq = np.absolute(diff)**2 #Square of the displacement
+    MSD = np.sum(diff_sq)/len(a) #Time averaged mean square displacement.
+    D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
+    open("atoms.traj", "w").close()
+    print("MSD = ", MSD)
+    print("D = ", D)
+    return(MSD, D)
 
 def Lindemann(a, MSD):
-     traj_MSD = Trajectory("atoms.traj")
-     pos_eq = traj_MSD[100]
-     nblist = FullNeighborList(3.61491, atoms=a)
-     d = traj_MSD[1].get_positions()
-     L = MSD/d
+     nblist = FullNeighborList(6, atoms).get_neighbors(1, -1) #Returns a list containing information about neighbors to atom 1 at a maximum distance of 6Å. Third element of nblist is a list of all squared norms of distances between atom 1 and its neighbors.
+     d = np.sqrt(np.amin(nblist[2])) #d is the distance to the nearest neighbor. nblist[2] since the third element of nblist is a list of the square of the norm of all distances.
+     L = MSD/d #Lindemann criterion. Expect melting when L>0.1
+     if L > 0.1:
+         print("MELTING!")
+         return True
+     else:
+         print("Not melting.")
+         return False
+
 
 
 
 # Now run the dynamics
 #traj = Trajectory("atoms.traj", "w", atoms)
-
 #dyn.attach(MSD_calc(atoms), interval=10)
-dyn.run(200)
-MSD = MSD_calc(atoms)
-Neighbors = FullNeighborList(3.61491, atoms, 0.05)
-print(Neighbors.get_neighbors(1, -1))
+
+dyn.run(500)
+MSD = MSD_calc(atoms, 250)
+L = Lindemann(atoms, MSD[1])
