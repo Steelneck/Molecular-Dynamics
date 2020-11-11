@@ -2,11 +2,6 @@ import sys, unittest
 from ase.lattice.cubic import FaceCenteredCubic
 from calculations import Specific_Heat
 import numpy
-""" 
-    # Example From hands-on-3, delete later
-from ase.lattice.cubic import FaceCenteredCubic
-from ase.calculators.emt import EMT
-"""
 
 atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                                   symbol="Cu",
@@ -23,7 +18,7 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsInstance(Specific_Heat(atoms), numpy.float64)
         
     def test_specific_heat_not_bravice_lattice(self):
-        self.assertIsNone(Specific_Heat(not_bravice_lattice))
+        self.assertFalse(Specific_Heat(not_bravice_lattice))
         
 
 

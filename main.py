@@ -2,6 +2,7 @@ from ase.lattice.cubic import FaceCenteredCubic
 from ase import Atoms
 from Calculations.calculations import Specific_Heat
 
+
 def main():
     fcclattice = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                               symbol='Cu',
@@ -11,6 +12,12 @@ def main():
 
     atoms = Atoms('CO', positions=[(0, 0, 0),(0,0,2)])
     print(Specific_Heat(atoms))
+
+    
+    atoms2 = FaceCenteredCubic(symbol='Ar', 
+                        directions=[[1,0,0],[0,1,0],[0,0,1]],
+                        latticeconstant=5.25, size=(1,1,1))
+    print(Specific_Heat(atoms2))
 
 if __name__ == "__main__":
     main()
