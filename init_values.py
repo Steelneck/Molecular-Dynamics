@@ -29,10 +29,10 @@ Size_Y = 10
 Size_Z = 10
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = True # Set periodic boundary condition to True or False
-Bravais = FaceCenteredCubic # Set the lattice
-lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
+Bravais = SimpleTetragonal # Set the lattice
+lc_a = 3.6 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0
-lc_c = 0
+lc_c = 3.8
 lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
@@ -70,7 +70,7 @@ lc_gamma = 0
 
 def init():
 
-    # Set the lattice constant (Need to fix optional arguments for lattice function)
+    # Set the lattice constant
     Lattice_Const = set_lattice_const(lc_a,
                                       lc_b,
                                       lc_c,
@@ -78,7 +78,7 @@ def init():
                                       lc_beta,
                                       lc_gamma)
     
-    # Set up a crystal with lattice function from init_functions.py
+    # Set up a crystals
     atoms = set_lattice(Bravais,
                         Lattice_Const,
                         Directions,
@@ -96,15 +96,6 @@ def init():
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
     atoms.calc = EMT()
-
-
-""" Only using this to check results in terminal """
-
-# Keep this for now to see changes in energy in terminal when changing lattice
-def printenergy(a=atoms):  # store a reference to atoms in the definition.
-    """Function to print the potential, kinetic and total energy."""
-    epot = a.get_potential_energy() / len(a)
-    ekin = a.get_kinetic_energy() / len(a)
-    print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
-    'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
+    
+    return atoms
 
