@@ -107,3 +107,17 @@
 2020-11-14:18:38:13CET * 0 * information * 0x25d1290_0x20f1350 * KIM_LogImplementation.cpp:106 * Log object destroyed.
 2020-11-14:18:38:13CET * 0 * information * 0x25d1290_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
 2020-11-14:18:38:13CET * 0 * information * 0x25d1290 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:48:09CET * 0 * information * 0x1b31440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:48:09CET * 1 * information * 0x1b31440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:48:09CET * 0 * information * 0x1b31440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:48:09CET * 0 * information * 0x1b317e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:48:09CET * 1 * information * 0x1b317e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x1b31440_Collections'.
+2020-11-14:18:48:09CET * 2 * information * 0x1b31440_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x1b317e0'.
+2020-11-14:18:48:09CET * 0 * information * 0x16513e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:48:09CET * 1 * information * 0x16513e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x1b31440_0x16513e0'.
+2020-11-14:18:48:09CET * 2 * information * 0x1b31440_0x16513e0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x16513e0'.
+2020-11-14:18:48:09CET * 3 * information * 0x1b31440_0x16513e0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:48:09CET * 4 * information * 0x1b31440_0x16513e0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:48:10CET * 0 * information * 0x1b31440_0x16513e0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:48:10CET * 0 * information * 0x1b31440_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:48:10CET * 0 * information * 0x1b31440 * KIM_LogImplementation.cpp:106 * Log object destroyed.

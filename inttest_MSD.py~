@@ -1,3 +1,0 @@
-import MSD
-
-MSD.run_md()
