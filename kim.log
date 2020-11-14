@@ -1,0 +1,109 @@
+2020-11-14:18:22:38CET * 0 * information * 0x1c30440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:22:38CET * 1 * information * 0x1c30440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:22:38CET * 0 * information * 0x1c30440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:22:38CET * 0 * information * 0x1c307e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:22:38CET * 1 * information * 0x1c307e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x1c30440_Collections'.
+2020-11-14:18:22:38CET * 2 * information * 0x1c30440_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x1c307e0'.
+2020-11-14:18:22:38CET * 0 * information * 0x1cba7b0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:22:38CET * 1 * information * 0x1cba7b0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x1c30440_0x1cba7b0'.
+2020-11-14:18:22:38CET * 2 * information * 0x1c30440_0x1cba7b0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x1cba7b0'.
+2020-11-14:18:22:38CET * 3 * information * 0x1c30440_0x1cba7b0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:22:38CET * 4 * information * 0x1c30440_0x1cba7b0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:22:47CET * 0 * information * 0x1c30440_0x1cba7b0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:22:47CET * 0 * information * 0x1c30440_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:22:47CET * 0 * information * 0x1c30440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:24:12CET * 0 * information * 0x2008440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:24:12CET * 1 * information * 0x2008440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:24:12CET * 0 * information * 0x2008440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:24:12CET * 0 * information * 0x20087e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:24:12CET * 1 * information * 0x20087e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2008440_Collections'.
+2020-11-14:18:24:12CET * 2 * information * 0x2008440_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x20087e0'.
+2020-11-14:18:24:12CET * 0 * information * 0x2091240 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:24:12CET * 1 * information * 0x2091240 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2008440_0x2091240'.
+2020-11-14:18:24:12CET * 2 * information * 0x2008440_0x2091240 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2091240'.
+2020-11-14:18:24:12CET * 3 * information * 0x2008440_0x2091240 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:24:12CET * 4 * information * 0x2008440_0x2091240 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:24:21CET * 0 * information * 0x2008440_0x2091240 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:24:21CET * 0 * information * 0x2008440_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:24:21CET * 0 * information * 0x2008440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:15CET * 0 * information * 0x30eb290 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:15CET * 1 * information * 0x30eb290 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:15CET * 0 * information * 0x30eb290 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:15CET * 0 * information * 0x30eb630 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:15CET * 1 * information * 0x30eb630 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x30eb290_Collections'.
+2020-11-14:18:25:15CET * 2 * information * 0x30eb290_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x30eb630'.
+2020-11-14:18:25:15CET * 0 * information * 0x3173f10 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:15CET * 1 * information * 0x3173f10 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x30eb290_0x3173f10'.
+2020-11-14:18:25:15CET * 2 * information * 0x30eb290_0x3173f10 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x3173f10'.
+2020-11-14:18:25:15CET * 3 * information * 0x30eb290_0x3173f10 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:25:15CET * 4 * information * 0x30eb290_0x3173f10 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:25:25CET * 0 * information * 0x30eb290_0x3173f10 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:25CET * 0 * information * 0x30eb290_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:25CET * 0 * information * 0x30eb290 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:54CET * 0 * information * 0x2d06440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:54CET * 1 * information * 0x2d06440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:25:54CET * 0 * information * 0x2d06440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:54CET * 0 * information * 0x2d067e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:54CET * 1 * information * 0x2d067e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2d06440_Collections'.
+2020-11-14:18:25:54CET * 2 * information * 0x2d06440_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2d067e0'.
+2020-11-14:18:25:54CET * 0 * information * 0x2d8eed0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:25:54CET * 1 * information * 0x2d8eed0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2d06440_0x2d8eed0'.
+2020-11-14:18:25:54CET * 2 * information * 0x2d06440_0x2d8eed0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2d8eed0'.
+2020-11-14:18:25:54CET * 3 * information * 0x2d06440_0x2d8eed0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:25:54CET * 4 * information * 0x2d06440_0x2d8eed0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:26:04CET * 0 * information * 0x2d06440_0x2d8eed0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:04CET * 0 * information * 0x2d06440_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:04CET * 0 * information * 0x2d06440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:21CET * 0 * information * 0x2002010 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:26:21CET * 1 * information * 0x2002010 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:21CET * 0 * information * 0x2002010 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:26:21CET * 0 * information * 0x20023b0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:26:21CET * 1 * information * 0x20023b0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2002010_Collections'.
+2020-11-14:18:26:21CET * 2 * information * 0x2002010_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x20023b0'.
+2020-11-14:18:26:21CET * 0 * information * 0x208aaf0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:26:21CET * 1 * information * 0x208aaf0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2002010_0x208aaf0'.
+2020-11-14:18:26:21CET * 2 * information * 0x2002010_0x208aaf0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x208aaf0'.
+2020-11-14:18:26:21CET * 3 * information * 0x2002010_0x208aaf0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:26:21CET * 4 * information * 0x2002010_0x208aaf0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:26:30CET * 0 * information * 0x2002010_0x208aaf0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:30CET * 0 * information * 0x2002010_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:26:30CET * 0 * information * 0x2002010 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:33:42CET * 0 * information * 0x2ee5440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:33:42CET * 1 * information * 0x2ee5440 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:33:42CET * 0 * information * 0x2ee5440 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:33:42CET * 0 * information * 0x2ee57e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:33:42CET * 1 * information * 0x2ee57e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2ee5440_Collections'.
+2020-11-14:18:33:42CET * 2 * information * 0x2ee5440_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2ee57e0'.
+2020-11-14:18:33:42CET * 0 * information * 0x2a053e0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:33:42CET * 1 * information * 0x2a053e0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2ee5440_0x2a053e0'.
+2020-11-14:18:33:42CET * 2 * information * 0x2ee5440_0x2a053e0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2a053e0'.
+2020-11-14:18:33:42CET * 3 * information * 0x2ee5440_0x2a053e0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:33:42CET * 4 * information * 0x2ee5440_0x2a053e0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:34:14CET * 0 * information * 0x2d62fb0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:34:14CET * 1 * information * 0x2d62fb0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:34:14CET * 0 * information * 0x2d62fb0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:34:14CET * 0 * information * 0x2d63350 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:34:14CET * 1 * information * 0x2d63350 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2d62fb0_Collections'.
+2020-11-14:18:34:14CET * 2 * information * 0x2d62fb0_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x2d63350'.
+2020-11-14:18:34:14CET * 0 * information * 0x28833c0 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:34:14CET * 1 * information * 0x28833c0 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x2d62fb0_0x28833c0'.
+2020-11-14:18:34:14CET * 2 * information * 0x2d62fb0_0x28833c0 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x28833c0'.
+2020-11-14:18:34:14CET * 3 * information * 0x2d62fb0_0x28833c0 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:34:14CET * 4 * information * 0x2d62fb0_0x28833c0 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:34:15CET * 0 * information * 0x2d62fb0_0x28833c0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:34:15CET * 0 * information * 0x2d62fb0_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:34:15CET * 0 * information * 0x2d62fb0 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:38:12CET * 0 * information * 0x25d1290 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:38:12CET * 1 * information * 0x25d1290 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:38:12CET * 0 * information * 0x25d1290 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:38:12CET * 0 * information * 0x25d1630 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:38:12CET * 1 * information * 0x25d1630 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x25d1290_Collections'.
+2020-11-14:18:38:12CET * 2 * information * 0x25d1290_Collections * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x25d1630'.
+2020-11-14:18:38:12CET * 0 * information * 0x20f1350 * KIM_LogImplementation.cpp:96 * Log object created.  Default verbosity level is 'information'.
+2020-11-14:18:38:12CET * 1 * information * 0x20f1350 * KIM_LogImplementation.cpp:156 * Log object renamed.  ID changed to '0x25d1290_0x20f1350'.
+2020-11-14:18:38:12CET * 2 * information * 0x25d1290_0x20f1350 * KIM_LogImplementation.cpp:160 * Log object renamed.  ID changed from '0x20f1350'.
+2020-11-14:18:38:12CET * 3 * information * 0x25d1290_0x20f1350 * LennardJones612Implementation.cpp:631 * Register argument supportStatus
+2020-11-14:18:38:12CET * 4 * information * 0x25d1290_0x20f1350 * LennardJones612Implementation.cpp:650 * Register callback supportStatus
+2020-11-14:18:38:13CET * 0 * information * 0x25d1290_0x20f1350 * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:38:13CET * 0 * information * 0x25d1290_Collections * KIM_LogImplementation.cpp:106 * Log object destroyed.
+2020-11-14:18:38:13CET * 0 * information * 0x25d1290 * KIM_LogImplementation.cpp:106 * Log object destroyed.

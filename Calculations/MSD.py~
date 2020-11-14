@@ -10,6 +10,7 @@ from ase.lattice.bravais import Lattice
 from ase.atoms import Atoms
 from ase.md.langevin import Langevin
 from ase import units
+from ase.calculators.kim.kim import KIM
 
 import numpy as np
 import tkinter
@@ -30,7 +31,8 @@ atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                           pbc=True)
 
 # Describe the interatomic interactions with the Effective Medium Theory
-atoms.calc = EMT()
+calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
+atoms.calc = calc
 
 # Set the momenta corresponding to T=300K
 MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
@@ -74,5 +76,7 @@ traj = Trajectory("atoms.traj", "w", atoms)
 dyn.attach(traj.write, interval=1)
 dyn.run(200)
 
-MSD = MSD_calc(atoms, 50)
-L = Lindemann(atoms, MSD[1])
+#MSD = MSD_calc(atoms, 50)
+#print(MSD)
+#L = Lindemann(atoms, MSD[1])
+#Print(L)
