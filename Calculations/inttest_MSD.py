@@ -1,4 +1,4 @@
-import MSD
+import Calculations.MSD
 import os
 import sys
 

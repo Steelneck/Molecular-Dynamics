@@ -1,6 +1,7 @@
 import sys, unittest
 from MSD import MSD_calc
 from MSD import Lindemann
+from MSD import Self_diffuse
 
 from ase.lattice.cubic import FaceCenteredCubic
 from ase.lattice.cubic import BodyCenteredCubic
@@ -36,14 +37,27 @@ traj = Trajectory("atoms.traj", "w", atoms)
 dyn.attach(traj.write, interval=1)
 dyn.run(200)
 
-MSD = MSD_calc(atoms, 50)
-L = Lindemann(atoms, MSD[1])
+traj_MSD = Trajectory("atoms.traj")
+n = 1
+atoms_eq = []
+while n < len(traj_MSD):
+      ediff = abs((traj_MSD[n].get_potential_energy() / len(atoms)) -
+               (traj_MSD[n].get_kinetic_energy() / len(atoms))) #epot-ekin
+      if ediff < 0.005:
+            atoms_eq.append(traj_MSD[n])
+      n += 1
+
+MSD = MSD_calc(atoms, 19, atoms_eq)
+D = Self_diffuse(MSD, 19, atoms_eq)
+L = Lindemann(atoms, MSD)
+
+open("atoms.traj", "w").close()
 
 class MSDTests(unittest.TestCase):
       def test_MSD_calc(self):
-      	    self.assertTrue(isinstance(MSD[0], float))
+      	    self.assertTrue(isinstance(MSD, float))
       def test_self_diffuse(self):
-            self.assertTrue(isinstance(MSD[1], float))
+            self.assertTrue(isinstance(D, float))
       def test_Lindemann(self):
             self.assertTrue(isinstance(L, int))
 
