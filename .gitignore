@@ -1,2 +1,4 @@
 .github/
 __pycache__/
+*.traj
+kim.log
