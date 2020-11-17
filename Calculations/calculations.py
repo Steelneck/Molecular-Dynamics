@@ -64,7 +64,6 @@ def Self_diffuse(MSD, t, eq_list):
     traj_MSD = Trajectory("atoms.traj")  
     time = len(traj_MSD)-t
     D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
-    open("atoms.traj", "w").close()
     print("D = ", D)
     return(D)
 

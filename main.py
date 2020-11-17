@@ -32,7 +32,5 @@ def main():
     D = calc.Self_diffuse(MSD, 10, atoms_eq)
     L = calc.Lindemann(atoms, MSD)
 
-    open("atoms.traj", "w").close()
-
 if __name__ == "__main__":
     main()
