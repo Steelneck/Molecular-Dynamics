@@ -7,17 +7,6 @@ from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
 
 
-def eq_traj(a):
-    traj_non_eq = Trajectory("atoms.traj")
-    traj_eq = Trajectory("atoms_eq.traj", "w", a)
-    n = 1
-    while n < len(traj_non_eq):
-        ediff = abs((traj_non_eq[n].get_potential_energy() / len(a)) -
-               (traj_non_eq[n].get_kinetic_energy() / len(a))) #epot-ekin
-        if ediff < 0.003:
-            traj_eq.write(traj_non_eq[n])
-        n += 1
-
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Specific_Heat(atoms):
     

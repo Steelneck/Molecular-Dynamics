@@ -19,17 +19,10 @@ def main():
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
 
-    traj_MSD = Trajectory("atoms.traj")
-    n = 1
-    atoms_eq = []
-    while n < len(traj_MSD):
-        ediff = abs((traj_MSD[n].get_potential_energy() / len(atoms)) -
-               (traj_MSD[n].get_kinetic_energy() / len(atoms))) #epot-ekin
-        if ediff < 0.005:
-            atoms_eq.append(traj_MSD[n])
-        n += 1
-    MSD = calc.MSD_calc(atoms, 10, atoms_eq)
-    D = calc.Self_diffuse(MSD, 10, atoms_eq)
+    
+    calc.eq_traj(atoms)
+    MSD = calc.MSD_calc(atoms, 10)
+    D = calc.Self_diffuse(MSD, 10)
     L = calc.Lindemann(atoms, MSD)
 
 if __name__ == "__main__":
