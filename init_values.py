@@ -37,33 +37,28 @@ lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
 
-# The following Bravais lattices can / cannot be used:
-# SimpleCubic
-# FaceCenteredCubic
-# BodyCenteredCubic
-# Diamond # (requires a basis - check ase how to define new lattice with Factory)
-# SimpleTetragonal
-# CenteredTetragonal
-# SimpleOrthorhombic
-# BaseCenteredOrthorhombic
-# FaceCenteredOrthorhombic
-# BodyCenteredOrthorhombic
-# SimpleMonoclinic
-# BaseCenteredMonoclinic
-# Triclinic # Not sure how this one works
-# Hexagonal # OBS! Currently broken, see ase/lattice/hexagonal.py line 60
-# HexagonalClosedPacked # OBS! Currently broken (and requires a basis)
-# Graphite (requires a basis)
+""" The following Bravais lattices can be used:
+ SimpleCubic                 Lattice constant: a
+ FaceCenteredCubic           Lattice constant: a (set a=0 to let ase set the constant)
+ BodyCenteredCubic           Lattice constant: a
+ SimpleTetragonal            Lattice constant: a,c
+ CenteredTetragonal          Lattice constant: a,c
+ SimpleOrthorhombic          Lattice constant: a,b,c
+ BaseCenteredOrthorhombic    Lattice constant: a,b,c
+ FaceCenteredOrthorhombic    Lattice constant: a,b,c
+ BodyCenteredOrthorhombic    Lattice constant: a,b,c
+ SimpleMonoclinic            Lattice constant: a,b,c,alpha
+ BaseCenteredMonoclinic      Lattice constant: a,b,c,alpha
+"""
 
-    # Lattice constants for crystals:
-        # Cubic         : a
-        # Tetragonal    : a,c
-        # Orthorhombic  : a,b,c,
-        # Triclinic     : a,b,c,alpha,beta,gamma
-        # Monoclinic    : a,b,c,alpha
-        # Hexagonal     : a,c
-        # OBS fcc can get the lattice constant from ase
-
+""" The following Bravais lattices cannot be used:
+ Diamond # (requires a basis - check ase how to define new lattice with Factory)
+ Triclinic # Not sure how this one works, needs all constants a,b,c,alpha,beta,gamma
+ Hexagonal # OBS! Currently broken, see ase/lattice/hexagonal.py line 60
+ HexagonalClosedPacked # OBS! Currently broken (and requires a basis)
+ Hexagonal / HexagonalClosedPacked needs constant a,c
+ Graphite (requires a basis)
+"""
 
 
 """ This section will initialize the system based on the variables """
