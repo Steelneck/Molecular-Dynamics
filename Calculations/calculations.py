@@ -6,16 +6,16 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
 
-
+#Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
 def eq_traj(a):
     traj_non_eq = Trajectory("atoms.traj")
-    traj_eq = Trajectory("atoms_eq.traj", "w", a)
+    traj_eq = Trajectory("atoms_eq.traj", "w", a) #new equilibrium trajectory file
     n = 1
-    while n < len(traj_non_eq):
+    while n < len(traj_non_eq): #Goes through all objects in traj_non_eq and checks whether or not they are in equilibrium.
         ediff = abs((traj_non_eq[n].get_potential_energy() / len(a)) -
-               (traj_non_eq[n].get_kinetic_energy() / len(a))) #epot-ekin
-        if ediff < 0.003:
-            traj_eq.write(traj_non_eq[n])
+                    (traj_non_eq[n].get_kinetic_energy() / len(a))) #epot-ekin
+        if ediff < 0.003: #Criteria for equilibrium.
+            traj_eq.write(traj_non_eq[n]) #write that object to the new .traj-file
         n += 1
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)

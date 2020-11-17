@@ -2,6 +2,7 @@
 
 from Init.init_values import *
 #import tkinter
+import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
@@ -20,10 +21,15 @@ def main():
     dyn.run(200)
 
     
-    calc.eq_traj(atoms)
-    MSD = calc.MSD_calc(atoms, 10)
-    D = calc.Self_diffuse(MSD, 10)
-    L = calc.Lindemann(atoms, MSD)
+    calc.eq_traj(atoms) #Creates new .traj-file containing trajectory post equilibrium.
+    if os.path.getsize("atoms_eq.traj") != 0:
+        traj_eq = Trajectory("atoms_eq.traj")
+        #If-statement that checks if we ever reached equilibrium.
+        MSD = calc.MSD_calc(atoms, 10)
+        D = calc.Self_diffuse(MSD, 10)
+        L = calc.Lindemann(atoms, MSD)
+    else:
+        print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
 if __name__ == "__main__":
     main()
