@@ -19,7 +19,6 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_specific_heat_not_bravice_lattice(self):
         self.assertFalse(Specific_Heat(not_bravice_lattice))
-        
 
 
 if __name__ == '__main__':

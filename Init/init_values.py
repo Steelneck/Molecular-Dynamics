@@ -30,10 +30,10 @@ Size_Y = 10
 Size_Z = 10
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = True # Set periodic boundary condition to True or False
-Bravais = SimpleTetragonal # Set the lattice
-lc_a = 3.6 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
+Bravais = FaceCenteredCubic # Set the lattice
+lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0
-lc_c = 3.8
+lc_c = 0
 lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
