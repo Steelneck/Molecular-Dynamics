@@ -1,6 +1,6 @@
 """Demonstrates molecular dynamics with constant energy."""
 
-from init_values import *
+from Init.init_values import *
 
 def main():
     
