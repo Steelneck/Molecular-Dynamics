@@ -40,3 +40,4 @@ def Specific_Heat(atoms):
     heat_capcity = ((eng_vec[1] - eng_vec[0])*(1.6021765*10**(-19)))/(temp_vec[1] - temp_vec[0]) / bulk_mass
     return heat_capcity
 
+
