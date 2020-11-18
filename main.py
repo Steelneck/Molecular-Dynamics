@@ -25,12 +25,15 @@ def main():
     while n < len(traj_MSD):
         ediff = abs((traj_MSD[n].get_potential_energy() / len(atoms)) -
                (traj_MSD[n].get_kinetic_energy() / len(atoms))) #epot-ekin
+        print(atoms.get_potential_energy() / len(atoms))
+        print(atoms.get_kinetic_energy() / len(atoms))
         if ediff < 0.005:
             atoms_eq.append(traj_MSD[n])
         n += 1
-    MSD = calc.MSD_calc(atoms, 10, atoms_eq)
-    D = calc.Self_diffuse(MSD, 10, atoms_eq)
-    L = calc.Lindemann(atoms, MSD)
+    SH = calc.Specific_Heat(atoms, atoms_eq)
+    #MSD = calc.MSD_calc(atoms, 10, atoms_eq)
+    #D = calc.Self_diffuse(MSD, 10, atoms_eq)
+    #L = calc.Lindemann(atoms, MSD)
 
 if __name__ == "__main__":
     main()
