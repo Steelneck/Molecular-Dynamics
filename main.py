@@ -2,6 +2,7 @@
 
 from Init.init_values import *
 #import tkinter
+import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
@@ -18,22 +19,16 @@ def main():
     
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
-
-    traj_MSD = Trajectory("atoms.traj")
-    n = 1
-    atoms_eq = []
-    while n < len(traj_MSD):
-        ediff = abs((traj_MSD[n].get_potential_energy() / len(atoms)) -
-               (traj_MSD[n].get_kinetic_energy() / len(atoms))) #epot-ekin
-        print(atoms.get_potential_energy() / len(atoms))
-        print(atoms.get_kinetic_energy() / len(atoms))
-        if ediff < 0.005:
-            atoms_eq.append(traj_MSD[n])
-        n += 1
-    SH = calc.Specific_Heat(atoms, atoms_eq)
-    #MSD = calc.MSD_calc(atoms, 10, atoms_eq)
-    #D = calc.Self_diffuse(MSD, 10, atoms_eq)
-    #L = calc.Lindemann(atoms, MSD)
+    
+    calc.eq_traj(atoms) #Creates new .traj-file containing trajectory post equilibrium.
+    if os.path.getsize("atoms_eq.traj") != 0:
+        traj_eq = Trajectory("atoms_eq.traj")
+        #If-statement that checks if we ever reached equilibrium.
+        MSD = calc.MSD_calc(atoms, 10)
+        D = calc.Self_diffuse(MSD, 10)
+        L = calc.Lindemann(atoms, MSD)
+    else:
+        print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,20 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
+from ase.calculators.eam import EAM
+from ase.build import bulk
 
+#Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
+def eq_traj(a):
+    traj_non_eq = Trajectory("atoms.traj")
+    traj_eq = Trajectory("atoms_eq.traj", "w", a) #new equilibrium trajectory file
+    n = 1
+    while n < len(traj_non_eq): #Goes through all objects in traj_non_eq and checks whether or not they are in equilibrium.
+        ediff = abs((traj_non_eq[n].get_potential_energy() / len(a)) -
+                    (traj_non_eq[n].get_kinetic_energy() / len(a))) #epot-ekin
+        if ediff < 0.003: #Criteria for equilibrium.
+            traj_eq.write(traj_non_eq[n]) #write that object to the new .traj-file
+        n += 1
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Specific_Heat(a, eq_list):
@@ -25,26 +38,26 @@ def Specific_Heat(a, eq_list):
     print("C_p = ", heat_capcity, "[J/K*Kg]")
     return heat_capcity
 
-def MSD_calc(a, t, eq_list):
+def MSD_calc(a, t):
     try:
         a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
     """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
-    traj_MSD = Trajectory("atoms.traj")  #time evolution of trajectory
+    traj_MSD = Trajectory("atoms_eq.traj")  #time evolution of trajectory
     time = len(traj_MSD)-t
-    pos_eq = eq_list[len(eq_list)-1].get_positions() #position of atoms when system has reached equilibrium
-    pos_t = eq_list[t].get_positions() #position of atoms at time t
+    pos_eq = traj_MSD[-1].get_positions() #position of atoms when system has reached equilibrium
+    pos_t = traj_MSD[t].get_positions() #position of atoms at time t
     diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
     diff_sq = np.absolute(diff)**2 
     MSD = np.sum(diff_sq)/len(a) #Time averaged mean square displacement.
     print("MSD = ", MSD)
     return(MSD)
 
-def Self_diffuse(MSD, t, eq_list):
+def Self_diffuse(MSD, t):
     """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
-    traj_MSD = Trajectory("atoms.traj")  
+    traj_MSD = Trajectory("atoms_eq.traj")  
     time = len(traj_MSD)-t
     D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
     print("D = ", D)
@@ -93,3 +106,15 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     internalPressure = allInstantPressures / M              # Internal pressure is the MD average of the instantaneous pressures
     print("Internal Pressure", internalPressure)
     return(internalPressure)
+
+def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+    """ Returns the average temperature within parameters """
+    
+    for i in range(1,timeStepIndex):
+        sumTemp = sum(myAtoms.get_temperature())     
+        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
+
+    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
+    print("Average internal temperature:", avgTemperature)  
+    return(avgTemperature)
+
