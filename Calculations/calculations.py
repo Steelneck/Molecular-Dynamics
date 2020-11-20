@@ -5,6 +5,8 @@ import numpy as np
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
+from ase.calculators.eam import EAM
+from ase.build import bulk
 
 #Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
 def eq_traj(a):
@@ -121,3 +123,15 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     internalPressure = allInstantPressures / M              # Internal pressure is the MD average of the instantaneous pressures
     print("Internal Pressure", internalPressure)
     return(internalPressure)
+
+def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+    """ Returns the average temperature within parameters """
+    
+    for i in range(1,timeStepIndex):
+        sumTemp = sum(myAtoms.get_temperature())     
+        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
+
+    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
+    print("Average internal temperature:", avgTemperature)  
+    return(avgTemperature)
+
