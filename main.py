@@ -27,6 +27,7 @@ def main():
         MSD = calc.MSD_calc(atoms, 10)
         D = calc.Self_diffuse(MSD, 10)
         L = calc.Lindemann(atoms, MSD)
+        SHC = calc.Specific_Heat(atoms)
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 

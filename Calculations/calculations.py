@@ -18,21 +18,21 @@ def eq_traj(a):
         n += 1
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(a, eq_list):
+def Specific_Heat(a):
     
     try:
         a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
-    traj = Trajectory("atoms.traj")
+    traj = Trajectory("atoms_eq.traj")
     bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
-    temp_diff = (eq_list[1].get_kinetic_energy() /len(eq_list[1]) - eq_list[0].get_kinetic_energy() /len(eq_list[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
-    pot_energy_diff = (eq_list[1].get_potential_energy() /len(eq_list[1]) 
-                        - eq_list[0].get_potential_energy() /len(eq_list[0])) # potential energy difference when ystem has reached equilibrium
+    temp_diff = (traj[1].get_kinetic_energy() /len(traj[1]) - traj[0].get_kinetic_energy() /len(traj[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
+    pot_energy_diff = (traj[1].get_potential_energy() /len(traj[1]) 
+                        - traj[0].get_potential_energy() /len(traj[0])) # potential energy difference when ystem has reached equilibrium
 
-    kin_energy_diff = (eq_list[1].get_kinetic_energy() /len(eq_list[1]) 
-                            - eq_list[0].get_kinetic_energy()/len(eq_list[0])) # potential energy difference when ystem has reached equilibrium
+    kin_energy_diff = (traj[1].get_kinetic_energy() /len(traj[1]) 
+                            - traj[0].get_kinetic_energy()/len(traj[0])) # potential energy difference when ystem has reached equilibrium
     
     heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
     print("C_p = ", heat_capcity, "[J/K*Kg]")
