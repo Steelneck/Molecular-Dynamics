@@ -1,9 +1,6 @@
 from ase import units
 from ase.data import atomic_masses, atomic_numbers
-from ase.md.langevin import Langevin
 import numpy as np
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
-from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
 from ase.calculators.eam import EAM
 from ase.build import bulk
@@ -21,38 +18,24 @@ def eq_traj(a):
         n += 1
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(atoms):
+def Specific_Heat(a, eq_list):
     
     try:
-        atoms.get_masses() # Tries if the attribute exists, skips except if it does
+        a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
+    traj = Trajectory("atoms.traj")
+    bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
+    temp_diff = (eq_list[1].get_kinetic_energy() /len(eq_list[1]) - eq_list[0].get_kinetic_energy() /len(eq_list[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
+    pot_energy_diff = (eq_list[1].get_potential_energy() /len(eq_list[1]) 
+                        - eq_list[0].get_potential_energy() /len(eq_list[0])) # potential energy difference when ystem has reached equilibrium
 
-    # Calculates the bulk mass by taking the sum of all the atom masses. 
-    bulk_mass=sum(atoms.get_masses())*1.6605402*10**(-27) # converts from atomic mass units to kg
-
-    # Uses the lennard jones potential through openKIM
-    calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
-    atoms.calc = calc
-
-    # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
-
-    # We want to run MD with constant temperture using the Langevin algorithm.
-    dyn = Langevin(atoms, 5 * units.fs, units.kB * 300, 0.002)
-
-    temp_vec = np.array([])
-    eng_vec = np.array([])
-
-    #MD run with 10 instances in between. Calculates the heat capcity by taking the difference in energy divided by the difference in temperature and 
-    #divide everything with the mass of the crystal. 
-    for i in range(2):
-        dyn.run(10)
-        temp_vec = np.append(temp_vec, (atoms.get_kinetic_energy() / len(atoms)) / (1.5 * units.kB))
-        eng_vec = np.append(eng_vec, (atoms.get_potential_energy() / len(atoms)) + (atoms.get_kinetic_energy() / len(atoms)))
+    kin_energy_diff = (eq_list[1].get_kinetic_energy() /len(eq_list[1]) 
+                            - eq_list[0].get_kinetic_energy()/len(eq_list[0])) # potential energy difference when ystem has reached equilibrium
     
-    heat_capcity = ((eng_vec[1] - eng_vec[0])*(1.6021765*10**(-19)))/(temp_vec[1] - temp_vec[0]) / bulk_mass
+    heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
+    print("C_p = ", heat_capcity, "[J/K*Kg]")
     return heat_capcity
 
 def MSD_calc(a, t):

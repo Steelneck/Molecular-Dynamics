@@ -13,6 +13,7 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
+from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
@@ -29,7 +30,7 @@ Size_X = 10 # How many times fundamental repeat unit is repeated
 Size_Y = 10
 Size_Z = 10
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
-Pbc = True # Set periodic boundary condition to True or False
+Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0
@@ -37,6 +38,8 @@ lc_c = 0
 lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
+Temperature = 300
+Calculator = EMT()
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -59,6 +62,13 @@ lc_gamma = 0
  HexagonalClosedPacked # OBS! Currently broken (and requires a basis)
  Hexagonal / HexagonalClosedPacked needs constant a,c
  Graphite (requires a basis)
+"""
+
+""" The following Calculators can be used:
+EMT()
+    ASAP3 built in effective medium theory. Works for Ni, Cu, Pd, Ag, Pt and Au (and their alloys).
+Kim('Insert_openKIM_potential_here')
+    openKIM potentials can be found from https://openkim.org/
 """
 
 
@@ -87,11 +97,11 @@ def init():
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
-    MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
+    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
     
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
-    atoms.calc = EMT()
+    atoms.calc = Calculator
     
     return atoms
 

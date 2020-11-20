@@ -19,7 +19,6 @@ def main():
     
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
-
     
     calc.eq_traj(atoms) #Creates new .traj-file containing trajectory post equilibrium.
     if os.path.getsize("atoms_eq.traj") != 0:
