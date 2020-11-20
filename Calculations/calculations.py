@@ -76,16 +76,18 @@ def Lindemann(a, MSD):
          print(L)
          return False
 
-def calc_instantaneous_pressure(myAtoms, trajectoryFileName, timeStepIndex):
+def calc_instantaneous_pressure(myAtoms, trajObject, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT)."""
-    traj = Trajectory(trajectoryFileName)
+    
     equilibriumIndex = timeStepIndex
-    atomsAtEquilibrium = traj[equilibriumIndex]             # Retrieve atoms some amount of timesteps in when system has reached equilibrium
+    atomsAtEquilibrium = trajObject[equilibriumIndex]             # Retrieve atoms some amount of timesteps in when system has reached equilibrium
     eqPos = atomsAtEquilibrium.get_positions()              # Atom 3D coords.
     eqTemperature = atomsAtEquilibrium.get_temperature()    # Temperature at time t = equilibriumIndex * deltaT.
-    eqPotEn = atomsAtEquilibrium.get_potential_energy()     # Get potetntial energy from atoms object at time t = equilibriumIndex * deltaT, should be the same for all. 
+    nrAtoms = len(myAtoms.get_masses())                     # This should be the amount of atoms, because one mass per atom.
+    eqPotEn = atomsAtEquilibrium.get_potential_energy()/nrAtoms     # Get potetntial energy from atoms object at time t = equilibriumIndex * deltaT, should be the same for all. 
+                                                                         # Scale with amount of atoms
     N = len(atomsAtEquilibrium)                             # Number of atoms in object
-    eqForces = atoms.calc.get_forces(atomsAtEquilibrium)    # Use calculator object to get the forces on the atoms. 
+    eqForces = myAtoms.calc.get_forces(atomsAtEquilibrium)    # Use calculator object to get the forces on the atoms. 
     
     # Instantaneos pressure 
     posForce = np.sum(eqPos * eqForces, axis=1)             # Dot product of all forces and positions
@@ -94,20 +96,24 @@ def calc_instantaneous_pressure(myAtoms, trajectoryFileName, timeStepIndex):
     #print(instantP)
     return(instantP)
 
-def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
-    """ Internal pressure is the MD average of the instantaneous pressures """
-    M = iterations                                          # M = (iterations * deltaT) / deltaT
+def calc_internal_pressure(myAtoms, trajObject):
+    """ Internal pressure is the MD average of the instantaneous pressures. 
+    IMPORTANT! trajObject contains the atoms objects when the system has reached equilibrium """
 
+     
+    iterationsInEqulibrium = len(trajObject)                # Will be the amount of iterations in equilibrium
+    M = iterationsInEqulibrium                              # M = (iterations * deltaT) / deltaT
     # MD average
     allInstantPressures = 0
-    for n in range(1,iterations):
-        allInstantPressures += calc_instantaneous_pressure(myAtoms, trajectoryFileName, n)
+    for n in range(1,iterationsInEqulibrium):
+        allInstantPressures += calc_instantaneous_pressure(myAtoms, trajObject, n)
     
     internalPressure = allInstantPressures / M              # Internal pressure is the MD average of the instantaneous pressures
     print("Internal Pressure", internalPressure)
+
     return(internalPressure)
 
-def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+def calc_internal_temperature(nrAtoms, trajectoryFileName, timeStepIndex):
     """ Returns the average temperature within parameters """
     
     for i in range(1,timeStepIndex):
