@@ -110,9 +110,9 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
 def internal_temperature(myAtoms, timeStepIndex):
     """ Returns the average temperature within parameters """
     
-    eqTemperature = myAtoms.get_temperature()     
+    eqTemperature = myAtoms.get_temperature()               # Fetches temperature of system using ASE function
 
-    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
+    avgTemperature = eqTemperature/timeStepIndex            # Sampling over timesteps for better approximation
     print("Average internal temperature:", avgTemperature, "[K]")  
     return(avgTemperature)
 
