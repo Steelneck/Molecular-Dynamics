@@ -29,8 +29,8 @@ def main():
         L = calc.Lindemann(atoms, MSD)
         SHC = calc.Specific_Heat(atoms)
 
-        # The average internal temperature of the system of atoms
-        T_int = calc.internal_temperature(atoms)         
+        # The average internal temperature of the system
+        internalTemperature = calc.internal_temperature(atoms, 10)
 
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
