@@ -32,6 +32,9 @@ def main():
         # The average internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, 10)
 
+        # The cohesive energy of the system
+        cohesiveEnergy = calc.cohesive_energy(atoms, 10)
+
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
