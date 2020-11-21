@@ -116,10 +116,3 @@ def internal_temperature(myAtoms, timeStepIndex):
      
     print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
     return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
-
-#def cohesive_energy(potential):
- #   """ Returns the cohesive energy of the system """
-#
- #   cohEnergy = EAM(potential)
-  #  print("Cohesive energy:", cohEnergy, "[J]")
-   # return(cohEnergy)

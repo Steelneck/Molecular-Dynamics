@@ -29,7 +29,7 @@ def main():
         L = calc.Lindemann(atoms, MSD)
         SHC = calc.Specific_Heat(atoms)
 
-        # The average internal temperature of the system
+        # Internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, 10)
 
     else:
