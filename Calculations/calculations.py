@@ -109,11 +109,17 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
 
 def internal_temperature(myAtoms, timeStepIndex):
     """ Returns the average temperature within parameters """
-    
-    eqTemperature = myAtoms.get_temperature()               # Fetches temperature of system using ASE function
+    eqTemp = 0                                             
 
-    avgTemperature = eqTemperature/timeStepIndex            # Sampling over timesteps for better approximation
-    print("Average internal temperature:", avgTemperature, "[K]")  
-    return(avgTemperature)
+    for i in range(1, timeStepIndex):                       
+        eqTemp += myAtoms.get_temperature()                 # Sum returned value from ASE function over timesteps for sampling
+     
+    print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
+    return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
 
-# def cohesive_energy(myAtoms, timeStepIndex)
+#def cohesive_energy(potential):
+ #   """ Returns the cohesive energy of the system """
+#
+ #   cohEnergy = EAM(potential)
+  #  print("Cohesive energy:", cohEnergy, "[J]")
+   # return(cohEnergy)
