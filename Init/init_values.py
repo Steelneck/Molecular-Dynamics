@@ -94,6 +94,9 @@ def init():
                         Size_Z,
                         Symbol,
                         Pbc) 
+
+    # Create potential file for use with EAM calculator
+    EAMpotential = 'EAM.txt'
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
