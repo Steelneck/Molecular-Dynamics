@@ -28,6 +28,10 @@ def main():
         D = calc.Self_diffuse(MSD, 10)
         L = calc.Lindemann(atoms, MSD)
         SHC = calc.Specific_Heat(atoms)
+
+        # The average internal temperature of the system of atoms
+        T_int = calc.internal_temperature(atoms)         
+
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 

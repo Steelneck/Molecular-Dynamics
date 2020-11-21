@@ -107,14 +107,13 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     print("Internal Pressure", internalPressure)
     return(internalPressure)
 
-def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+def internal_temperature(myAtoms, timeStepIndex):
     """ Returns the average temperature within parameters """
     
-    for i in range(1,timeStepIndex):
-        sumTemp = sum(myAtoms.get_temperature())     
-        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
+    eqTemperature = myAtoms.get_temperature()     
 
     avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
-    print("Average internal temperature:", avgTemperature)  
+    print("Average internal temperature:", avgTemperature, "[K]")  
     return(avgTemperature)
 
+# def cohesive_energy(myAtoms, timeStepIndex)
