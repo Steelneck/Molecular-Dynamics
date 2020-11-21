@@ -96,7 +96,7 @@ def init():
                         Pbc) 
 
     # Create potential file for use with EAM calculator
-    EAMpotential = 'EAM.txt'
+    #EAMpotential = 'EAM.txt'
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
