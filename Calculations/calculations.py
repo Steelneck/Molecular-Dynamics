@@ -116,3 +116,16 @@ def internal_temperature(myAtoms, timeStepIndex):
      
     print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
     return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
+
+def cohesive_energy():
+    """ Returns the cohesive energy of the system """
+
+    alloy = bulk('Cu', 'fcc', 4.05)
+
+    EAMresult = EAM(potential='Calculations/Cu_Zhou04.eam.alloy')
+    EAMresult.write_potential('Calculations/new.eam.alloy')
+    alloy.calc = EAMresult
+    cohEnergy = alloy.get_potential_energy()
+
+    print("Cohesive energy:", cohEnergy, "[eV]")
+    return(cohEnergy)

@@ -32,6 +32,9 @@ def main():
         # Internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, 10)
 
+        # Cohesive energy calculated from alloy file
+        cohesiveTemperature = calc.cohesive_energy()
+
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
