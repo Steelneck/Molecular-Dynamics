@@ -10,13 +10,23 @@ from asap3 import Trajectory, FullNeighborList
 def eq_traj(a):
     traj_non_eq = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", a) #new equilibrium trajectory file
-    n = 1
-    while n < len(traj_non_eq): #Goes through all objects in traj_non_eq and checks whether or not they are in equilibrium.
-        ediff = abs((traj_non_eq[n].get_potential_energy() / len(a)) -
-                    (traj_non_eq[n].get_kinetic_energy() / len(a))) #epot-ekin
-        if ediff < 0.003: #Criteria for equilibrium.
-            traj_eq.write(traj_non_eq[n]) #write that object to the new .traj-file
+    n = 0
+    eq = False
+    while n < len(traj_non_eq)-1: #Goes through all objects in traj_non_eq and checks whether or not they are in equilibrium (difference in e_tot is small).
+        e_tot_1 = (traj_non_eq[n].get_potential_energy() +
+                    traj_non_eq[n].get_kinetic_energy()) #e_tot of timestep n
+        e_tot_2 = (traj_non_eq[n+1].get_potential_energy() +
+                   traj_non_eq[n+1].get_kinetic_energy()) #e_tot of timestep n+1
+        e_tot_diff = abs(e_tot_2 - e_tot_1)
+        if e_tot_diff < 0.1: #Criteria for equilibrium.
+            eq_index = n
+            break
         n += 1
+    n = len(traj_non_eq) - 1
+    while n > eq_index:
+        traj_eq.write(traj_non_eq[n])
+        n -= 1 #write that object to the new .traj-file
+        
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Specific_Heat(atoms):

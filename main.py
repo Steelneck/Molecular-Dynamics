@@ -16,7 +16,7 @@ def main():
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
 
     traj = Trajectory("atoms.traj", "w", atoms)
-    
+
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
 
