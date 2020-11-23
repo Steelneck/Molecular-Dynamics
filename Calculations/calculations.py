@@ -117,6 +117,7 @@ def internal_temperature(myAtoms, timeStepIndex):
     print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
     return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
 
+<<<<<<< HEAD
 def cohesive_energy():
     """ Returns the cohesive energy of the system """
 
@@ -128,4 +129,11 @@ def cohesive_energy():
     cohEnergy = alloy.get_potential_energy()
 
     print("Cohesive energy:", cohEnergy, "[eV]")
+=======
+def cohesive_energy(potentialFile):
+    """ Returns the cohesive energy of the system """
+    
+    cohEnergy = EAM(potentialFile)
+    print("Cohesive energy:", cohEnergy, "[J]")
+>>>>>>> 61f7746473ea7458653d4474c7d7e79ef8a5fa4d
     return(cohEnergy)
