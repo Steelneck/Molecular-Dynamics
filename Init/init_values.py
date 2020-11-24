@@ -19,7 +19,6 @@ from ase.calculators.kim.kim import KIM
 from .init_functions import set_lattice
 from .init_functions import set_lattice_const
 
-
 """ This section is where the user changes values """
 
 # Set variables for your simulation
@@ -74,35 +73,41 @@ Kim('Insert_openKIM_potential_here')
 """
 
 
-""" This section will initialize the system based on the variables """
 
-def init():
+Lattice_Const = set_lattice_const(lc_a,
+                                lc_b,
+                                lc_c,
+                                lc_alpha,
+                                lc_beta,
+                                lc_gamma)
 
-    # Set the lattice constant
-    Lattice_Const = set_lattice_const(lc_a,
-                                      lc_b,
-                                      lc_c,
-                                      lc_alpha,
-                                      lc_beta,
-                                      lc_gamma)
-    
-    # Set up a crystals
-    atoms = set_lattice(Bravais,
-                        Lattice_Const,
-                        Directions,
-                        Miller,
-                        Size_X,
-                        Size_Y,
-                        Size_Z,
-                        Symbol,
-                        Pbc) 
-    
-    # Set the momenta corresponding to T=300K 
-    # (Note: Create a higher order function)
-    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-    
-    # Describe the interatomic interactions with the Effective Medium Theory
-    # (Note: Create a higher ordet function)
-    atoms.calc = Calculator
+# Set up a crystals
+atoms = set_lattice(Bravais,
+                Lattice_Const,
+                Directions,
+                Miller,
+                Size_X,
+                Size_Y,
+                Size_Z,
+                Symbol,
+                Pbc) 
 
-    return atoms
+# Set the momenta corresponding to T=300K 
+# (Note: Create a higher order function)
+MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+
+# Describe the interatomic interactions with the Effective Medium Theory
+# (Note: Create a higher ordet function)
+atoms.calc = Calculator
+
+atoms_list.append(atoms)
+    
+# Set the momenta corresponding to T=300K 
+# (Note: Create a higher order function)
+MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+
+# Describe the interatomic interactions with the Effective Medium Theory
+# (Note: Create a higher ordet function)
+atoms.calc = Calculator
+
+return atoms
