@@ -79,36 +79,36 @@ def Lindemann(a, MSD):
 def calc_instantaneous_pressure(myAtoms, trajObject, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT)."""
     
-    equilibriumIndex = timeStepIndex
-    atomsAtEquilibrium = trajObject[equilibriumIndex]             # Retrieve atoms some amount of timesteps in when system has reached equilibrium
-    eqPos = atomsAtEquilibrium.get_positions()              # Atom 3D coords.
-    eqTemperature = atomsAtEquilibrium.get_temperature()    # Temperature at time t = equilibriumIndex * deltaT.
-    nrAtoms = len(myAtoms.get_masses())                     # This should be the amount of atoms, because one mass per atom.
-    eqPotEn = atomsAtEquilibrium.get_potential_energy()/nrAtoms     # Get potetntial energy from atoms object at time t = equilibriumIndex * deltaT, should be the same for all. 
-                                                                         # Scale with amount of atoms
-    N = len(atomsAtEquilibrium)                             # Number of atoms in object
-    eqForces = myAtoms.calc.get_forces(atomsAtEquilibrium)    # Use calculator object to get the forces on the atoms. 
+    atomsAtEquilibrium = trajObject[timeStepIndex]                  # Retrieve atoms some amount of timesteps in when system has reached equilibrium. 
+    eqPos = atomsAtEquilibrium.get_positions()                      # Atom 3D coords. Unit of length [Å] (I think).
+    eqTemperature = atomsAtEquilibrium.get_temperature()            # Temperature at time t = timeStepIndex * deltaT. Unit [K] (I think).
+    nrAtoms = len(myAtoms)                                          # This should be the amount of atoms.
+    eqPotEn = atomsAtEquilibrium.get_potential_energy()/nrAtoms     # Get potetntial energy from atoms object at time t = timeStepIndex * deltaT, should be the same for all. 
+                                                                    # Unit [eV] (I think). Scale with amount of atoms
+    N = len(atomsAtEquilibrium)                                     # Number of atoms in object
+    eqForces = myAtoms.calc.get_forces(atomsAtEquilibrium)          # Use calculator object to get the forces on the atoms. Unit: [eV/Å] (I think)
     
     # Instantaneos pressure 
-    posForce = np.sum(eqPos * eqForces, axis=1)             # Dot product of all forces and positions
-    instantP = (N * units.kB * eqTemperature) / eqPotEn + np.sum(posForce)
+    posForce = np.sum(eqPos * eqForces, axis=1)                     # Dot product of all forces and positions. Unit [eV * Å / Å]  = [eV]
+    instantP = (N * units.kB * eqTemperature) / eqPotEn + np.sum(posForce) / (3 * eqPotEn) # Unit kB: [eV/K], -> [(eV/K) * K / eV + eV / eV]
 
     #print(instantP)
     return(instantP)
 
 def calc_internal_pressure(myAtoms, trajObject):
     """ Internal pressure is the MD average of the instantaneous pressures. 
-    IMPORTANT! trajObject contains the atoms objects when the system has reached equilibrium """
-
+    IMPORTANT! trajObject must contain the atoms objects when the system has reached equilibrium,
+    in order to get internal temperature from a stable crystal. """
      
-    iterationsInEqulibrium = len(trajObject)                # Will be the amount of iterations in equilibrium
-    M = iterationsInEqulibrium                              # M = (iterations * deltaT) / deltaT
+    iterationsInEqulibrium = len(trajObject)                        # Will be the amount of iterations in equilibrium
+    M = iterationsInEqulibrium                                      # M = (iterations * deltaT) / deltaT
+
     # MD average
     allInstantPressures = 0
-    for n in range(1,iterationsInEqulibrium):
+    for n in range(1,iterationsInEqulibrium):                       # Start from 1 since it is the first element in a .traj object. 
         allInstantPressures += calc_instantaneous_pressure(myAtoms, trajObject, n)
     
-    internalPressure = allInstantPressures / M              # Internal pressure is the MD average of the instantaneous pressures
+    internalPressure = allInstantPressures / M                      # Internal pressure is the MD average of the instantaneous pressures
     print("Internal Pressure", internalPressure)
 
     return(internalPressure)
