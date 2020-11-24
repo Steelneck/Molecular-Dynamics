@@ -7,11 +7,6 @@ import os
 from tkinter import *
 import Calculations.calculations as calc
 from asap3 import Trajectory
-from pymatgen.io.cif import CifFile
-from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.core.structure import IStructure
-from pymatgen.ext.matproj import MPRester
-
 
 def main():  
     # Initiate the crystal based on the chosen variables
