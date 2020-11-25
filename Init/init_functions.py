@@ -47,7 +47,3 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     
     # Returns a dict with all the values
     return lc_constants
-
-def set_timeStepIndex(interval, steps):
-    timeStepIndex = interval/steps
-    return timeStepIndex
