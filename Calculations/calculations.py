@@ -107,12 +107,15 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     print("Internal Pressure", internalPressure)
     return(internalPressure)
 
-def internal_temperature(myAtoms, timeStepIndex):
+def internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
     """ Returns the average temperature within parameters """
-    eqTemp = 0                                             
+    traj = Trajectory(trajectoryFileName)
+    N = len(traj)
 
-    for i in range(1, timeStepIndex):                       
-        eqTemp += myAtoms.get_temperature()                 # Sum returned value from ASE function over timesteps for sampling
+    eqTemp = 0
+    for n in range(1, N):                       
+        eqTemp += traj[timeStepIndex].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
      
-    print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
-    return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
+    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
+    print("Internal temperature:", internalTemp, "[K]")  
+    return(internalTemp)

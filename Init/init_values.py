@@ -102,6 +102,5 @@ def init():
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
     atoms.calc = Calculator
-    
-    return atoms
 
+    return atoms
