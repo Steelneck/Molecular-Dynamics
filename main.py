@@ -6,8 +6,7 @@ import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
-def main():
-    
+def main():  
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
     atoms = init()
@@ -20,14 +19,12 @@ def main():
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
 
-    
-    calc.eq_traj(atoms) #Creates new .traj-file containing trajectory post equilibrium.
-    if os.path.getsize("atoms_eq.traj") != 0:
+    calc.eq_traj(atoms, "atoms.traj", "atoms_eq.traj", Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
+    if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
         traj_eq = Trajectory("atoms_eq.traj")
-        #If-statement that checks if we ever reached equilibrium.
-        MSD = calc.MSD_calc(atoms, 10)
-        D = calc.Self_diffuse(MSD, 10)
-        L = calc.Lindemann(atoms, MSD)
+        MSD = calc.MSD_calc(atoms, traj_eq, 10)
+        D = calc.Self_diffuse(traj_eq, MSD, 10)
+        L = calc.Lindemann(traj_eq, MSD, 10)
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
