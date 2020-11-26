@@ -105,6 +105,7 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     print("Internal Pressure", internalPressure)
     return(internalPressure)
 
+<<<<<<< HEAD
 def cohesive_energy(myAtoms):
     """ Returns the cohesive energy of the system """
 
@@ -113,3 +114,30 @@ def cohesive_energy(myAtoms):
 
     print("Cohesive energy:", Ecoh, "[eV/atom]")
     return Ecoh
+=======
+def internal_temperature(myAtoms, timeStepIndex):
+    """ Returns the average temperature within parameters """
+
+    eqTemp = 0                                             
+
+    for i in range(1, timeStepIndex):                       
+        eqTemp += myAtoms.get_temperature()                 # Sum returned value from ASE function over timesteps for sampling
+     
+    print("Internal temperature:", eqTemp/timeStepIndex, "[K]")  
+    return(eqTemp/timeStepIndex)                            # Average over number of samples, return a final value
+
+def cohesive_energy():
+    """ Returns the cohesive energy of the system """
+
+    alloy = bulk('Cu', 'fcc', 4.05)
+
+    EAMresult = EAM(potential='Calculations/Cu_Zhou04.eam.alloy')
+    EAMresult.write_potential('Calculations/new.eam.alloy')
+    alloy.calc = EAMresult
+    cohEnergy = alloy.get_potential_energy()
+
+    print("Cohesive energy:", cohEnergy, "[eV]")
+    return(cohEnergy)
+    
+
+>>>>>>> dbada2530d3442d7085c3c85ac90b82e2e12edb5
