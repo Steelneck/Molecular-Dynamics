@@ -31,9 +31,10 @@ def main():
         SHC = calc.Specific_Heat(atoms)
 
         # Internal temperature of the system
-        internalTemperature = calc.internal_temperature(atoms, "atoms_eq.traj", 10)
+        #internalTemperature = calc.internal_temperature(atoms, "atoms_eq.traj", 10)
         
-        
+        # Cohesive energy of the system
+        cohesiveEnergy = calc.cohesive_energy(atoms)
 
     else:
         print("System never reached equilibrium. No calculations are possible.")

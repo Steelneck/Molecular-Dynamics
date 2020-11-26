@@ -2,8 +2,6 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-from ase.calculators.eam import EAM
-from ase.build import bulk
 
 #Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
 def eq_traj(a):
@@ -107,15 +105,11 @@ def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
     print("Internal Pressure", internalPressure)
     return(internalPressure)
 
-def internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
-    """ Returns the average temperature within parameters """
-    traj = Trajectory(trajectoryFileName)
-    N = len(traj)
+def cohesive_energy(myAtoms):
+    """ Returns the cohesive energy of the system """
 
-    eqTemp = 0
-    for n in range(1, N):                       
-        eqTemp += traj[timeStepIndex].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
-     
-    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
-    print("Internal temperature:", internalTemp, "[K]")  
-    return(internalTemp)
+    #The cohesive energy is the average potential energy of the system
+    Ecoh = -myAtoms.get_potential_energy() / len(myAtoms)
+
+    print("Cohesive energy:", Ecoh, "[eV/atom]")
+    return Ecoh
