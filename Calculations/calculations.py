@@ -5,45 +5,48 @@ import numpy as np
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
+from ase.calculators.eam import EAM
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
-def eq_traj(myAtoms, trajectoryFileName, eq_trajectoryFileName, superCellSize):
-    traj_non_eq = Trajectory(trajectoryFileName) #Opens the simulation trajectory file
-    traj_eq = Trajectory(eq_trajectoryFileName, "w", myAtoms) #new equilibrium trajectory file to write atoms in equilibrium too.
-    t = 0
-    eq_index = 0
-    while t < len(traj_non_eq)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
-        P_tot_diff = 0
-        E_tot_diff = 0
-        V_diff = 0
-        for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
-            curr_element = t+i
-            next_element = t+i+1
-            E_tot_1 = (traj_non_eq[curr_element].get_potential_energy() +
-                       traj_non_eq[curr_element].get_kinetic_energy()) #Total energy of two consecutive timesteps
-            E_tot_2 = (traj_non_eq[next_element].get_potential_energy() +
-                       traj_non_eq[next_element].get_kinetic_energy()) 
-            P_inst_1 = calc_instantaneous_pressure(myAtoms, trajectoryFileName, curr_element) #instantaneous pressure at two consecutive timesteps
-            P_inst_2 = calc_instantaneous_pressure(myAtoms, trajectoryFileName, next_element) 
-            V_1 = traj_non_eq[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
-            V_2 = traj_non_eq[next_element].get_volume() * superCellSize 
-            V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
-            P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
-            E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
+def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
+    try:
+        t = 0
+        eq_index = 0
+        while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
+            P_tot_diff = 0
+            E_tot_diff = 0
+            V_diff = 0
+            for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
+                curr_element = t+i
+                next_element = t+i+1
+                E_tot_1 = (trajObject[curr_element].get_potential_energy() +
+                           trajObject[curr_element].get_kinetic_energy()) #Total energy of two consecutive timesteps
+                E_tot_2 = (trajObject[next_element].get_potential_energy() +
+                           trajObject[next_element].get_kinetic_energy()) 
+                #P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, curr_element) #instantaneous pressure at two consecutive timesteps
+                #P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, next_element) 
+                V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
+                V_2 = trajObject[next_element].get_volume() * superCellSize 
+                V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
+                #P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
+                E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
             
-        P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
-        V_diff_mean = V_diff/3
-        E_tot_diff_mean = E_tot_diff/3
-        
-        if E_tot_diff_mean < 0.1 and V_diff_mean < 0.1: #Criteria for equilibrium.
-            eq_index = t #saves index of first atom that has reached equilibrium.
-            break
-        t += 1
-    t = len(traj_non_eq) - 1
-    while t > eq_index: #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
-        traj_eq.write(traj_non_eq[t])
-        t -= 1
-    
+                #P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
+                V_diff_mean = V_diff/3
+                E_tot_diff_mean = E_tot_diff/3
+                
+                if E_tot_diff_mean < 0.1 and V_diff_mean < 0.1: #Criteria for equilibrium.
+                    eq_index = t #saves index of first atom that has reached equilibrium.
+                    break
+            t += 1
+        t = len(trajObject) - 1
+        while t > eq_index: #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
+            eq_trajObject.write(trajObject[t])
+            t -= 1
+    except Exception as e:
+        print("An error occured when checking equilibrium conditions")
+        return(None)
+    return(eq_index)
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Specific_Heat(atoms):
     
@@ -82,38 +85,46 @@ def Specific_Heat(atoms):
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
 def MSD_calc(myAtoms, trajObject, timeStepIndex):
     try:
-        myAtoms.get_masses() # Tries if the attribute exists, skips except if it does
-    except AttributeError:
-        print("You have not entered a valid system.") # Message for user if no attribute
-        return False # Ends the function
-    
-    time = len(trajObject)-timeStepIndex
-    pos_eq = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-    pos_t = trajObject[1].get_positions() #position of atoms at time t
-    diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
-    diff_sq = np.absolute(diff)**2 
-    MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
+        time = len(trajObject)-timeStepIndex
+        pos_eq = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
+        pos_t = trajObject[1].get_positions() #position of atoms at time t
+        diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
+        diff_sq = np.absolute(diff)**2 
+        MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
+    except Exception as e:
+        print("An error occured when calculating the mean square displacement.")
+        return(None)
+
     print("MSD = ", MSD)
     return(MSD)
 
+"""Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
+
 def Self_diffuse(trajObject, MSD, timeStepIndex):
-    """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
-    time = len(trajObject)-timeStepIndex #T
-    D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
+    try:
+        time = len(trajObject)-timeStepIndex #T
+        D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
+    except Exception as e:
+        print("An error ocurred when calculating the self diffusion coefficient.")
+        return(None)
     print("D = ", D)
     return(D)
-
+    
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
 def Lindemann(trajObject, MSD, timeStepIndex):
-     nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
-     d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
-     L = MSD/d #Lindemann criterion. Expect melting when L>0.1
-     if L > 0.1:
-         print("MELTING!")
-         return True 
-     else:
-         print("NOT MELTING!")
-         return False
+    try:
+        nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
+        d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
+        L = MSD/d #Lindemann criterion. Expect melting when L>0.1
+    except Exception as e:
+        print("An error occured when checking the Lindemann criterion.")
+        return(None)
+    if L > 0.1:
+            print("MELTING!")
+            return True 
+    else:
+        print("NOT MELTING!")
+        return False
 
 def calc_instantaneous_pressure(myAtoms, trajectoryFileName, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT)."""
