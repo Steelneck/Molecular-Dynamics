@@ -33,7 +33,8 @@ def main():
         # Internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, "atoms_eq.traj", 10)
         
-        
+        # Debye temperature of the system
+        debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
 
     else:
         print("System never reached equilibrium. No calculations are possible.")

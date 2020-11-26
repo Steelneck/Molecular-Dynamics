@@ -4,6 +4,7 @@ import numpy as np
 from asap3 import Trajectory, FullNeighborList
 from ase.calculators.eam import EAM
 from ase.build import bulk
+from ase.phonons import Phonons
 
 #Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
 def eq_traj(a):
@@ -119,3 +120,20 @@ def internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
+
+def debye_temperature(myAtoms, trajectoryFileName, timeStepIndex, calculator):
+    """ Returns the Debye temperature of the system """
+    traj = Trajectory(trajectoryFileName)
+    N = 5
+    ph = Phonons(myAtoms, calculator)
+    ph.run()
+
+    ph.read(acoustic=True)
+    ph.clean()
+
+    dos = ph.get_dos()
+    debyeFreq = (3*max(dos)/(4*3.14))^(1/3) # * speedOfSound 
+    debyeTemp = 6.626*10^(-34)*debyeFreq/(1.3807*10^(-23))
+
+    print("Debye temperature:", debyeTemp, "[K]")
+    return(debyeTemp)
