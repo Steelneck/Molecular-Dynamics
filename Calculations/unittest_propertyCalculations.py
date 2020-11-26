@@ -45,41 +45,41 @@ class PropertyCalculationTests(unittest.TestCase):
  
     """Unittests for specific heat"""
     
-#    def test_specific_heat(self):
-#        self.assertIsInstance(Specific_Heat(atoms), numpy.float64)
+    def test_specific_heat(self):
+        self.assertIsInstance(Specific_Heat(atoms, trajObject), numpy.float64)
         
-#    def test_specific_heat_not_bravice_lattice(self):
-#        self.assertFalse(Specific_Heat(not_bravice_lattice))
+    def test_specific_heat_not_bravice_lattice(self):
+        self.assertFalse(Specific_Heat(not_bravice_lattice, trajObject))
 
     """Unittests for instantaneous and internal pressure"""
     
-#    def test_instantaneous_pressure_return_type(self):
-#        self.assertIsInstance(calc_instantaneous_pressure(atoms, trajObject, 1000, 1), float)
+    def test_instantaneous_pressure_return_type(self):
+        self.assertIsInstance(calc_instantaneous_pressure(atoms, trajObject, 1000, 1), float)
 
-#    def test_instantaneous_pressure_wrong_input_argument(self):
-#        instPressure1 = calc_instantaneous_pressure(None, trajObject, 1000, 1)
-#        instPressure2 = calc_instantaneous_pressure(atoms, None, 1000, 1)
-#        instPressure3 = calc_instantaneous_pressure(atoms, trajObject, None, 1)
-#        instPressure4 = calc_instantaneous_pressure(atoms, trajObject, 1000, None)
+    def test_instantaneous_pressure_wrong_input_argument(self):
+        instPressure1 = calc_instantaneous_pressure(None, trajObject, 1000, 1)
+        instPressure2 = calc_instantaneous_pressure(atoms, None, 1000, 1)
+        instPressure3 = calc_instantaneous_pressure(atoms, trajObject, None, 1)
+        instPressure4 = calc_instantaneous_pressure(atoms, trajObject, 1000, None)
         
         # Then all should return None
-#        self.assertIsNone(instPressure1)
-#        self.assertIsNone(instPressure2)
-#        self.assertIsNone(instPressure3)
-#        self.assertIsNone(instPressure4)
+        self.assertIsNone(instPressure1)
+        self.assertIsNone(instPressure2)
+        self.assertIsNone(instPressure3)
+        self.assertIsNone(instPressure4)
 
-#    def test_internal_pressure_return_type(self):
-#        self.assertIsInstance(calc_internal_pressure(atoms, trajObject, 1000), float)
+    def test_internal_pressure_return_type(self):
+        self.assertIsInstance(calc_internal_pressure(atoms, trajObject, 1000), float)
 
-#    def test_internal_pressure_wrong_input_argument(self):
-#        internalPressure1 = calc_internal_pressure(None, trajObject, 1000)
-#        internalPressure2 = calc_internal_pressure(atoms, None, 1000)
-#        internalPressure3 = calc_internal_pressure(atoms, trajObject, None)
+    def test_internal_pressure_wrong_input_argument(self):
+        internalPressure1 = calc_internal_pressure(None, trajObject, 1000)
+        internalPressure2 = calc_internal_pressure(atoms, None, 1000)
+        internalPressure3 = calc_internal_pressure(atoms, trajObject, None)
         
         # Then all should return None
-#        self.assertIsNone(internalPressure1)
-#        self.assertIsNone(internalPressure2)
-#        self.assertIsNone(internalPressure3)
+        self.assertIsNone(internalPressure1)
+        self.assertIsNone(internalPressure2)
+        self.assertIsNone(internalPressure3)
 
     """Unittest for eq_calc"""
 

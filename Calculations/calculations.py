@@ -23,47 +23,44 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
                            trajObject[curr_element].get_kinetic_energy()) #Total energy of two consecutive timesteps
                 E_tot_2 = (trajObject[next_element].get_potential_energy() +
                            trajObject[next_element].get_kinetic_energy()) 
-                #P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, curr_element) #instantaneous pressure at two consecutive timesteps
-                #P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, next_element) 
+                P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
+                P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
                 V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
                 V_2 = trajObject[next_element].get_volume() * superCellSize 
                 V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
-                #P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
+                P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
                 E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
-            
-                #P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
+                P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
                 V_diff_mean = V_diff/3
                 E_tot_diff_mean = E_tot_diff/3
-                
-                if E_tot_diff_mean < 0.1 and V_diff_mean < 0.1: #Criteria for equilibrium.
-                    eq_index = t #saves index of first atom that has reached equilibrium.
-                    break
+            if E_tot_diff_mean < 0.02 and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
+                eq_index = t #saves index of first atom that has reached equilibrium.
+                break
             t += 1
         t = len(trajObject) - 1
-        while t > eq_index: #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
-            eq_trajObject.write(trajObject[t])
-            t -= 1
+        for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
+            eq_trajObject.write(trajObject[i])
     except Exception as e:
-        print("An error occured when checking equilibrium conditions")
+        print("An error occured when checking equilibrium conditions", e)
         return(None)
     return(eq_index)
 
+
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(a):
+def Specific_Heat(a, trajObject):
     
     try:
         a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
-    traj = Trajectory("atoms_eq.traj")
     bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
-    temp_diff = (traj[1].get_kinetic_energy() /len(traj[1]) - traj[0].get_kinetic_energy() /len(traj[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
-    pot_energy_diff = (traj[1].get_potential_energy() /len(traj[1]) 
-                        - traj[0].get_potential_energy() /len(traj[0])) # potential energy difference when ystem has reached equilibrium
+    temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
+    pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
+                        - trajObject[0].get_potential_energy() /len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
 
-    kin_energy_diff = (traj[1].get_kinetic_energy() /len(traj[1]) 
-                            - traj[0].get_kinetic_energy()/len(traj[0])) # potential energy difference when ystem has reached equilibrium
+    kin_energy_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) 
+                            - trajObject[0].get_kinetic_energy()/len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
     
     heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
     print("C_p = ", heat_capcity, "[J/K*Kg]")
@@ -80,9 +77,8 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
     except Exception as e:
-        print("An error occured when calculating the mean square displacement.")
+        print("An error occured when calculating the mean square displacement.", e)
         return(None)
-
     print("MSD = ", MSD, "[Å²]")
     return(MSD)
 
@@ -90,10 +86,9 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 def Self_diffuse(trajObject, MSD, timeStepIndex):
     try:
-        time = len(trajObject)-timeStepIndex #T
-        D = MSD/(6*time) #How to connect mean squre displacement to self-diffusion coefficient.
+        D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
-        print("An error ocurred when calculating the self diffusion coefficient.")
+        print("An error ocurred when calculating the self diffusion coefficient.", e)
         return(None)
     print("D = ", D, "[Å²/fs]")
     return(D)
@@ -105,7 +100,7 @@ def Lindemann(trajObject, MSD, timeStepIndex):
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
         L = MSD/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
-        print("An error occured when checking the Lindemann criterion.")
+        print("An error occured when checking the Lindemann criterion.", e)
         return(None)
     if L > 0.1:
             print("MELTING!")
