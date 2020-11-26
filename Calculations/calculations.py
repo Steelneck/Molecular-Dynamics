@@ -47,40 +47,28 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
         print("An error occured when checking equilibrium conditions")
         return(None)
     return(eq_index)
+
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(atoms):
+def Specific_Heat(a):
     
     try:
-        atoms.get_masses() # Tries if the attribute exists, skips except if it does
+        a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
+    traj = Trajectory("atoms_eq.traj")
+    bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
+    temp_diff = (traj[1].get_kinetic_energy() /len(traj[1]) - traj[0].get_kinetic_energy() /len(traj[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
+    pot_energy_diff = (traj[1].get_potential_energy() /len(traj[1]) 
+                        - traj[0].get_potential_energy() /len(traj[0])) # potential energy difference when ystem has reached equilibrium
 
-    # Calculates the bulk mass by taking the sum of all the atom masses. 
-    bulk_mass=sum(atoms.get_masses())*1.6605402*10**(-27) # converts from atomic mass units to kg
-
-    # Uses the lennard jones potential through openKIM
-    calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
-    atoms.calc = calc
-
-    # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
-
-    # We want to run MD with constant temperture using the Langevin algorithm.
-    dyn = Langevin(atoms, 5 * units.fs, units.kB * 300, 0.002)
-
-    temp_vec = np.array([])
-    eng_vec = np.array([])
-
-    #MD run with 10 instances in between. Calculates the heat capcity by taking the difference in energy divided by the difference in temperature and 
-    #divide everything with the mass of the crystal. 
-    for i in range(2):
-        dyn.run(10)
-        temp_vec = np.append(temp_vec, (atoms.get_kinetic_energy() / len(atoms)) / (1.5 * units.kB))
-        eng_vec = np.append(eng_vec, (atoms.get_potential_energy() / len(atoms)) + (atoms.get_kinetic_energy() / len(atoms)))
+    kin_energy_diff = (traj[1].get_kinetic_energy() /len(traj[1]) 
+                            - traj[0].get_kinetic_energy()/len(traj[0])) # potential energy difference when ystem has reached equilibrium
     
-    heat_capcity = ((eng_vec[1] - eng_vec[0])*(1.6021765*10**(-19)))/(temp_vec[1] - temp_vec[0]) / bulk_mass
+    heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
+    print("C_p = ", heat_capcity, "[J/K*Kg]")
     return heat_capcity
+
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
 def MSD_calc(myAtoms, trajObject, timeStepIndex):
@@ -95,7 +83,7 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
         print("An error occured when calculating the mean square displacement.")
         return(None)
 
-    print("MSD = ", MSD)
+    print("MSD = ", MSD, "[Å²]")
     return(MSD)
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
@@ -107,7 +95,7 @@ def Self_diffuse(trajObject, MSD, timeStepIndex):
     except Exception as e:
         print("An error ocurred when calculating the self diffusion coefficient.")
         return(None)
-    print("D = ", D)
+    print("D = ", D, "[Å²/fs]")
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
@@ -126,33 +114,64 @@ def Lindemann(trajObject, MSD, timeStepIndex):
         print("NOT MELTING!")
         return False
 
-def calc_instantaneous_pressure(myAtoms, trajectoryFileName, timeStepIndex):
-    """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT)."""
-    traj = Trajectory(trajectoryFileName)
-    equilibriumIndex = timeStepIndex
-    atomsAtEquilibrium = traj[equilibriumIndex]             # Retrieve atoms some amount of timesteps in when system has reached equilibrium
-    eqPos = atomsAtEquilibrium.get_positions()              # Atom 3D coords.
-    eqTemperature = atomsAtEquilibrium.get_temperature()    # Temperature at time t = equilibriumIndex * deltaT.
-    eqPotEn = atomsAtEquilibrium.get_potential_energy()     # Get potetntial energy from atoms object at time t = equilibriumIndex * deltaT, should be the same for all. 
-    N = len(atomsAtEquilibrium)                             # Number of atoms in object
-    eqForces = myAtoms.calc.get_forces(atomsAtEquilibrium)    # Use calculator object to get the forces on the atoms. 
-    
-    # Instantaneos pressure 
-    posForce = np.sum(eqPos * eqForces, axis=1)             # Dot product of all forces and positions
-    instantP = (N * units.kB * eqTemperature) / eqPotEn + np.sum(posForce)
+def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepIndex):
+    """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT).
+    superCellSize is the repetition of unit cell in each direction in 3D space."""
+    try: 
+        atomsAtEquilibrium = trajObject[timeStepIndex]                  # Retrieve atoms some amount of timesteps in when system has reached equilibrium. 
+        eqPos = atomsAtEquilibrium.get_positions()                      # Atom 3D coords. Unit of length [Å] (I think).
+        eqTemperature = atomsAtEquilibrium.get_temperature()            # Temperature at time t = timeStepIndex * deltaT. Unit [K] (I think).
+
+        eqVolume = atomsAtEquilibrium.get_volume() * superCellSize      # Get volume from atoms object at time t = timeStepIndex * deltaT. 
+                                                                        # By getting the unit cell volume and scale with repetition. Unit [Å^3] I think.
+                                                                        # This might be constant always but not sure for defect systems... 
+        
+        N = len(atomsAtEquilibrium)                                     # Number of atoms in object
+        eqForces = myAtoms.calc.get_forces(atomsAtEquilibrium)          # Use calculator object to get the forces on the atoms. Unit: [eV/Å] (I think)
+        
+        # Instantaneos pressure 
+        posForce = np.sum(eqPos * eqForces, axis=1)                     # Dot product of all forces and positions. Unit [eV * Å / Å]  = [eV]
+        instantP = (N * units.kB * eqTemperature) / eqVolume + np.sum(posForce) / (3 * eqVolume) # Unit kB: [eV/K], -> [(eV/K) * K / Å^3 + eV / Å^3] = [eV / Å^3]
+    except Exception as e:
+        print("An error occured when calculating instantaneos pressure:", e)
+        return(None)
 
     #print(instantP)
     return(instantP)
 
-def calc_internal_pressure(myAtoms, trajectoryFileName, iterations):
-    """ Internal pressure is the MD average of the instantaneous pressures """
-    M = iterations                                          # M = (iterations * deltaT) / deltaT
+def calc_internal_pressure(myAtoms, trajObject, superCellSize):
+    """ Internal pressure is the MD average of the instantaneous pressures. 
+    IMPORTANT! trajObject must contain the atoms objects when the system has reached equilibrium,
+    in order to get internal temperature from a stable crystal. 
+    superCellSize is the repetition of unit cell in each direction in 3D space."""
+    try:  
+        iterationsInEqulibrium = len(trajObject)                        # Will be the amount of iterations in equilibrium
+        M = iterationsInEqulibrium                                      # M = (iterations * deltaT) / deltaT
 
-    # MD average
-    allInstantPressures = 0
-    for n in range(1,iterations):
-        allInstantPressures += calc_instantaneous_pressure(myAtoms, trajectoryFileName, n)
+        # MD average
+        allInstantPressures = 0
+        for n in range(1,iterationsInEqulibrium):                       # Start from 1 since it is the first element in a .traj object. 
+            instPressure = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize,  n)
+            if instPressure is not None:
+                allInstantPressures += instPressure
+            else:
+                raise Exception("Instantenous pressure returned: None")
+        
+        internalPressure = allInstantPressures / M                      # Internal pressure is the MD average of the instantaneous pressures. 
+                                                                        # Unit summation of instantaneosPressures => [eV / Å^3]
+        print("Internal Pressure:", internalPressure, "[eV / Å^3]")
+        return(internalPressure)
+    except Exception as e:
+        print("An error occured in internal pressure function:", e)
+        return(None)
+
+def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+    """ Returns the average temperature within parameters """
     
-    internalPressure = allInstantPressures / M              # Internal pressure is the MD average of the instantaneous pressures
-    print("Internal Pressure", internalPressure)
-    return(internalPressure)
+    for i in range(1,timeStepIndex):
+        sumTemp = sum(myAtoms.get_temperature())     
+        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
+
+    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
+    print("Average internal temperature:", avgTemperature)  
+    return(avgTemperature)

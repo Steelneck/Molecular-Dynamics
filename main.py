@@ -28,6 +28,8 @@ def main():
         MSD = calc.MSD_calc(atoms, traj_eq, 10)
         D = calc.Self_diffuse(traj_eq, MSD, 10)
         L = calc.Lindemann(traj_eq, MSD, 10)
+        SHC = calc.Specific_Heat(atoms)
+        internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 
