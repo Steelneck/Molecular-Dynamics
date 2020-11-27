@@ -29,17 +29,13 @@ def main():
         D = calc.Self_diffuse(MSD, 10)
         L = calc.Lindemann(atoms, MSD)
         SHC = calc.Specific_Heat(atoms)
-<<<<<<< HEAD
 
         # Internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, "atoms_eq.traj", 10)
         
         # Debye temperature of the system
-        debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
+        debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10)
 
-=======
-        internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
->>>>>>> 74d35f6e20689d81e1491fc0f09675c936e7b3af
     else:
         print("System never reached equilibrium. No calculations are possible.")
 
