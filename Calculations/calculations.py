@@ -2,9 +2,6 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-from ase.calculators.eam import EAM
-from ase.build import bulk
-from ase.phonons import Phonons
 
 #Function that takes the atoms-objects that have reached equilibrium and writes them over to a new .traj-file.
 def eq_traj(a):
@@ -128,32 +125,15 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
+def internal_temperature(myAtoms, traj, timeStepIndex):
     """ Returns the average temperature within parameters """
-    traj = Trajectory(trajectoryFileName)
     N = len(traj)
 
     eqTemp = 0
     for n in range(1, N):                       
-        eqTemp += traj[timeStepIndex].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
+        eqTemp += traj[n].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
      
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
 
-def debye_temperature(myAtoms, trajectoryFileName, timeStepIndex, calculator):
-    """ Returns the Debye temperature of the system """
-    traj = Trajectory(trajectoryFileName)
-    N = 5
-    ph = Phonons(myAtoms, calculator)
-    ph.run()
-
-    ph.read(acoustic=True)
-    ph.clean()
-
-    dos = ph.get_dos()
-    debyeFreq = (3*max(dos)/(4*3.14))^(1/3) # * speedOfSound 
-    debyeTemp = 6.626*10^(-34)*debyeFreq/(1.3807*10^(-23))
-
-    print("Debye temperature:", debyeTemp, "[K]")
-    return(debyeTemp)
