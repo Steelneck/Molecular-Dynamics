@@ -31,14 +31,14 @@ def main():
         SHC = calc.Specific_Heat(atoms)
 
         # Internal temperature of the system
-        #internalTemperature = calc.internal_temperature(atoms, "atoms_eq.traj", 10)
+        internalTemperature = calc.internal_temperature(atoms, traj_eq, 10)
         
-        # Cohesive energy of the system
-        cohesiveEnergy = calc.cohesive_energy(atoms)
+        # Debye temperature of the system
+        debyeTemperature = calc.debye_temperature(atoms, traj_eq, 10)
 
-        # Cohesive energy calculated from alloy file
-        cohesiveTemperature = calc.cohesive_energy()
-
+        cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq, 10)
+        
+        internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
     else:
         print("System never reached equilibrium. No calculations are possible.")
 

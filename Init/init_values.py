@@ -40,6 +40,8 @@ lc_beta = 0
 lc_gamma = 0
 Temperature = 300
 Calculator = EMT()
+steps = 1000
+interval = 10
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
