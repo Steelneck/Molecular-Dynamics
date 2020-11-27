@@ -1,11 +1,17 @@
 import sys, unittest, os
 
 from ase.lattice.cubic import FaceCenteredCubic
+<<<<<<< HEAD
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import *
+=======
+from calculations import Specific_Heat
+from calculations import calc_instantaneous_pressure, calc_internal_pressure
+from calculations import internal_temperature
+>>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
 import numpy
 from asap3 import Trajectory, EMT
 
@@ -123,6 +129,11 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10), 10), int)
+    def test_internal_temperature(self):
+        self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
+
+    def test_internal_temperature_not_negative(self):
+        self.assertGreaterEqual(internal_temperature(atoms, trajObject, 1000), 0)
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):

@@ -40,6 +40,8 @@ lc_beta = 0
 lc_gamma = 0
 Temperature = 300
 Calculator = EMT()
+steps = 1000
+interval = 10
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -102,6 +104,5 @@ def init():
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
     atoms.calc = Calculator
-    
-    return atoms
 
+    return atoms

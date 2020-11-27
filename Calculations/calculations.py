@@ -2,7 +2,10 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
+<<<<<<< HEAD
 from ase.calculators.eam import EAM
+=======
+>>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -151,14 +154,16 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
     except Exception as e:
         print("An error occured in internal pressure function:", e)
         return(None)
-      
-def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
-    """ Returns the average temperature within parameters """
-    
-    for i in range(1,timeStepIndex):
-        sumTemp = sum(myAtoms.get_temperature())     
-        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
 
-    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
-    print("Average internal temperature:", avgTemperature)  
-    return(avgTemperature)
+def internal_temperature(myAtoms, traj, timeStepIndex):
+    """ Returns the average temperature within parameters """
+    N = len(traj)
+
+    eqTemp = 0
+    for n in range(1, N):                       
+        eqTemp += traj[n].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
+     
+    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
+    print("Internal temperature:", internalTemp, "[K]")  
+    return(internalTemp)
+
