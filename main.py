@@ -18,7 +18,7 @@ def main():
 
     dyn.attach(traj.write, interval=10)
     dyn.run(200)
-
+    
     traj = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
     
@@ -29,7 +29,7 @@ def main():
         D = calc.Self_diffuse(traj_eq, MSD, 10)
         L = calc.Lindemann(traj_eq, MSD, 10)
         SHC = calc.Specific_Heat(atoms, traj_eq)
-        internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
+        Internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
     else:
         print("Something went wront, your system never reached equilibrium. No calculations are possible.")
 

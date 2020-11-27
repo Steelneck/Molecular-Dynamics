@@ -5,13 +5,9 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
-from calculations import Specific_Heat
-from calculations import calc_instantaneous_pressure, calc_internal_pressure
-from calculations import eq_traj
-from calculations import MSD_calc
-from calculations import Self_diffuse
-from calculations import Lindemann
+from calculations import *
 import numpy
+from asap3 import Trajectory, EMT
 
 from asap3 import Trajectory, EMT
 
@@ -22,7 +18,9 @@ atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
 
 not_bravice_lattice = 1
 
+#Attach calculator to the atoms object.
 atoms.calc = EMT()
+
 MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
 
 # We want to run MD with constant energy using the VelocityVerlet algorithm.
@@ -37,9 +35,6 @@ dyn.run(200)
 trajObject = Trajectory("test.traj")
 
 eq_trajObject = Trajectory("test_eq.traj", "w", atoms)
-
-# Attach calculator to atoms object
-atoms.calc = EMT()
 
 class PropertyCalculationTests(unittest.TestCase):
  

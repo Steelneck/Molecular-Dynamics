@@ -1,9 +1,6 @@
 from ase import units
 from ase.data import atomic_masses, atomic_numbers
-from ase.md.langevin import Langevin
 import numpy as np
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
-from ase.calculators.kim.kim import KIM
 from asap3 import Trajectory, FullNeighborList
 from ase.calculators.eam import EAM
 
@@ -30,9 +27,9 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
                 V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
                 P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
                 E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
-                P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
-                V_diff_mean = V_diff/3
-                E_tot_diff_mean = E_tot_diff/3
+            P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
+            V_diff_mean = V_diff/3
+            E_tot_diff_mean = E_tot_diff/3
             if E_tot_diff_mean < 0.02 and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
@@ -45,15 +42,14 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
         return(None)
     return(eq_index)
 
-
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(a, trajObject):
-    
+def Specific_Heat(myAtoms, trajObject):   
     try:
         a.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
+      
     bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
     temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
     pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
@@ -116,7 +112,6 @@ def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepInde
         atomsAtEquilibrium = trajObject[timeStepIndex]                  # Retrieve atoms some amount of timesteps in when system has reached equilibrium. 
         eqPos = atomsAtEquilibrium.get_positions()                      # Atom 3D coords. Unit of length [Å] (I think).
         eqTemperature = atomsAtEquilibrium.get_temperature()            # Temperature at time t = timeStepIndex * deltaT. Unit [K] (I think).
-
         eqVolume = atomsAtEquilibrium.get_volume() * superCellSize      # Get volume from atoms object at time t = timeStepIndex * deltaT. 
                                                                         # By getting the unit cell volume and scale with repetition. Unit [Å^3] I think.
                                                                         # This might be constant always but not sure for defect systems... 
@@ -142,7 +137,7 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
     try:  
         iterationsInEqulibrium = len(trajObject)                        # Will be the amount of iterations in equilibrium
         M = iterationsInEqulibrium                                      # M = (iterations * deltaT) / deltaT
-
+        
         # MD average
         allInstantPressures = 0
         for n in range(1,iterationsInEqulibrium):                       # Start from 1 since it is the first element in a .traj object. 
@@ -159,7 +154,7 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
     except Exception as e:
         print("An error occured in internal pressure function:", e)
         return(None)
-
+      
 def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
     """ Returns the average temperature within parameters """
     
