@@ -16,10 +16,8 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
             for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
                 curr_element = t+i
                 next_element = t+i+1
-                E_tot_1 = (trajObject[curr_element].get_potential_energy() +
-                           trajObject[curr_element].get_kinetic_energy()) #Total energy of two consecutive timesteps
-                E_tot_2 = (trajObject[next_element].get_potential_energy() +
-                           trajObject[next_element].get_kinetic_energy()) 
+                E_tot_1 = trajObject[curr_element].get_total_energy() #Total energy of two consecutive timesteps
+                E_tot_2 = trajObject[next_element].get_total_energy()
                 P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
                 P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
                 V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
@@ -40,17 +38,16 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
     except Exception as e:
         print("An error occured when checking equilibrium conditions", e)
         return(None)
-    return(eq_index)
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Specific_Heat(myAtoms, trajObject):   
     try:
-        a.get_masses() # Tries if the attribute exists, skips except if it does
+        myAtoms.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
       
-    bulk_mass=sum(a.get_masses())*1.6605402*10**(-27)
+    bulk_mass=sum(myAtoms.get_masses())*1.6605402*10**(-27)
     temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
     pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
                         - trajObject[0].get_potential_energy() /len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
