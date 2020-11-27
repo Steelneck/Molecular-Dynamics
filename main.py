@@ -36,7 +36,7 @@ def main():
         internalTemperature = calc.internal_temperature(atoms, traj_eq, 10)
         
         # Debye temperature of the system
-        debyeTemperature = calc.debye_temperature(atoms, traj_eq, 10)
+        #debyeTemperature = calc.debye_temperature(atoms, traj_eq, 10)
 
         cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq, 10)
         
