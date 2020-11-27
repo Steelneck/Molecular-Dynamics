@@ -1,8 +1,14 @@
 import sys, unittest
+
 from ase.lattice.cubic import FaceCenteredCubic
-from calculations import Specific_Heat
-from calculations import calc_instantaneous_pressure, calc_internal_pressure
+from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+from ase.md.verlet import VelocityVerlet
+from ase import units
+
+from calculations import *
 import numpy
+from asap3 import Trajectory, EMT
+
 from asap3 import Trajectory, EMT
 
 atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
@@ -12,26 +18,36 @@ atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
 
 not_bravice_lattice = 1
 
+#Attach calculator to the atoms object.
+atoms.calc = EMT()
+
+MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
+
+# We want to run MD with constant energy using the VelocityVerlet algorithm.
+dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+
 # Create trajectory object
 trajWriter = Trajectory("test.traj", "w", atoms)
-trajWriter.write(atoms)
-trajWriter.write(atoms)
-trajWriter.write(atoms)
-trajWriter.write(atoms)
+
+dyn.attach(trajWriter.write, interval=10)
+dyn.run(200)
+
 trajObject = Trajectory("test.traj")
 
-# Attach calculator to atoms object
-atoms.calc = EMT()
+eq_trajObject = Trajectory("test_eq.traj", "w", atoms)
 
 class PropertyCalculationTests(unittest.TestCase):
  
-
+    """Unittests for specific heat"""
+    
     def test_specific_heat(self):
-        self.assertIsInstance(Specific_Heat(atoms), numpy.float64)
+        self.assertIsInstance(Specific_Heat(atoms, trajObject), numpy.float64)
         
     def test_specific_heat_not_bravice_lattice(self):
-        self.assertFalse(Specific_Heat(not_bravice_lattice))
+        self.assertFalse(Specific_Heat(not_bravice_lattice, trajObject))
 
+    """Unittests for instantaneous and internal pressure"""
+    
     def test_instantaneous_pressure_return_type(self):
         self.assertIsInstance(calc_instantaneous_pressure(atoms, trajObject, 1000, 1), float)
 
@@ -60,8 +76,62 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(internalPressure2)
         self.assertIsNone(internalPressure3)
 
+    """Unittest for eq_calc"""
 
+    def test_eq_calc_return_type(self):
+        self.assertIsInstance(eq_traj(atoms, trajObject, eq_trajObject, 3*3*3), int)
 
+    #eq_traj doesnt use atoms yet, so no point in testing that input
+    def test_eq_calc_wrong_input_argument(self):
+        eq_traj1 = eq_traj(atoms, None, eq_trajObject, 3*3*3)
+        eq_traj2 = eq_traj(atoms, trajObject, None, 3*3*3)
+        eq_traj3 = eq_traj(atoms, trajObject, eq_trajObject, None)
+
+        #All should return None
+        self.assertIsNone(eq_traj1)
+        self.assertIsNone(eq_traj2)
+        self.assertIsNone(eq_traj3)
+
+    """Unittests for calculation of mean square displacement"""
+
+    def test_MSD_calc_return_type(self):
+      	self.assertIsInstance(MSD_calc(atoms, trajObject, 10), float)
+
+    #MSD doesnt use the time input yet so no point in testing it    
+    def test_MSD_calc_wrong_input_argument(self):   
+        MSD1 = MSD_calc(None, trajObject, 10)
+        MSD2 = MSD_calc(atoms, None, 10)
+
+        #All should return None
+        self.assertIsNone(MSD1)
+        self.assertIsNone(MSD2)
+
+    """Unittests for calculation of Self diffusion coefficient"""
+
+    def test_self_diffuse_return_type(self):
+        self.assertIsInstance(Self_diffuse(trajObject, MSD_calc(atoms, trajObject, 10), 10), float)
+
+    #Self_diffuse doesnt use the time input yet so no point in testing it 
+    def test_Self_diffuse_wrong_input_argument(self):
+        D1 = Self_diffuse(None, MSD_calc(atoms, trajObject, 10), 10)
+        D2 = Self_diffuse(trajObject, None, 10)
+
+        #All should return None
+        self.assertIsNone(D1)
+        self.assertIsNone(D2)
+        
+    def test_Lindemann_return_type(self):
+        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10), 10), int)
+
+    #Lindemann doesnt use the time input yet so no point in testing it 
+    def test_Lindemann_wrong_input_argument(self):
+        L1 =Lindemann(None, MSD_calc(atoms, trajObject, 10), 10)
+        L2 =Lindemann(trajObject, None, 10)
+
+        #All should return None
+        self.assertIsNone(L1)
+        self.assertIsNone(L2)
+    
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]
     testsuite = unittest.TestSuite(tests)
