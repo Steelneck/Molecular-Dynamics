@@ -2,6 +2,7 @@ import sys, unittest
 from ase.lattice.cubic import FaceCenteredCubic
 from calculations import Specific_Heat
 from calculations import calc_instantaneous_pressure, calc_internal_pressure
+from calculations import internal_temperature, debye_temperature
 import numpy
 from asap3 import Trajectory, EMT
 
@@ -60,7 +61,17 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(internalPressure2)
         self.assertIsNone(internalPressure3)
 
+    def test_internal_temperature(self):
+        self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
 
+    def test_internal_temperature_not_negative(self):
+        self.assertGreaterEqual(internal_temperature(atoms, trajObject, 1000), 0)
+
+    def test_debye_temperature(self):
+        self.assertIsInstance(debye_temperature(atoms, trajObject, 1000), float)
+
+    def test_debye_temperature_not_negative(self):
+        self.assertGreaterEqual(debye_temperature(atoms, trajObject, 1000), 0)
 
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]

@@ -125,23 +125,23 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, trajectoryFile, timeStepIndex):
+def internal_temperature(myAtoms, traj_eq, timeStepIndex):
     """ Returns the average temperature within parameters """
-    traj = Trajectory(trajectoryFile)
-    N = len(traj)
+    #traj = Trajectory(trajectoryFile)
+    N = len(traj_eq)
 
     eqTemp = 0
     for n in range(1, N):                       
-        eqTemp += traj[n].get_temperature()                  # Sum returned value from ASE function over timesteps for sampling
+        eqTemp += traj_eq[n].get_temperature()                  # Sum returned value from ASE function over timesteps for sampling
      
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
 
-def debye_temperature(myAtoms, trajectoryFile, timeStepIndex):
+def debye_temperature(myAtoms, traj_eq, timeStepIndex):
     """ Returns the Debye temperature of the system """
-    traj = Trajectory(trajectoryFile)
-    N = len(traj)
+    #traj = Trajectory(trajectoryFile)
+    N = len(traj_eq)
 
     # Set values of necessary constants in eV-units
     hbar = 6.582119569*10**(-34)
@@ -151,8 +151,8 @@ def debye_temperature(myAtoms, trajectoryFile, timeStepIndex):
 
     eqDebyeTemp = 0.0
     for n in range(1, N):
-        T = traj[n].get_temperature()
-        m = sum(traj[n].get_masses())
+        T = traj_eq[n].get_temperature()
+        m = sum(traj_eq[n].get_masses())
         eqDebyeTemp += np.sqrt(3*hbar2*T/(m*kB*MSD))
 
     avgDebyeTemp = eqDebyeTemp/N
