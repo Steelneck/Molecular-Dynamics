@@ -1,4 +1,4 @@
-import sys, unittest, os
+import sys, unittest
 
 from ase.lattice.cubic import FaceCenteredCubic
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
@@ -79,8 +79,7 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unittest for eq_calc"""
 
     def test_eq_calc_return_type(self):
-        eq_traj(atoms, trajObject, eq_trajObject, 3*3*3)
-        self.assertTrue(os.path.getsize("test_eq.traj") != 0)
+        self.assertIsInstance(eq_traj(atoms, trajObject, eq_trajObject, 3*3*3), int)
 
     #eq_traj doesnt use atoms yet, so no point in testing that input
     def test_eq_calc_wrong_input_argument(self):
