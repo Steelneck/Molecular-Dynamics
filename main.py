@@ -1,20 +1,31 @@
 """Demonstrates molecular dynamics with constant energy."""
 
+<<<<<<< HEAD
 from Init.init_values import *
 from tkinter import *
+=======
+from Init.init2 import *
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
 import os
+from tkinter import *
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
 def main():  
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
+<<<<<<< HEAD
     atoms = init()
+=======
+    
+    atoms = init_MP()
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
     
     
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
 
+<<<<<<< HEAD
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval=10)
@@ -34,6 +45,12 @@ def main():
 
         # Internal temperature of the system
         internalTemperature = calc.internal_temperature(atoms, traj_eq, 10)
+=======
+        traj = Trajectory("atoms.traj", "w", atomobj)
+        
+        dyn.attach(traj.write, interval=10)
+        dyn.run(100)
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
         
         # Debye temperature of the system
         #debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
