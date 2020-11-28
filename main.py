@@ -1,7 +1,10 @@
 """Demonstrates molecular dynamics with constant energy."""
 
+<<<<<<< HEAD
 from Init.init_values import *
 from tkinter import *
+=======
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
 from Init.init2 import *
 import os
 from tkinter import *
