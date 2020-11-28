@@ -2,7 +2,9 @@
 
 from Init.init_values import *
 from tkinter import *
+from Init.init2 import *
 import os
+from tkinter import *
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
@@ -15,6 +17,7 @@ def main():
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
 
+<<<<<<< HEAD
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval)
@@ -33,7 +36,17 @@ def main():
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
+<<<<<<< HEAD
         internalTemperature = calc.internal_temperature(atoms, traj_eq, timeStepIndex)
+=======
+        internalTemperature = calc.internal_temperature(atoms, traj_eq, 10)
+=======
+        traj = Trajectory("atoms.traj", "w", atomobj)
+        
+        dyn.attach(traj.write, interval=10)
+        dyn.run(100)
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
+>>>>>>> Created a new init file for materials project. Can now extract information and create atoms objects. Need to do more research on this
         
         # Debye temperature of the system
         #debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
