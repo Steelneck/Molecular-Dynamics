@@ -1,7 +1,8 @@
 """Demonstrates molecular dynamics with constant energy."""
 
-from Init.init_values import *
+from Init.init2 import *
 import os
+from tkinter import *
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
@@ -9,6 +10,7 @@ def main():
 
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
+    
     atoms = init_MP()
     
     
@@ -20,7 +22,7 @@ def main():
         traj = Trajectory("atoms.traj", "w", atomobj)
         
         dyn.attach(traj.write, interval=10)
-        dyn.run(200)
+        dyn.run(100)
         
         calc.eq_traj(atomobj) #Creates new .traj-file containing trajectory post equilibrium.
         if os.path.getsize("atoms_eq.traj") != 0:
