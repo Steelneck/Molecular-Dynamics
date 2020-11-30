@@ -5,6 +5,7 @@ from Init.init_values import *
 import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
+from ase.gui import *
 
 def main():  
     # Initiate the crystal based on the chosen variables
@@ -21,6 +22,8 @@ def main():
     
     traj = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
+
+    calc.calc_lattice_constant(atoms, Symbol)
     
     calc.eq_traj(atoms, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
     if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
