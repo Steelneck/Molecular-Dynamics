@@ -1,21 +1,16 @@
 import sys, unittest, os
 
 from ase.lattice.cubic import FaceCenteredCubic
-<<<<<<< HEAD
+
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import *
-=======
-from calculations import Specific_Heat
-from calculations import calc_instantaneous_pressure, calc_internal_pressure
-from calculations import internal_temperature
->>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
+
 import numpy
 from asap3 import Trajectory, EMT
 
-from asap3 import Trajectory, EMT
 
 atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                                   symbol="Cu",
