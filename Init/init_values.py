@@ -82,41 +82,32 @@ def timestepindex(timesteps, traj_interval):
 
 timeStepIndex = timestepindex(steps, interval)
 
+def init():
+    Lattice_Const = set_lattice_const(lc_a,
+                                    lc_b,
+                                    lc_c,
+                                    lc_alpha,
+                                    lc_beta,
+                                    lc_gamma)
 
-Lattice_Const = set_lattice_const(lc_a,
-                                lc_b,
-                                lc_c,
-                                lc_alpha,
-                                lc_beta,
-                                lc_gamma)
+    # Set up a crystals
+    atoms = set_lattice(Bravais,
+                    Lattice_Const,
+                    Directions,
+                    Miller,
+                    Size_X,
+                    Size_Y,
+                    Size_Z,
+                    Symbol,
+                    Pbc) 
 
-# Set up a crystals
-atoms = set_lattice(Bravais,
-                Lattice_Const,
-                Directions,
-                Miller,
-                Size_X,
-                Size_Y,
-                Size_Z,
-                Symbol,
-                Pbc) 
+        
+    # Set the momenta corresponding to T=300K 
+    # (Note: Create a higher order function)
+    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
-# Set the momenta corresponding to T=300K 
-# (Note: Create a higher order function)
-MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+    # Describe the interatomic interactions with the Effective Medium Theory
+    # (Note: Create a higher ordet function)
+    atoms.calc = Calculator
 
-# Describe the interatomic interactions with the Effective Medium Theory
-# (Note: Create a higher ordet function)
-atoms.calc = Calculator
-
-atoms_list.append(atoms)
-    
-# Set the momenta corresponding to T=300K 
-# (Note: Create a higher order function)
-MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-
-# Describe the interatomic interactions with the Effective Medium Theory
-# (Note: Create a higher ordet function)
-atoms.calc = Calculator
-
-return atoms
+    return atoms

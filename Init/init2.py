@@ -19,6 +19,7 @@ m = MPRester('rXy9SNuvaCUyoVmTDjDT')
 
 #MongoDB query to get data from materials project. Properties must allways show "cif" to work.
 data = m.query(criteria={"elements": ["Cu"]}, properties=["cif"])
+#print(data)
 Temperature = 300
 Calculator = EMT()
 
@@ -26,12 +27,12 @@ Calculator = EMT()
 def init_MP():
     i = 0
     atoms_list = []
-    while i < 1: 
-        cif_Info=(CifParser.from_string((data[3])["cif"])).as_dict()
+    while i < 2: 
+        cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
         
         atoms = from_dictionary_to_atoms(cif_Info)
 
-        print(cif_Info['Cu'])
+        #print(cif_Info['Cu'])
 
         # Set the momenta corresponding to T=300K 
         # (Note: Create a higher order function)
