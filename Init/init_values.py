@@ -101,4 +101,6 @@ def init():
     # (Note: Create a higher ordet function)
     atoms.calc = Calculator
 
-    return atoms
+    atoms_list = []
+    atoms_list.append(atoms)
+    return atoms_list

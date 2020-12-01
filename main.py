@@ -12,7 +12,7 @@ def main():
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
     
-    atoms = init_MP()
+    atoms = init()
     
     for atomobj in atoms:
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
