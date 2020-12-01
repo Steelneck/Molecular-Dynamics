@@ -21,7 +21,6 @@ from asap3 import EMT
 from .init_functions import set_lattice
 from .init_functions import set_lattice_const
 
-
 """ This section is where the user changes values """
 
 # Set variables for your simulation

@@ -6,6 +6,15 @@ import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 
+""" Ignore the parallel rank deprecation warning """
+
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
+""" Main """
+
 def main():  
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
