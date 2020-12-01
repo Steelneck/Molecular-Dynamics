@@ -43,7 +43,7 @@ def main():
         internalTemperature = calc.internal_temperature(atoms, traj_eq, timeStepIndex)
 
     
-    atoms = init_MP()
+    atoms = init()
     
     for atomobj in atoms:
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
