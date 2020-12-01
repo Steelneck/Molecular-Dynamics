@@ -27,7 +27,7 @@ Calculator = EMT()
 def init_MP():
     i = 0
     atoms_list = []
-    while i < 2: 
+    while i < 1: 
         cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
         
         atoms = from_dictionary_to_atoms(cif_Info)
