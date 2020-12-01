@@ -78,7 +78,7 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD, timeStepIndex):
+def Self_diffuse(trajObject, MSD):
     try:
         D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
@@ -88,7 +88,7 @@ def Self_diffuse(trajObject, MSD, timeStepIndex):
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
-def Lindemann(trajObject, MSD, timeStepIndex):
+def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
