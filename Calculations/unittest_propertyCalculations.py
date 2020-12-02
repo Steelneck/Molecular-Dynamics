@@ -132,7 +132,17 @@ class PropertyCalculationTests(unittest.TestCase):
         #All should return None
         self.assertIsNone(L1)
         self.assertIsNone(L2)
+
+    """Unittests for calculation of Self diffusion coefficient"""
+    def test_lattice_constant_wrong_input_argument(self):
+        a1 = calc_lattice_constant_fcc_cubic(None)
+        a2 = calc_lattice_constant_fcc_cubic("not an atom")
+        self.assertIsNone(a1)
+        self.assertIsNone(a2)
     
+    def test_lattice_constant_output_type(self):
+        self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu'), float)
+
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]
     testsuite = unittest.TestSuite(tests)
