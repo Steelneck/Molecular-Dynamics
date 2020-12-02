@@ -1,23 +1,14 @@
-import sys, unittest, os
+import sys, unittest, os, numpy
 
 from ase.lattice.cubic import FaceCenteredCubic
-<<<<<<< HEAD
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import *
-=======
 from calculations import Specific_Heat
 from calculations import calc_instantaneous_pressure, calc_internal_pressure
-<<<<<<< HEAD
 from calculations import internal_temperature, debye_temperature
-=======
-from calculations import internal_temperature
->>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
->>>>>>> 508ddc125548c55a4994a9965ba790b572a67255
-import numpy
-from asap3 import Trajectory, EMT
 
 from asap3 import Trajectory, EMT
 
