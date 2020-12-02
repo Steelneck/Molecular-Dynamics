@@ -2,10 +2,7 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-<<<<<<< HEAD
 from ase.calculators.eam import EAM
-=======
->>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
