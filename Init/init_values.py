@@ -20,6 +20,7 @@ from asap3 import EMT
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
 from .init_functions import set_lattice_const
+from.init_functions import insert_impurity
 
 """ This section is where the user changes values """
 
@@ -27,10 +28,10 @@ from .init_functions import set_lattice_const
 # OBS! Combination of Directions and Miller only works when complete and consistent
 Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
 Miller = [None, None, None] # Basis of supercell and / or three surfaces
-Size_X = 10 # How many times fundamental repeat unit is repeated
-Size_Y = 10
-Size_Z = 10
-Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
+Size_X = 2 # How many times fundamental repeat unit is repeated
+Size_Y = 2
+Size_Z = 2
+Symbol = "Al" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -43,6 +44,11 @@ Temperature = 300
 Calculator = EMT()
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
+
+""" Insert impurity in crystal """
+Impurity = True             # Set to true when run simulation with foreign element
+Impurity_ele = 'Au'         # Set an element (Gold baby)
+Impurity_pos = [(0,0,0)]    # Decide position (Highly recommend something off e.g. 10,0,3)
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -77,7 +83,7 @@ Kim('Insert_openKIM_potential_here')
 """ Decide timestepindex for the traj file """
 
 def timestepindex(timesteps, traj_interval):
-    trajindexes = math.floor(timesteps/traj_interval)
+    trajindexes = math.floor(timesteps/traj_interval) # Round down to avoid out-of-bounds index array
     return trajindexes
 
 timeStepIndex = timestepindex(steps, interval)
@@ -103,14 +109,17 @@ def init():
                         Size_Y,
                         Size_Z,
                         Symbol,
-                        Pbc) 
+                        Pbc)
+
+    if Impurity == True:
+        insert_impurity(atoms, Impurity_ele, Impurity_pos) # Insert "foregin" atom in the crystal
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
     
     # Describe the interatomic interactions with the Effective Medium Theory
-    # (Note: Create a higher ordet function)
+    # (Note: Create a higher order function to use EAM, KIM or EMT)
     atoms.calc = Calculator
 
     return atoms
