@@ -1,6 +1,7 @@
 """ Initiation functions """
 
 from collections import Counter
+from ase import *
 
 # Parameters will decide values and bravais lattice
 def set_lattice(Bravais,
@@ -47,3 +48,8 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     
     # Returns a dict with all the values
     return lc_constants
+
+def insert_impurity(myAtoms, symbol, position):     # position = [(0,0,0)] where (x,y,z) and [rows]
+    del myAtoms[0]                                  # Deletes atom at first row
+    element = Atoms(symbol, position)               # Create new atom with position
+    myAtoms += element                              # Add new atom to atoms

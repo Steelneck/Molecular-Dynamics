@@ -3,8 +3,25 @@
 import sys, unittest
 from init_functions import set_lattice_const
 from init_functions import set_lattice
+from init_functions import insert_impurity
 from ase.lattice.cubic import FaceCenteredCubic
 from asap3 import EMT
+from ase.build import bulk
+from ase import *
+
+atoms = set_lattice(FaceCenteredCubic,
+                    0,
+                    Directions = [[1,0,0],[0,1,0],[0,0,1]],
+                    Miller = [None,None,None],
+                    Size_X = 2,
+                    Size_Y = 2,
+                    Size_Z = 2,
+                    Symbol = 'Cu',
+                    Pbc = True)
+
+al_cube = bulk('Al', 'fcc', a=3.6)
+super_al = al_cube*(2,4,4)
+
 
 " Define the test class with test functions "
 
@@ -40,6 +57,29 @@ class TestInit(unittest.TestCase):
             self.assertEqual(lc_constant['a'], 3.6)
             self.assertEqual(lc_constant['c'], 2)
             self.assertEqual(lc_constant['gamma'], 74)
+
+        def test_set_lattice(self):
+            self.assertEqual(atoms.get_chemical_symbols()[0], 'Cu')
+            self.assertEqual(len(super_al), len(atoms)) # 32 in each
+
+        def test_atoms_size(self):
+            copy_atoms = atoms
+            insert_impurity(atoms, 'Au', position=[(0,0,0)])
+            self.assertEqual(len(atoms), len(copy_atoms))
+
+        def test_cube_size(self):
+            copy_cube = super_al
+            insert_impurity(super_al, 'Ag', [(0,0,0)])
+            self.assertEqual(len(copy_cube), len(super_al))
+
+        def test_last_atom(self):
+            last_ele_before = atoms.get_chemical_symbols()
+            insert_impurity(atoms, 'Ag', [(0,0,0)])
+            self.assertIsNot(last_ele_before[-1], atoms.get_chemical_symbols()[-1])
+
+        
+
+        
 
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(TestInit)]
