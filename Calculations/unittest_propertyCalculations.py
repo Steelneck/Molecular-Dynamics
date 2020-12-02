@@ -7,20 +7,16 @@ from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import Specific_Heat
-from calculations import calc_instantaneous_pressure, calc_internal_pressure
-from calculations import internal_temperature, debye_temperature, cohesive_energy
 from calculations import internal_temperature
-
+from calculations import cohesive_energy
 from calculations import calc_instantaneous_pressure
 from calculations import calc_internal_pressure
 from calculations import eq_traj
 from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
-from calculations import internal_temperature
 from calculations import calc_lattice_constant_fcc_cubic
 
->>>>>>> development
 import numpy
 from asap3 import Trajectory, EMT
 
