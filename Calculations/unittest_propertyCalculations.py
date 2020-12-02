@@ -137,6 +137,7 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
+    
     def test_internal_temperature(self):
         self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
 

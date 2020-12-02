@@ -165,36 +165,17 @@ def internal_temperature(myAtoms, traj, timeStepIndex):
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
     
-def debye_temperature(myAtoms, traj_eq, timeStepIndex):
-    """ Returns the Debye temperature of the system """
-    #traj = Trajectory(trajectoryFile)
-    N = len(traj_eq)
-
-    # Set values of necessary constants in eV-units
-    hbar = 6.582119569*10**(-34)
-    hbar2 = hbar**2
-    kB = 8.617333262145*10**(-5)
-    MSD = MSD_calc(myAtoms, timeStepIndex)
-
-    eqDebyeTemp = 0.0
-    for n in range(1, N):
-        T = traj_eq[n].get_temperature()
-        m = sum(traj_eq[n].get_masses())
-        eqDebyeTemp += np.sqrt(3*hbar2*T/(m*kB*MSD))
-
-    avgDebyeTemp = eqDebyeTemp/N
-    print("Debye temperature:", avgDebyeTemp, "[K]")
-    return(avgDebyeTemp)
-    
 def cohesive_energy(myAtoms, traj_eq, timeStepIndex):
     """ Returns the cohesive energy of the system """
     N = len(traj_eq)
 
-    eqCohEn = 0.0
+    eqCohEn = 0
     for n in range(1, N):
-        eqCohEn += traj_eq[n].get_potential_energy()/N
+        eqCohEn += traj_eq[n].get_potential_energy()/len(myAtoms)
 
     avgCohEn = eqCohEn/N
     print("Cohesive energy:", avgCohEn, "[eV/atom]")
     return(avgCohEn)
 
+# def cohesive_EAM(myAtoms, traj_eq, timeStepIndex):
+    
