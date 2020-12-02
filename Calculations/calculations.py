@@ -2,7 +2,7 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-from ase.calculators.eam import EAM
+# from ase.calculators.eam import EAM
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -77,7 +77,7 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD, timeStepIndex):
+def Self_diffuse(trajObject, MSD):
     try:
         D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
@@ -87,7 +87,7 @@ def Self_diffuse(trajObject, MSD, timeStepIndex):
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
-def Lindemann(trajObject, MSD, timeStepIndex):
+def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
@@ -172,15 +172,14 @@ def debye_temperature(myAtoms, traj_eq, timeStepIndex):
 
     # Set values of necessary constants in eV-units
     hbar = 6.582119569*10**(-34)
-    hbar2 = hbar**2
     kB = 8.617333262145*10**(-5)
     MSD = MSD_calc(myAtoms, timeStepIndex)
 
     eqDebyeTemp = 0.0
     for n in range(1, N):
         T = traj_eq[n].get_temperature()
-        m = sum(traj_eq[n].get_masses())
-        eqDebyeTemp += np.sqrt(3*hbar2*T/(m*kB*MSD))
+        m = sum(traj_eq[n].get_masses())*1.6605402*10**(-27)
+        eqDebyeTemp += np.sqrt(3*(hbar**2)*T/(m*kB*MSD))
 
     avgDebyeTemp = eqDebyeTemp/N
     print("Debye temperature:", avgDebyeTemp, "[K]")
