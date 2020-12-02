@@ -2,10 +2,8 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-<<<<<<< HEAD
+
 from ase.calculators.eam import EAM
-=======
->>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -80,7 +78,7 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD, timeStepIndex):
+def Self_diffuse(trajObject, MSD):
     try:
         D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
@@ -90,7 +88,7 @@ def Self_diffuse(trajObject, MSD, timeStepIndex):
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
-def Lindemann(trajObject, MSD, timeStepIndex):
+def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
@@ -155,19 +153,18 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj_eq, timeStepIndex):
+def internal_temperature(myAtoms, traj, timeStepIndex):
     """ Returns the average temperature within parameters """
-    #traj = Trajectory(trajectoryFile)
-    N = len(traj_eq)
+    N = len(traj)
 
     eqTemp = 0
     for n in range(1, N):                       
-        eqTemp += traj_eq[n].get_temperature()                  # Sum returned value from ASE function over timesteps for sampling
+        eqTemp += traj[n].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
      
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
-
+    
 def debye_temperature(myAtoms, traj_eq, timeStepIndex):
     """ Returns the Debye temperature of the system """
     #traj = Trajectory(trajectoryFile)
@@ -200,3 +197,4 @@ def cohesive_energy(myAtoms, traj_eq, timeStepIndex):
     avgCohEn = eqCohEn/N
     print("Cohesive energy:", avgCohEn, "[eV/atom]")
     return(avgCohEn)
+

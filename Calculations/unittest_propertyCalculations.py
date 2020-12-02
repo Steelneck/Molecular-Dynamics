@@ -1,25 +1,29 @@
 import sys, unittest, os
 
 from ase.lattice.cubic import FaceCenteredCubic
-<<<<<<< HEAD
+
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
-from calculations import *
-=======
 from calculations import Specific_Heat
 from calculations import calc_instantaneous_pressure, calc_internal_pressure
-<<<<<<< HEAD
 from calculations import internal_temperature, debye_temperature, cohesive_energy
-=======
 from calculations import internal_temperature
->>>>>>> 829c7f6244c92be31f3420247f6caaa23405ef23
->>>>>>> 508ddc125548c55a4994a9965ba790b572a67255
+
+from calculations import calc_instantaneous_pressure
+from calculations import calc_internal_pressure
+from calculations import eq_traj
+from calculations import MSD_calc
+from calculations import Self_diffuse
+from calculations import Lindemann
+from calculations import internal_temperature
+
+
+>>>>>>> development
 import numpy
 from asap3 import Trajectory, EMT
 
-from asap3 import Trajectory, EMT
 
 atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                                   symbol="Cu",
@@ -120,19 +124,19 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unittests for calculation of Self diffusion coefficient"""
 
     def test_self_diffuse_return_type(self):
-        self.assertIsInstance(Self_diffuse(trajObject, MSD_calc(atoms, trajObject, 10), 10), float)
+        self.assertIsInstance(Self_diffuse(trajObject, MSD_calc(atoms, trajObject, 10)), float)
 
     #Self_diffuse doesnt use the time input yet so no point in testing it 
     def test_Self_diffuse_wrong_input_argument(self):
-        D1 = Self_diffuse(None, MSD_calc(atoms, trajObject, 10), 10)
-        D2 = Self_diffuse(trajObject, None, 10)
+        D1 = Self_diffuse(None, MSD_calc(atoms, trajObject, 10))
+        D2 = Self_diffuse(trajObject, None)
 
         #All should return None
         self.assertIsNone(D1)
         self.assertIsNone(D2)
         
     def test_Lindemann_return_type(self):
-        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10), 10), int)
+        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
     def test_internal_temperature(self):
         self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
 
@@ -153,8 +157,8 @@ class PropertyCalculationTests(unittest.TestCase):
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
-        L1 =Lindemann(None, MSD_calc(atoms, trajObject, 10), 10)
-        L2 =Lindemann(trajObject, None, 10)
+        L1 =Lindemann(None, MSD_calc(atoms, trajObject, 10))
+        L2 =Lindemann(trajObject, None)
 
         #All should return None
         self.assertIsNone(L1)

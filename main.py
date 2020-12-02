@@ -17,8 +17,8 @@ def main():
 
     traj = Trajectory("atoms.traj", "w", atoms)
 
-    dyn.attach(traj.write, interval=10)
-    dyn.run(steps=200)
+    dyn.attach(traj.write, interval)
+    dyn.run(steps)
     
     traj = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
@@ -27,13 +27,13 @@ def main():
     if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
         traj_eq = Trajectory("atoms_eq.traj")
         #If-statement that checks if we ever reached equilibrium.
-        MSD = calc.MSD_calc(atoms, 10)
-        D = calc.Self_diffuse(MSD, 10)
-        L = calc.Lindemann(atoms, MSD)
-        SHC = calc.Specific_Heat(atoms)
+        MSD = calc.MSD_calc(atoms, traj_eq, timeStepIndex)
+        D = calc.Self_diffuse(traj_eq, MSD)
+        L = calc.Lindemann(traj_eq, MSD)
+        SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
-        internalTemperature = calc.internal_temperature(atoms, traj_eq, 10)
+        internalTemperature = calc.internal_temperature(atoms, traj_eq, timeStepIndex)
         
         # Debye temperature of the system
         #debyeTemperature = calc.debye_temperature(atoms, traj_eq, 10)
