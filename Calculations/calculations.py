@@ -173,7 +173,7 @@ def debye_temperature(myAtoms, traj_eq, timeStepIndex):
     # Set values of necessary constants in eV-units
     hbar = 6.582119569*10**(-34)
     kB = 8.617333262145*10**(-5)
-    MSD = MSD_calc(myAtoms, timeStepIndex)
+    MSD = calc.MSD_calc(myAtoms, timeStepIndex)
 
     eqDebyeTemp = 0.0
     for n in range(1, N):

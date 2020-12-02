@@ -15,6 +15,10 @@ def main():
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
 
+
+    # Define timeStepIndex as the steps to interval ratio
+    timeStepIndex = steps/interval
+
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval)

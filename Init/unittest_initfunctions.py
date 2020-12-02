@@ -41,6 +41,9 @@ class TestInit(unittest.TestCase):
             self.assertEqual(lc_constant['c'], 2)
             self.assertEqual(lc_constant['gamma'], 74)
 
+        def test_timestepindex(self):
+            self.assertIsInstance(timeStepIndex, float)
+
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(TestInit)]
     testsuite = unittest.TestSuite(tests)
