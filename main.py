@@ -23,8 +23,9 @@ def main():
     traj = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
 
-    calc.calc_lattice_constant_fcc_cubic(Symbol)
-    print(atoms.cell.lengths())
+    # I believe that when assigning Calculator to atoms.calc the Calculator object is modified like it is a pointer object/referenced. Thus passing Calculator does not work. 
+    # Please feel free to switch EMT() argument to Calculator and see the error message. print(atoms.calc, Calculator) then print(EMT()) proves that Calculator is modified, like a pointer object.
+    latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())         
     
     calc.eq_traj(atoms, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
     if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.

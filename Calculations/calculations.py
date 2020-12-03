@@ -5,6 +5,7 @@ from asap3 import Trajectory, FullNeighborList
 from ase.calculators.eam import EAM
 from ase.build import bulk
 from ase.io import read
+import sys, os
 
 from asap3 import EMT ###!!! Temporary
 
@@ -167,25 +168,25 @@ def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
     print("Average internal temperature:", avgTemperature)  
     return(avgTemperature)
 
-def calc_lattice_constant_fcc_cubic(atomName):
-    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. Calculates both a and c constant but those are equal for fcc cubic"""
+def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
+    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
+        Calculates both a and c constant but those are equal for fcc cubic.
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
     try: 
         # Make a good initial guess on the lattice constant
         a0 = 3.52 / np.sqrt(2) 
         c0 = np.sqrt(8 / 3.0) * a0
         
-        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname
-        traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations
+        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
+        traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
 
         # Generate 9 calculations of potential energy for different a and c values. 
-        eps = 0.01                                                              # A small deviation to generate a few more constants
+        eps = 0.01                                                              # A small deviation to generate a few more constants.
         for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
             for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
                 at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
-                #at.calc = atoms.calc                                           # Something doesn't work with copying calculator from atoms object. 
-                at.calc = EMT()                                                 # Assign a new calculator.
-                at.get_potential_energy()                                       
-                traj.write(at)                                                  # Write both bulk config and energy to trajectory file
+                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
+                traj.write(at)                                                  # Write bulk config to trajectory file
 
         # Now we can get the energies and lattice constants from the traj file
         configs = read(fileName + "@:")
@@ -211,5 +212,8 @@ def calc_lattice_constant_fcc_cubic(atomName):
         return(a0)
         #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
     except Exception as e:
-        print("An error occured when calculating the lattice constant:", e)
+        print("An error occured when calculating the lattice constant:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
