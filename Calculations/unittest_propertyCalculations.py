@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import sys, unittest
+=======
+import sys, unittest, os
+>>>>>>> parent of 9635de9... Removed copied file from previous development branch...
 
 from ase.lattice.cubic import FaceCenteredCubic
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
@@ -79,7 +83,12 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unittest for eq_calc"""
 
     def test_eq_calc_return_type(self):
+<<<<<<< HEAD
         self.assertIsInstance(eq_traj(atoms, trajObject, eq_trajObject, 3*3*3), int)
+=======
+        eq_traj(atoms, trajObject, eq_trajObject, 3*3*3)
+        self.assertTrue(os.path.getsize("test_eq.traj") != 0)
+>>>>>>> parent of 9635de9... Removed copied file from previous development branch...
 
     #eq_traj doesnt use atoms yet, so no point in testing that input
     def test_eq_calc_wrong_input_argument(self):
@@ -132,16 +141,16 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(L1)
         self.assertIsNone(L2)
 
-    """Unittests for calculation of Lattice constant"""
-     def test_lattice_constant_wrong_input_argument(self):
-         a1 = calc_lattice_constant_fcc_cubic(None)
-         a2 = calc_lattice_constant_fcc_cubic("not an atom")
-         self.assertIsNone(a1)
-         self.assertIsNone(a2)
-
-     def test_lattice_constant_output_type(self):
-         self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu'), float)
+    """Unittests for calculation of Self diffusion coefficient"""
+    def test_lattice_constant_wrong_input_argument(self):
+        a1 = calc_lattice_constant_fcc_cubic(None)
+        a2 = calc_lattice_constant_fcc_cubic("not an atom")
+        self.assertIsNone(a1)
+        self.assertIsNone(a2)
     
+    def test_lattice_constant_output_type(self):
+        self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu'), float)
+
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]
     testsuite = unittest.TestSuite(tests)
