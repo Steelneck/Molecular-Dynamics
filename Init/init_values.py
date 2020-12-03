@@ -15,7 +15,7 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
-#from ase.calculators.kim.kim import KIM
+from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
@@ -72,6 +72,7 @@ EMT()
     ASAP3 built in effective medium theory. Works for Ni, Cu, Pd, Ag, Pt and Au (and their alloys).
 Kim('Insert_openKIM_potential_here')
     openKIM potentials can be found from https://openkim.org/
+    For standard lenard-jones potential use: LJ_ElliottAkerson_2015_Universal__MO_959249795837_003
 """
 
 """ Decide timestepindex for the traj file """
