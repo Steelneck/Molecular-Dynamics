@@ -6,6 +6,7 @@ import os
 from tkinter import *
 import Calculations.calculations as calc
 from asap3 import Trajectory
+from ase.gui import *
 
 def main():  
     # Initiate the crystal based on the chosen variables
