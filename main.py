@@ -2,7 +2,6 @@
 
 from Init.init_values import *
 from tkinter import *
-from Init.init2 import *
 import os
 from tkinter import *
 import Calculations.calculations as calc

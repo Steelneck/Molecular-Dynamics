@@ -9,6 +9,7 @@ from ase.lattice.orthorhombic import *
 from ase.lattice.monoclinic import *
 from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
+from ase import Atoms
 
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
@@ -20,6 +21,11 @@ from ase.calculators.kim.kim import KIM
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
 from .init_functions import set_lattice_const
+from .init_functions import from_dictionary_to_atoms
+
+# Dependencies to run materials project
+from pymatgen.ext.matproj import MPRester
+from pymatgen.io.cif import CifParser
 
 """ This section is where the user changes values """
 
@@ -43,6 +49,7 @@ Temperature = 300
 Calculator = EMT()
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
+
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -75,6 +82,20 @@ Kim('Insert_openKIM_potential_here')
     For standard lenard-jones potential use: LJ_ElliottAkerson_2015_Universal__MO_959249795837_003
 """
 
+""" This section is only for parameters is concerned with Materials project 
+    The size parameters, calculator and temperature above is also used when running materials project
+"""
+
+m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
+data = m.query(criteria={"elements": ["Cu"]}, properties=['cif', 'spacegroup', 'pretty_formula'])
+
+""" MongoDB query to get desired data from materialsproject 
+        Only change the critera of the query!
+        Properties must allways show ['cif', 'spacegroup', 'pretty_formula'] to work
+        Quries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
+Note: Right now this function sorts out everything except for FCC crystals
+"""
+
 """ Decide timestepindex for the traj file """
 
 def timestepindex(timesteps, traj_interval):
@@ -82,6 +103,7 @@ def timestepindex(timesteps, traj_interval):
     return trajindexes
 
 timeStepIndex = timestepindex(steps, interval)
+atoms_list = []
 
 def init():
     Lattice_Const = set_lattice_const(lc_a,
@@ -111,6 +133,43 @@ def init():
     # (Note: Create a higher ordet function)
     atoms.calc = Calculator
 
-    atoms_list = []
     atoms_list.append(atoms)
     return atoms_list
+
+def init_MP():    
+    #If there are no elements in data raise an exception and end program
+    if len(data) != 0:
+        for i in range(len(data)):
+            
+            space_group = ((data[i])['spacegroup'])['symbol']
+            crystal_structure = ((data[i])['spacegroup'])['crystal_system']
+            
+            # Function that skips the element if it not an FCC crystal
+            if space_group[0] != 'F' or crystal_structure != 'cubic':
+                continue
+            
+            # Ordered dictionary of the CIF
+            cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
+
+            #Pretty formula for the element
+            pretty_formula = str((data[i])['pretty_formula'])
+
+            # Function that returns an atomobject depending on the information from the CIF
+            atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z)
+
+            # Set the momenta corresponding to T=300K 
+            # (Note: Create a higher order function)
+            MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+
+            # Describe the interatomic interactions with the Effective Medium Theory
+            # (Note: Create a higher ordet function)
+            atoms.calc = Calculator
+
+            atoms_list.append(atoms)
+
+        if len(atoms_list) == 0:
+            raise Exception("The query contains no FCC crystals")
+        else:
+            return atoms_list
+    else:
+        raise Exception("The query returned no elements!") 
