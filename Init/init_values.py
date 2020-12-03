@@ -1,5 +1,7 @@
 """ Initiation of variables and system  """
 
+import math
+
 # 6 of the 7 lattice systems (rhombohedral is not available)
 from ase.lattice.cubic import *
 from ase.lattice.tetragonal import *
@@ -13,7 +15,7 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
-from ase.calculators.kim.kim import KIM
+#from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
@@ -40,6 +42,8 @@ lc_beta = 0
 lc_gamma = 0
 Temperature = 300
 Calculator = EMT()
+steps = 1000 # Timesteps for dyn.run
+interval = 10 # Writes in traj at n timestep
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -71,6 +75,13 @@ Kim('Insert_openKIM_potential_here')
     openKIM potentials can be found from https://openkim.org/
 """
 
+""" Decide timestepindex for the traj file """
+
+def timestepindex(timesteps, traj_interval):
+    trajindexes = math.floor(timesteps/traj_interval)
+    return trajindexes
+
+timeStepIndex = timestepindex(steps, interval)
 
 """ This section will initialize the system based on the variables """
 
@@ -102,6 +113,5 @@ def init():
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
     atoms.calc = Calculator
-    
-    return atoms
 
+    return atoms

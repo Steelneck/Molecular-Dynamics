@@ -2,6 +2,7 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
+
 from ase.calculators.eam import EAM
 from ase.build import bulk
 from ase.io import read
@@ -82,7 +83,7 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD, timeStepIndex):
+def Self_diffuse(trajObject, MSD):
     try:
         D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
@@ -92,7 +93,7 @@ def Self_diffuse(trajObject, MSD, timeStepIndex):
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
-def Lindemann(trajObject, MSD, timeStepIndex):
+def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
@@ -156,17 +157,18 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
     except Exception as e:
         print("An error occured in internal pressure function:", e)
         return(None)
-      
-def calc_internal_temperature(myAtoms, trajectoryFileName, timeStepIndex):
-    """ Returns the average temperature within parameters """
-    
-    for i in range(1,timeStepIndex):
-        sumTemp = sum(myAtoms.get_temperature())     
-        eqTemperature += sumTemp/len(sumTemp)               # Iteration gives the sum of a number of average temperatures
 
-    avgTemperature = eqTemperature/timeStepIndex            # Sampling this gives the average temperature for the atoms
-    print("Average internal temperature:", avgTemperature)  
-    return(avgTemperature)
+def internal_temperature(myAtoms, traj, timeStepIndex):
+    """ Returns the average temperature within parameters """
+    N = len(traj)
+
+    eqTemp = 0
+    for n in range(1, N):                       
+        eqTemp += traj[n].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
+     
+    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
+    print("Internal temperature:", internalTemp, "[K]")  
+    return(internalTemp)
 
 def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
     """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
