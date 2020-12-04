@@ -14,11 +14,10 @@ from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
 from calculations import internal_temperature
-
+from calculations import calc_lattice_constant_fcc_cubic
 
 import numpy
 from asap3 import Trajectory, EMT
-
 
 atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                                   symbol="Cu",
@@ -146,7 +145,19 @@ class PropertyCalculationTests(unittest.TestCase):
         #All should return None
         self.assertIsNone(L1)
         self.assertIsNone(L2)
+
+    """Unittests for calculation of Lattice Constant"""
+    def test_lattice_constant_wrong_input_argument(self):
+        a1 = calc_lattice_constant_fcc_cubic(None, EMT())
+        a2 = calc_lattice_constant_fcc_cubic("not an atom", EMT())
+        a3 = calc_lattice_constant_fcc_cubic("Cu", None)
+        self.assertIsNone(a1)
+        self.assertIsNone(a2)
+        self.assertIsNone(a3)
     
+    def test_lattice_constant_output_type(self):
+        self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu', EMT()), float)
+
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]
     testsuite = unittest.TestSuite(tests)
