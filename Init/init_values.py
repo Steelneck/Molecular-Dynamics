@@ -141,6 +141,7 @@ def init_MP():
     if len(data) != 0:
         for i in range(len(data)):
             
+            # Takes out the space group and crystal structure query
             space_group = ((data[i])['spacegroup'])['symbol']
             crystal_structure = ((data[i])['spacegroup'])['crystal_system']
             
@@ -167,6 +168,7 @@ def init_MP():
 
             atoms_list.append(atoms)
 
+        # If atoms_list is empty raise an expetion and end program
         if len(atoms_list) == 0:
             raise Exception("The query contains no FCC crystals")
         else:

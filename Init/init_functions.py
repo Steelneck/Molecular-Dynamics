@@ -52,27 +52,38 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
 """ Takes out the information from the ordered dictionary and creates an atomobject """
 def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
 
+    # Returns the structural chemical formula which is needed when creating the atoms object.
     chemical_formula = str((dictionary[symbol])['_chemical_formula_structural'])
+    
+    # Lattice constants
     a = float((dictionary[symbol])['_cell_length_a'])
     b = float((dictionary[symbol])['_cell_length_b'])
     c = float((dictionary[symbol])['_cell_length_c'])
+    
+    # Angles for the unit cell
     alpha = float((dictionary[symbol])['_cell_angle_alpha'])
     beta = float((dictionary[symbol])['_cell_angle_beta'])
     gamma = float((dictionary[symbol])['_cell_angle_gamma'])
+    
+    # Nr of atoms in the structural chemical formula
     nr_of_atoms = len(((dictionary[symbol])['_atom_site_fract_x']))
 
+    # Extracts the fractional coordinates that is then multipled with corresponding lattice constant
+    # This will return the posistions between the atoms based on the structural chemical formula
     position = []
     for i in range(nr_of_atoms):
-        post = list()
         x = float(((dictionary[symbol])['_atom_site_fract_x'])[i])*a
         y = float(((dictionary[symbol])['_atom_site_fract_y'])[i])*b
         z = float(((dictionary[symbol])['_atom_site_fract_z'])[i])*c
         pos = (x,y,z)
         position.append(pos)        
 
+    # Creates the atomobject
     atoms =Atoms(symbols= chemical_formula,
                 positions=position,
                 cell=[a, b, c, alpha, beta, gamma])
 
+    # Generates a supercell
     atoms = atoms*(Size_X,Size_Y,Size_Z)
+    
     return atoms
