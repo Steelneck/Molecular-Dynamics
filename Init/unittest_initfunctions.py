@@ -1,9 +1,11 @@
 """ Unit test for init functions class """
 
 import sys, unittest
+import numpy as np
 from init_functions import set_lattice_const
 from init_functions import set_lattice
 from init_functions import insert_impurity
+from init_functions import create_vacancy
 from ase.lattice.cubic import FaceCenteredCubic
 from asap3 import EMT
 from ase.build import bulk
@@ -20,8 +22,11 @@ atoms = set_lattice(FaceCenteredCubic,
                     Pbc = True)
 
 al_cube = bulk('Al', 'fcc', a=3.6)
+cu_cube = bulk('Cu', 'fcc', a=3.6)
+ag_cube = bulk('Ag', 'fcc', a=3.6)
 super_al = al_cube*(2,4,4)
-
+super_cu = cu_cube*(2,4,4)
+super_ag = ag_cube*(2,4,4)
 
 " Define the test class with test functions "
 
@@ -64,20 +69,32 @@ class TestInit(unittest.TestCase):
 
         def test_atoms_size(self):
             copy_atoms = atoms
-            insert_impurity(atoms, 'Au', position=[(0,0,0)])
+            insert_impurity(atoms, 'Au')
             self.assertEqual(len(atoms), len(copy_atoms))
 
         def test_cube_size(self):
             copy_cube = super_al
-            insert_impurity(super_al, 'Ag', [(0,0,0)])
+            insert_impurity(super_al, 'Ag')
             self.assertEqual(len(copy_cube), len(super_al))
 
         def test_last_atom(self):
             last_ele_before = atoms.get_chemical_symbols()
-            insert_impurity(atoms, 'Ag', [(0,0,0)])
+            insert_impurity(atoms, 'Ag')
             self.assertIsNot(last_ele_before[-1], atoms.get_chemical_symbols()[-1])
 
-        
+        def test_create_vacancy(self):
+            before = len(super_cu)
+            create_vacancy(super_cu)
+            after = len(super_cu)
+            self.assertIsNot(before, after)
+
+        def test_impurity_position(self):
+            before = super_ag.get_positions()[0]
+            insert_impurity(super_ag, 'Ag')
+            after = super_ag.get_positions()[-1]        # Insert_impurity appends the atom at the end of the list
+            self.assertEqual(before.all(), after.all()) # Checks if the removed position was the same as insert
+
+
 
         
 

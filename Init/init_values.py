@@ -18,7 +18,7 @@ from asap3 import EMT
 #from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
-from .init_functions import set_lattice
+from .init_functions import create_vacancy, set_lattice
 from .init_functions import set_lattice_const
 from.init_functions import insert_impurity
 
@@ -45,10 +45,10 @@ Calculator = EMT()
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
-""" Insert impurity in crystal """
-Impurity = True             # Set to true when run simulation with foreign element
+""" Insert impurity/vacancy in crystal """
+Impurity = False             # Set to true when run simulation with foreign element
+Vacancy = True              # Set to true when run simulation with vacancy
 Impurity_ele = 'Au'         # Set an element (Gold baby)
-Impurity_pos = [(0,0,0)]    # Decide position (Highly recommend something off e.g. 10,0,3)
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -112,7 +112,10 @@ def init():
                         Pbc)
 
     if Impurity == True:
-        insert_impurity(atoms, Impurity_ele, Impurity_pos) # Insert "foregin" atom in the crystal
+        insert_impurity(atoms, Impurity_ele) # Insert "foregin" atom in the crystal
+
+    if Vacancy == True:
+        create_vacancy(atoms) # Create a vacancy in the corner by removing the first atom
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
