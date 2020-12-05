@@ -15,6 +15,7 @@ from calculations import Self_diffuse
 from calculations import Lindemann
 from calculations import internal_temperature
 from calculations import calc_lattice_constant_fcc_cubic
+from calculations import write_atom_properties
 
 import numpy
 from asap3 import Trajectory, EMT
@@ -86,9 +87,9 @@ class PropertyCalculationTests(unittest.TestCase):
 
     """Unittest for eq_calc"""
 
-    def test_eq_calc_return_type(self):
-        eq_traj(atoms, trajObject, eq_trajObject, 3*3*3)
-        self.assertTrue(os.path.getsize("test_eq.traj") != 0)
+   # def test_eq_calc_check_traj(self):
+    #    eq_traj(atoms, trajObject, eq_trajObject, 3*3*3)
+    #    self.assertTrue(os.path.getsize("test_eq.traj") != 0)
 
     #eq_traj doesnt use atoms yet, so no point in testing that input
     def test_eq_calc_wrong_input_argument(self):
@@ -118,12 +119,12 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unittests for calculation of Self diffusion coefficient"""
 
     def test_self_diffuse_return_type(self):
-        self.assertIsInstance(Self_diffuse(trajObject, MSD_calc(atoms, trajObject, 10)), float)
+        self.assertIsInstance(Self_diffuse(MSD_calc(atoms, trajObject, 10), len(trajObject)), float)
 
     #Self_diffuse doesnt use the time input yet so no point in testing it 
     def test_Self_diffuse_wrong_input_argument(self):
-        D1 = Self_diffuse(None, MSD_calc(atoms, trajObject, 10))
-        D2 = Self_diffuse(trajObject, None)
+        D1 = Self_diffuse(None, len(trajObject))
+        D2 = Self_diffuse(MSD_calc(atoms, trajObject, 10), None)
 
         #All should return None
         self.assertIsNone(D1)
@@ -157,6 +158,20 @@ class PropertyCalculationTests(unittest.TestCase):
     
     def test_lattice_constant_output_type(self):
         self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu', EMT()), float)
+
+    def test_csv_writer_wrong_input_argument(self):
+        csv1 = write_atom_properties(None, "properties_test.csv", trajObject)
+        csv2 = write_atom_properties(atoms, None, trajObject)
+        csv3 = write_atom_properties(atoms, "properties.csv", None)
+
+  #  traj_eq = Trajectory("test_eq.traj")
+        
+  #  def test_csv_writer_check_csv(self):
+  #     write_atom_properties(atoms, "properties_test.csv", traj_eq)
+  #      self.assertTrue(os.path.getsize("properties_test.csv") != 0)
+  #      #file = open("properties_test.csv", "w+")
+        #file.close()
+        
 
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(PropertyCalculationTests)]

@@ -8,6 +8,8 @@ from ase.build import bulk
 from ase.io import read
 import sys, os
 
+import csv
+
 from asap3 import EMT ###!!! Temporary
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
@@ -42,7 +44,10 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
         for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
             eq_trajObject.write(trajObject[i])
     except Exception as e:
-        print("An error occured when checking equilibrium conditions", e)
+        print("An error occured when calculating the checking the conditions for equilibrium:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
@@ -69,25 +74,30 @@ def Specific_Heat(myAtoms, trajObject):
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
 def MSD_calc(myAtoms, trajObject, timeStepIndex):
     try:
-        time = len(trajObject)-timeStepIndex
         pos_eq = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-        pos_t = trajObject[1].get_positions() #position of atoms at time t
+        pos_t = trajObject[timeStepIndex].get_positions() #position of atoms at time t
         diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
     except Exception as e:
-        print("An error occured when calculating the mean square displacement.", e)
+        print("An error occured when calculating the mean square displacement:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     print("MSD = ", MSD, "[Å²]")
     return(MSD)
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD):
+def Self_diffuse(MSD, timeStepIndex):
     try:
-        D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
+        D = 5*MSD/(6*timeStepIndex) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
-        print("An error ocurred when calculating the self diffusion coefficient.", e)
+        print("An error occured when calculating the self diffusion coefficient:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     print("D = ", D, "[Å²/fs]")
     return(D)
@@ -99,11 +109,14 @@ def Lindemann(trajObject, MSD):
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
         L = MSD/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
-        print("An error occured when checking the Lindemann criterion.", e)
+        print("An error occured when checking the Lindemann criterion:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     if L > 0.1:
-            print("MELTING!")
-            return True 
+        print("MELTING!")
+        return True 
     else:
         print("NOT MELTING!")
         return False
@@ -219,3 +232,25 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
+
+
+def write_atom_properties(myAtoms, csvFileName, eq_trajObject):
+    """calculates a set of chosen properties and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
+    try:
+        file = open(csvFileName, "w", newline="")
+        fieldnames = ["Time", "MSD", "S"] #These will be the first rows in each column specifying the property."
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";") #makes a dictionary-writer for csv-files.
+        t = 1
+        writer.writeheader() #Sets fieldnames as first rows in file.
+        while t < len(eq_trajObject): #Checks time evolution of chosen properties.
+            time_after_eq = len(eq_trajObject) - t
+            MSD = MSD_calc(myAtoms, eq_trajObject, time_after_eq)
+            S = Self_diffuse(MSD, t)
+            writer.writerow({"Time" : t, "MSD" : MSD, "S" : S}) #Writes values at time t to csv-file. A new row is a new timestep.
+            t += 1
+    except Exception as e:
+        print("An error occured when writing values to .csv-file:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        

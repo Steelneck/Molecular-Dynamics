@@ -18,22 +18,23 @@ def main():
 
     traj = Trajectory("atoms.traj", "w", atoms)
 
-    dyn.attach(traj.write, interval)
-    dyn.run(steps)
+    dyn.attach(traj.write, 10)
+    dyn.run(500)
     
     traj = Trajectory("atoms.traj")
     traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
 
     # I believe that when assigning Calculator to atoms.calc the Calculator object is modified like it is a pointer object/referenced. Thus passing Calculator does not work. 
     # Please feel free to switch EMT() argument to Calculator and see the error message. print(atoms.calc, Calculator) then print(EMT()) proves that Calculator is modified, like a pointer object.
-    latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())         
+    #latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())         
     
     calc.eq_traj(atoms, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
     if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
         traj_eq = Trajectory("atoms_eq.traj")
+        calc.write_atom_properties(atoms, "properties.csv", traj_eq)     
         #If-statement that checks if we ever reached equilibrium.
-        MSD = calc.MSD_calc(atoms, traj_eq, timeStepIndex)
-        D = calc.Self_diffuse(traj_eq, MSD)
+        MSD = calc.MSD_calc(atoms, traj_eq, 1)
+        D = calc.Self_diffuse(MSD, len(traj_eq))
         L = calc.Lindemann(traj_eq, MSD)
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
