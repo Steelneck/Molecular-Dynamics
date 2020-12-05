@@ -12,6 +12,12 @@ def main():
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
 
+
+    """ Choose which init function to run. 
+            init() for ASE configuration.
+            init_MP() for materials project configuration.
+        See init_values for configuration settings.
+    """
     atoms = init_MP()
     
     for atomobj in atoms:

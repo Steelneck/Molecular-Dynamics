@@ -87,11 +87,9 @@ Kim('Insert_openKIM_potential_here')
 """
 
 m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
-data = m.query(criteria={"elements": ["Cu"]}, properties=['cif', 'spacegroup', 'pretty_formula'])
+criteria= {"elements":{"$in" : ["Cu"]}}
 
 """ MongoDB query to get desired data from materialsproject 
-        Only change the critera of the query!
-        Properties must allways show ['cif', 'spacegroup', 'pretty_formula'] to work
         Quries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
 Note: Right now this function sorts out everything except for FCC crystals
 """
@@ -138,6 +136,7 @@ def init():
 
 def init_MP():    
     #If there are no elements in data raise an exception and end program
+    data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
     if len(data) != 0:
         for i in range(len(data)):
             
