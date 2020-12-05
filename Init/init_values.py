@@ -1,5 +1,4 @@
 """ Initiation of variables and system  """
-
 import math
 
 # 6 of the 7 lattice systems (rhombohedral is not available)
@@ -18,7 +17,7 @@ from asap3 import EMT
 #from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
-from .init_functions import create_vacancy, set_lattice
+from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
 from.init_functions import insert_impurity
 
@@ -31,7 +30,7 @@ Miller = [None, None, None] # Basis of supercell and / or three surfaces
 Size_X = 2 # How many times fundamental repeat unit is repeated
 Size_Y = 2
 Size_Z = 2
-Symbol = "Al" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
+Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -46,9 +45,10 @@ steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
 """ Insert impurity/vacancy in crystal """
-Impurity = False             # Set to true when run simulation with foreign element
-Vacancy = True              # Set to true when run simulation with vacancy
+Vacancy = False              # Set to true when run simulation with vacancy
+Impurity = True             # Set to true when run simulation with foreign element
 Impurity_ele = 'Au'         # Set an element (Gold baby)
+Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -112,10 +112,14 @@ def init():
                         Pbc)
 
     if Impurity == True:
-        insert_impurity(atoms, Impurity_ele) # Insert "foregin" atom in the crystal
+        if Impurity_pos == "Center":
+            atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
+        else:
+            atom_pos = atoms.get_positions()[0] # Returns the first corner in crystal
+        insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
     if Vacancy == True:
-        create_vacancy(atoms) # Create a vacancy in the corner by removing the first atom
+        create_vacancy(atoms) # Create a vacancy
     
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
