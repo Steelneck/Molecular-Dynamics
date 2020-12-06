@@ -9,13 +9,13 @@ import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase.gui import *
 
-def simulation():
+def simulation(Calculator,Symbol):
     """ Choose which init function to run. 
             init() for ASE configuration.
             init_MP() for materials project configuration.
         See init_values for configuration settings.
     """
-    atoms = init_MP()
+    atoms = init_MP(Calculator,Symbol)
     
     for atomobj in atoms:
         # We want to run MD with constant energy using the VelocityVerlet algorithm.

@@ -16,7 +16,7 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
-#from ase.calculators.kim.kim import KIM
+from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
@@ -36,7 +36,6 @@ Miller = [None, None, None] # Basis of supercell and / or three surfaces
 Size_X = 10 # How many times fundamental repeat unit is repeated
 Size_Y = 10
 Size_Z = 10
-Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -46,7 +45,6 @@ lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
 Temperature = 300
-Calculator = EMT()
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
@@ -88,8 +86,6 @@ KIM('Insert_openKIM_potential_here')
 
 m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
 
-criteria_list= [{ "elements" : ["Pb"]}]
-
 """ MongoDB query to get desired data from materialsproject
         Query needs to be in a list format.
         Queries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
@@ -105,7 +101,7 @@ def timestepindex(timesteps, traj_interval):
 timeStepIndex = timestepindex(steps, interval)
 atoms_list = []
 
-def init():
+def init(Calculator,Symbol):
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
                                     lc_c,
@@ -136,7 +132,8 @@ def init():
     atoms_list.append(atoms)
     return atoms_list
     
-def init_MP():    
+def init_MP(Calculator,Symbol):
+    criteria_list= [{ "elements" : [Symbol]}]
     #Loop that takes out each critera for each query
     for criteria in criteria_list:
 
