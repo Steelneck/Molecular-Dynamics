@@ -21,6 +21,11 @@ def main():
     atoms = init_MP()
     
     for atomobj in atoms:
+        
+        # Describe the interatomic interactions with the Effective Medium Theory
+        # (Note: Create a higher ordet function)
+        atomobj.calc = Calculator
+        
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
         dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
 
