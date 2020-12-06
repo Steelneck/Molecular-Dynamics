@@ -77,7 +77,7 @@ interval = 10 # Writes in traj at n timestep
 """ The following Calculators can be used:
 EMT()
     ASAP3 built in effective medium theory. Works for Ni, Cu, Pd, Ag, Pt and Au (and their alloys).
-Kim('Insert_openKIM_potential_here')
+KIM('Insert_openKIM_potential_here')
     openKIM potentials can be found from https://openkim.org/
     For standard lenard-jones potential use: LJ_ElliottAkerson_2015_Universal__MO_959249795837_003
 """
