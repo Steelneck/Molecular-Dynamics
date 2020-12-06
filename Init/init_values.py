@@ -46,7 +46,7 @@ lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
 Temperature = 300
-Calculator = EMT()
+Calculator = KIM('LJ_ElliottAkerson_2015_Universal__MO_959249795837_003')
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 

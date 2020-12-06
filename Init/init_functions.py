@@ -52,8 +52,11 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
 """ Takes out the information from the ordered dictionary and creates an atomobject """
 def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
 
-    # Returns the structural chemical formula which is needed when creating the atoms object.
-    chemical_formula = str((dictionary[symbol])['_chemical_formula_structural'])
+    # Returns the chemical formula which is needed when creating the atoms object.
+    chemical_formula_sum = str((dictionary[symbol])['_chemical_formula_sum'])
+    
+    # Sometimes the chemical formula have spaces in between the elements. This function removes the spaces. 
+    chemical_formula = chemical_formula_sum.replace(" ","")
     
     # Lattice constants
     a = float((dictionary[symbol])['_cell_length_a'])
