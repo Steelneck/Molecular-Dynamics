@@ -87,10 +87,12 @@ KIM('Insert_openKIM_potential_here')
 """
 
 m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
-criteria= {"elements": ["Cu"]}
 
-""" MongoDB query to get desired data from materialsproject 
-        Quries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
+criteria_list= [{ "elements" : ["Pb"]}]
+
+""" MongoDB query to get desired data from materialsproject
+        Query needs to be in a list format.
+        Queries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
 Note: Right now this function sorts out everything except for FCC crystals
 """
 
@@ -133,44 +135,47 @@ def init():
 
     atoms_list.append(atoms)
     return atoms_list
-
+    
 def init_MP():    
-    #If there are no elements in data raise an exception and end program
-    data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
-    if len(data) != 0:
-        for i in range(len(data)):
+    #Loop that takes out each critera for each query
+    for criteria in criteria_list:
+
+        #If there are no elements in data raise an exception and end program
+        data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
+        if len(data) != 0:
+            for i in range(len(data)):
             
-            # Takes out the space group and crystal structure query
-            space_group = ((data[i])['spacegroup'])['symbol']
-            crystal_structure = ((data[i])['spacegroup'])['crystal_system']
+                # Takes out the space group and crystal structure query
+                space_group = ((data[i])['spacegroup'])['symbol']
+                crystal_structure = ((data[i])['spacegroup'])['crystal_system']
             
-            # Function that skips the element if it not an FCC crystal
-            if space_group[0] != 'F' or crystal_structure != 'cubic':
-                continue
-            
-            # Ordered dictionary of the CIF
-            cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
+                # Function that skips the element if it not an FCC crystal
+                if space_group[0] != 'F' or crystal_structure != 'cubic':
+                    continue
+                
+                # Ordered dictionary of the CIF
+                cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
 
-            #Pretty formula for the element
-            pretty_formula = str((data[i])['pretty_formula'])
+                #Pretty formula for the element
+                pretty_formula = str((data[i])['pretty_formula'])
 
-            # Function that returns an atomobject depending on the information from the CIF
-            atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z)
+                # Function that returns an atomobject depending on the information from the CIF
+                atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z)
 
-            # Set the momenta corresponding to T=300K 
-            # (Note: Create a higher order function)
-            MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+                # Set the momenta corresponding to T=300K 
+                # (Note: Create a higher order function)
+                MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
-            # Describe the interatomic interactions with the Effective Medium Theory
-            # (Note: Create a higher ordet function)
-            atoms.calc = Calculator
+                # Describe the interatomic interactions with the Effective Medium Theory
+                # (Note: Create a higher ordet function)
+                atoms.calc = Calculator
 
-            atoms_list.append(atoms)
-
-        # If atoms_list is empty raise an expetion and end program
-        if len(atoms_list) == 0:
-            raise Exception("The query contains no FCC crystals")
+                atoms_list.append(atoms)
         else:
-            return atoms_list
+            raise Exception("The query/queries returned no elements!") 
+    
+    # If atoms_list is empty raise an expetion and end program
+    if len(atoms_list) == 0:
+        raise Exception("The query/queries contains no FCC crystals")
     else:
-        raise Exception("The query returned no elements!") 
+        return atoms_list
