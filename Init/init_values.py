@@ -16,7 +16,7 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
-from ase.calculators.kim.kim import KIM
+#from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import set_lattice
