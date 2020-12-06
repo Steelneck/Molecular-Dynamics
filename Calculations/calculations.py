@@ -8,7 +8,12 @@ from ase.build import bulk
 from ase.io import read
 import sys, os
 
+
+from ase.units import kJ
+from ase.eos import EquationOfState
+
 from asap3 import EMT ###!!! Temporary
+from ase import Atoms ###!!! Temporary
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -219,3 +224,34 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
+
+def calc_bulk_modulus(atoms):
+    a = 4.0  # approximate lattice constant
+    b = a / 2
+    """
+    Use this for comparison remember to remove division with amount of atoms below 
+    atoms = Atoms('Cu',
+            cell=[(0, b, b), (b, 0, b), (b, b, 0)],
+            pbc=1,
+            calculator=EMT())  # use EMT potential
+    """
+    atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
+    trajFileName = atomsConfigName + '.traj'
+    cell = atoms.get_cell()
+    traj = Trajectory(trajFileName, 'w')
+    for x in np.linspace(0.8, 1.2, 10):                     # Generates a array of 10 numbers equally spaced between 0.8 and 1.2 to vary the lattice constants with
+        atoms.set_cell(cell * x, scale_atoms=True)          # Modify the cell with new lattice parameters, to later plot energy to volume.
+        traj.write(atoms)
+
+    configs = read(trajFileName + '@:')                     # To read all configs in traj file @ followed by a intervall. Example 0:4 first 5 elements, ':' denotes all elements. 
+                                                            # 10 elements from the for loop above
+    # Extract volumes and energies, divide with amount of atoms to scale for a cell
+    volumes = [atoms.get_volume()/len(atoms) for atoms in configs]                 
+    energies = [atoms.get_potential_energy()/len(atoms) for atoms in configs]
+
+    eos = EquationOfState(volumes, energies)                # Generate EOS
+    v0, e0, B = eos.fit()                                   # This returns minimized energy e0 for the corresponding volume v0, and B is the bulk modulus (curvature at v0).
+    B_GPa = B / kJ * 1.0e24                                 # Unit conversion
+    print(B / kJ * 1.0e24, 'GPa')                           # Print result with unit conversion
+    print(v0, 'Å^3')
+    eos.plot(atomsConfigName + '_eos.png')
