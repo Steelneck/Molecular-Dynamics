@@ -226,32 +226,39 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         return(None)
 
 def calc_bulk_modulus(atoms):
-    a = 4.0  # approximate lattice constant
-    b = a / 2
     """
-    Use this for comparison remember to remove division with amount of atoms below 
-    atoms = Atoms('Cu',
-            cell=[(0, b, b), (b, 0, b), (b, b, 0)],
-            pbc=1,
-            calculator=EMT())  # use EMT potential
+    Calculates the bulk modulus using Equation of State (EOS). Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures. 
     """
-    atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
-    trajFileName = atomsConfigName + '.traj'
-    cell = atoms.get_cell()
-    traj = Trajectory(trajFileName, 'w')
-    for x in np.linspace(0.8, 1.2, 10):                     # Generates a array of 10 numbers equally spaced between 0.8 and 1.2 to vary the lattice constants with
-        atoms.set_cell(cell * x, scale_atoms=True)          # Modify the cell with new lattice parameters, to later plot energy to volume.
-        traj.write(atoms)
+    try:
+        atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
+        trajFileName = atomsConfigName + '.traj'
+        cell = atoms.get_cell()                                 # Extract atoms cell, i.e. lattice constants to make small deviations in for-loop.
+        traj = Trajectory(trajFileName, 'w')
+        for x in np.linspace(0.8, 1.2, 10):                     # Generates a array of 10 numbers equally spaced between 0.8 and 1.2 to vary the lattice constants with
+            atoms.set_cell(cell * x, scale_atoms=True)          # Modify the cell with new lattice parameters, to later plot energy to volume. Careful this modifies the original object, must reset below. 
+            traj.write(atoms)
+        
+        atoms.set_cell(cell, scale_atoms=True)                  # Reset the cell to original. 
 
-    configs = read(trajFileName + '@:')                     # To read all configs in traj file @ followed by a intervall. Example 0:4 first 5 elements, ':' denotes all elements. 
-                                                            # 10 elements from the for loop above
-    # Extract volumes and energies, divide with amount of atoms to scale for a cell
-    volumes = [atoms.get_volume()/len(atoms) for atoms in configs]                 
-    energies = [atoms.get_potential_energy()/len(atoms) for atoms in configs]
+        configs = read(trajFileName + '@:')                     # To read all configs in traj file @ followed by a intervall. Example 0:4 first 5 elements, ':' denotes all elements. 
+                                                                # 10 elements from the for loop above
+        
+        # Extract volumes and energies, divide with amount of atoms to scale for a cell
+        volumes = [atoms.get_volume()/len(atoms) for atoms in configs]                 
+        energies = [atoms.get_potential_energy()/len(atoms) for atoms in configs]
 
-    eos = EquationOfState(volumes, energies)                # Generate EOS
-    v0, e0, B = eos.fit()                                   # This returns minimized energy e0 for the corresponding volume v0, and B is the bulk modulus (curvature at v0).
-    B_GPa = B / kJ * 1.0e24                                 # Unit conversion
-    print(B / kJ * 1.0e24, 'GPa')                           # Print result with unit conversion
-    print(v0, 'Å^3')
-    eos.plot(atomsConfigName + '_eos.png')
+        eos = EquationOfState(volumes, energies)                # Generate EOS
+        v0, e0, B = eos.fit()                                   # This returns minimized energy e0 for the corresponding volume v0, and B is the bulk modulus (curvature at v0).
+        B_GPa = B / kJ * 1.0e24                                 # Unit conversion
+
+        print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].') 
+        eos.plot(atomsConfigName + '_eos.png')                  # Saves an images of the plot. Might not want this?
+        
+        return(v0, e0, B_GPa)                                   # Return min E=e0 at volume V=v0 and Bulkmodulus with unit GPa
+
+    except Exception as e:
+        print("An error occured when calculating the Bulk modulus:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
