@@ -54,7 +54,7 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
 
     # Returns the chemical formula which is needed when creating the atoms object.
     chemical_formula_sum = str((dictionary[symbol])['_chemical_formula_sum'])
-    
+    print(chemical_formula_sum)
     # Sometimes the chemical formula have spaces in between the elements. 
     # This function removes the spaces since creating the atom object wont work otherwise. 
     chemical_formula = chemical_formula_sum.replace(" ","")
