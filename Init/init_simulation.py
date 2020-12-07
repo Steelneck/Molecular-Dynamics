@@ -44,3 +44,4 @@ def simulation(Calculator,Symbol):
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
+    atoms.clear()
