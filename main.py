@@ -44,7 +44,7 @@ def main():
         #debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
 
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
-        v0, e0, B_GPa = calc.calc_bulk_modulus(atoms)
+        e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
     else:
         print("System never reached equilibrium. No calculations are possible.")
 
