@@ -2,4 +2,4 @@
 __pycache__/
 *.traj
 kim.log
-Init/__pycache__/
+Calculations/__pycache__/
