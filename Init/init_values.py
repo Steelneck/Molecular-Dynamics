@@ -27,9 +27,9 @@ from.init_functions import insert_impurity
 # OBS! Combination of Directions and Miller only works when complete and consistent
 Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
 Miller = [None, None, None] # Basis of supercell and / or three surfaces
-Size_X = 2 # How many times fundamental repeat unit is repeated
-Size_Y = 2
-Size_Z = 2
+Size_X = 3 # How many times fundamental repeat unit is repeated
+Size_Y = 3
+Size_Z = 3
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
