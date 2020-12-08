@@ -1,0 +1,18 @@
+{
+    "Data": [
+        {
+            "Name": "Cu_KIM",
+            "EMT": false,
+            "openKIM": true,
+            "KIM_potential": "",
+            "ASE": false,
+            "Materials_project": true,
+            "Symbol": "Cu",
+            "Temperature": 300,
+            "Steps":1000,
+            "Interval":10,
+            "Size_X":10,
+            "Size_Y":10,
+            "Size_Z":10}
+    ]
+}
