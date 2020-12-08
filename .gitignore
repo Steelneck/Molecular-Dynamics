@@ -2,3 +2,4 @@
 __pycache__/
 *.traj
 kim.log
+Init/__pycache__/
