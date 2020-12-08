@@ -33,9 +33,6 @@ from pymatgen.io.cif import CifParser
 # OBS! Combination of Directions and Miller only works when complete and consistent
 Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
 Miller = [None, None, None] # Basis of supercell and / or three surfaces
-Size_X = 10 # How many times fundamental repeat unit is repeated
-Size_Y = 10
-Size_Z = 10
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -44,9 +41,6 @@ lc_c = 0
 lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
-Temperature = 300
-steps = 1000 # Timesteps for dyn.run
-interval = 10 # Writes in traj at n timestep
 
 
 """ The following Bravais lattices can be used:
@@ -98,10 +92,17 @@ def timestepindex(timesteps, traj_interval):
     trajindexes = math.floor(timesteps/traj_interval)
     return trajindexes
 
-timeStepIndex = timestepindex(steps, interval)
 atoms_list = []
 
-def init(Calculator,Symbol):
+#Check if the potential string is empty, then assign standard Lennard Jones potential
+def checkKIMpotential(potential):
+    if potential == "":
+        return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+    else:
+        return potential
+
+
+def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z):
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
                                     lc_c,
@@ -125,14 +126,20 @@ def init(Calculator,Symbol):
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
+    potential = checkKIMpotential(KIM_potential)
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher ordet function)
-    atoms.calc = Calculator
+    if (EMT_Check == True) and (openKIM_Check == False):
+        atoms.calc = EMT()
+    elif (EMT_Check == False) and (openKIM_Check == True):
+        atoms.calc = KIM(potential)
+    else:
+        raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
 
     atoms_list.append(atoms)
     return atoms_list
     
-def init_MP(Calculator,Symbol):
+def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z):
     criteria_list= [{ "elements" : [Symbol]}]
     #Loop that takes out each critera for each query
     for criteria in criteria_list:
@@ -165,7 +172,15 @@ def init_MP(Calculator,Symbol):
 
                 # Describe the interatomic interactions with the Effective Medium Theory
                 # (Note: Create a higher ordet function)
-                atoms.calc = Calculator
+
+                potential = checkKIMpotential(KIM_potential)
+
+                if (EMT_Check == True) and (openKIM_Check == False):
+                    atoms.calc = EMT()
+                elif (EMT_Check == False) and (openKIM_Check == True):
+                    atoms.calc = KIM(potential)
+                else:
+                    raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
 
                 atoms_list.append(atoms)
         else:
