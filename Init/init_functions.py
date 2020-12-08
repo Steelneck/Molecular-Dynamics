@@ -1,13 +1,10 @@
 """ Initiation functions """
 
 from collections import Counter
-<<<<<<< HEAD
 from operator import index
 from ase import *
 import math
-=======
 from ase import Atoms
->>>>>>> feature_simulation
 
 # Parameters will decide values and bravais lattice
 def set_lattice(Bravais,
@@ -55,7 +52,6 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     # Returns a dict with all the values
     return lc_constants
 
-<<<<<<< HEAD
 def find_crystal_center(myAtoms):
     N = len(myAtoms)                        
     center = math.ceil(N/2)             # Necessary to grab a center atom
@@ -81,7 +77,6 @@ def insert_impurity(myAtoms, symbol, atom_pos):
 def create_vacancy(myAtoms):  # Removes a row of atoms and randomly displace the other atoms
     del myAtoms[0]
     myAtoms.rattle(0.1)
-=======
 """ Takes out the information from the ordered dictionary and creates an atomobject """
 def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
 
@@ -124,4 +119,3 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
     atoms = atoms*(Size_X,Size_Y,Size_Z)
     
     return atoms
->>>>>>> feature_simulation

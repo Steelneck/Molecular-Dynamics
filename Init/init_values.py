@@ -15,20 +15,17 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 from asap3 import EMT
-from ase.calculators.kim.kim import KIM
+#from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
 from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
-<<<<<<< HEAD
 from.init_functions import insert_impurity
-=======
 from .init_functions import from_dictionary_to_atoms
 
 # Dependencies to run materials project
 from pymatgen.ext.matproj import MPRester
 from pymatgen.io.cif import CifParser
->>>>>>> feature_simulation
 
 """ This section is where the user changes values """
 
@@ -36,16 +33,10 @@ from pymatgen.io.cif import CifParser
 # OBS! Combination of Directions and Miller only works when complete and consistent
 Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
 Miller = [None, None, None] # Basis of supercell and / or three surfaces
-<<<<<<< HEAD
 Size_X = 3 # How many times fundamental repeat unit is repeated
 Size_Y = 3
 Size_Z = 3
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
-=======
-Size_X = 10 # How many times fundamental repeat unit is repeated
-Size_Y = 10
-Size_Z = 10
->>>>>>> feature_simulation
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -58,14 +49,11 @@ Temperature = 300
 steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
-<<<<<<< HEAD
 """ Insert impurity/vacancy in crystal """
 Vacancy = False              # Set to true when run simulation with vacancy
 Impurity = True             # Set to true when run simulation with foreign element
 Impurity_ele = 'Au'         # Set an element (Gold baby)
 Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
-=======
->>>>>>> feature_simulation
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -129,7 +117,6 @@ def init(Calculator,Symbol):
 
     # Set up a crystals
     atoms = set_lattice(Bravais,
-<<<<<<< HEAD
                         Lattice_Const,
                         Directions,
                         Miller,
@@ -149,18 +136,6 @@ def init(Calculator,Symbol):
     if Vacancy == True:
         create_vacancy(atoms) # Create a vacancy
     
-=======
-                    Lattice_Const,
-                    Directions,
-                    Miller,
-                    Size_X,
-                    Size_Y,
-                    Size_Z,
-                    Symbol,
-                    Pbc) 
-
-        
->>>>>>> feature_simulation
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
