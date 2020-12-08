@@ -1,5 +1,6 @@
 """Demonstrates molecular dynamics with constant energy."""
 
+<<<<<<< HEAD
 from Init.init_values import *
 from tkinter import *
 import os
@@ -55,5 +56,15 @@ def main():
     else:
         print("System never reached equilibrium. No calculations are possible.")
 
+=======
+from Init.init_simulation import *
+
+def main():  
+    
+    simulation(EMT(),'Cu')
+    simulation(EMT(), "Ni")
+    simulation(EMT(), "Pd")
+    
+>>>>>>> feature_simulation
 if __name__ == "__main__":
     main()
