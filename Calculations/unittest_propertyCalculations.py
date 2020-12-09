@@ -134,16 +134,16 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
     
     def test_internal_temperature(self):
-        self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
+        self.assertIsInstance(internal_temperature(atoms, trajObject), float)
 
     def test_internal_temperature_not_negative(self):
-        self.assertGreaterEqual(internal_temperature(atoms, trajObject, 1000), 0)
+        self.assertGreaterEqual(internal_temperature(atoms, trajObject), 0)
 
     def test_cohesive_energy(self):
-        self.assertIsInstance(cohesive_energy(atoms, trajObject, 1000), float)
+        self.assertIsInstance(cohesive_energy(atoms, trajObject), float)
 
     def test_cohesive_energy_positive(self):
-        self.assertGreater(cohesive_energy(atoms, trajObject, 1000), 0)
+        self.assertGreater(cohesive_energy(atoms, trajObject), 0)
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
