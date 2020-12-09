@@ -5,14 +5,22 @@ from tkinter import *
 import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
-from ase.gui import *
+from ase import *
+
+""" Ignore the parallel rank deprecation warning """
+
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
+""" Main """
 
 def main():  
     # Initiate the crystal based on the chosen variables
     # This will eventually become "Initiate the system" => system depends on user's choice
     atoms = init()
-    
-    
+
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
 
