@@ -20,7 +20,7 @@ from asap3 import EMT
 # Initiation functions to separate them from variables
 from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
-from.init_functions import insert_impurity
+from .init_functions import insert_impurity
 
 """ This section is where the user changes values """
 
