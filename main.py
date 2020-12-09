@@ -24,7 +24,6 @@ def main():
 
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
-
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval)
@@ -50,11 +49,11 @@ def main():
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
-        internalTemperature = calc.internal_temperature(atoms, traj_eq, timeStepIndex)
-        
-        # Debye temperature of the system
-        #debyeTemperature = calc.debye_temperature(atoms, "atoms_eq.traj", 10, EMT())
+        internalTemperature = calc.internal_temperature(atoms, traj_eq)
 
+        # Cohesive energy of the system
+        cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq)
+        
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
     else:
         print("System never reached equilibrium. No calculations are possible.")
