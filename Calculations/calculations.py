@@ -7,13 +7,8 @@ from ase.calculators.eam import EAM
 from ase.build import bulk
 from ase.io import read
 import sys, os
-
-
 from ase.units import kJ
 from ase.eos import EquationOfState
-
-from asap3 import EMT ###!!! Temporary
-from ase import Atoms ###!!! Temporary
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -234,7 +229,8 @@ def calc_bulk_modulus(atoms):
         trajFileName = atomsConfigName + '.traj'
         cell = atoms.get_cell()                                 # Extract atoms cell, i.e. lattice constants to make small deviations in for-loop.
         traj = Trajectory(trajFileName, 'w')                    # Create a traj file for writing results to.
-        measAmount = 10
+        measAmount = 10                                         # This is set to 10 from experimenting with different materials that yields an energy minimum between endpoints. 
+                                                                # Please note that this can be modified to a larger value if the curve from EOS is a straight line for instance.
         for x in np.linspace(0.8, 1.2, measAmount):             # Generates a array of measAmount numbers equally spaced between 0.8 and 1.2 to vary the lattice constants with
             atoms.set_cell(cell * x, scale_atoms=True)          # Modify the cell with new lattice parameters, to later plot energy to volume. Careful this modifies the original object, must reset below. 
             traj.write(atoms)
