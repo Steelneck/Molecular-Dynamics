@@ -139,12 +139,6 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_internal_temperature_not_negative(self):
         self.assertGreaterEqual(internal_temperature(atoms, trajObject, 1000), 0)
 
-    #def test_debye_temperature(self):
-    #    self.assertIsInstance(debye_temperature(atoms, trajObject, 1000), float)
-
-    #def test_debye_temperature_not_negative(self):
-    #    self.assertGreaterEqual(debye_temperature(atoms, trajObject, 1000), 0)
-
     def test_cohesive_energy(self):
         self.assertIsInstance(cohesive_energy(atoms, trajObject, 1000), float)
 

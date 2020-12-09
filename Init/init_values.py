@@ -13,6 +13,7 @@ from ase.lattice.hexagonal import *
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
+from ase.md.langevin import Langevin
 from ase import units
 from asap3 import EMT
 #from ase.calculators.kim.kim import KIM
@@ -32,7 +33,7 @@ Size_X = 10 # How many times fundamental repeat unit is repeated
 Size_Y = 10
 Size_Z = 10
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
-Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
+Pbc = (False, False, False) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0

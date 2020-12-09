@@ -15,7 +15,6 @@ def main():
     
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
-
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval)
@@ -38,9 +37,10 @@ def main():
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
-        internalTemperature = calc.internal_temperature(atoms, traj_eq, timeStepIndex)
+        internalTemperature = calc.internal_temperature(atoms, traj_eq)
 
-        cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq, 10)
+        # Cohesive energy of the system
+        cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq)
         
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
     else:

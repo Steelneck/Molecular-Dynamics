@@ -158,19 +158,19 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj, timeStepIndex):
+def internal_temperature(myAtoms, traj_eq):
     """ Returns the average temperature within parameters """
-    N = len(traj)
+    N = len(traj_eq)
 
     eqTemp = 0
     for n in range(1, N):                       
-        eqTemp += traj[n].get_temperature()     # Sum returned value from ASE function over timesteps for sampling
+        eqTemp += traj_eq[n].get_temperature()              # Sum returned value from ASE function over timesteps for sampling
      
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
     
-def cohesive_energy(myAtoms, traj_eq, timeStepIndex):
+def cohesive_energy(myAtoms, traj_eq):
     """ Returns the cohesive energy of the system """
     N = len(traj_eq)
 
