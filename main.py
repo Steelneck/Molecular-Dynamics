@@ -6,6 +6,7 @@ import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase import *
+import shutil
 
 """ Ignore the parallel rank deprecation warning """
 
@@ -39,7 +40,8 @@ def main():
     calc.eq_traj(atoms, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
     if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
         traj_eq = Trajectory("atoms_eq.traj")
-        calc.write_atom_properties(atoms, "properties.csv", traj_eq)     
+        calc.write_atom_properties(atoms, "Visualization/properties.csv", traj_eq)
+        #shutil.move("properties.csv", "Visualization/properties.csv")
         #If-statement that checks if we ever reached equilibrium.
         MSD = calc.MSD_calc(atoms, traj_eq, 1)
         print("MSD = ", MSD, "[Å²]")
