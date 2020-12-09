@@ -1,6 +1,9 @@
 """ Initiation functions """
 
 from collections import Counter
+from operator import index
+from ase import *
+import math
 
 # Parameters will decide values and bravais lattice
 def set_lattice(Bravais,
@@ -47,3 +50,29 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     
     # Returns a dict with all the values
     return lc_constants
+
+def find_crystal_center(myAtoms):
+    N = len(myAtoms)                        
+    center = math.ceil(N/2)             # Necessary to grab a center atom
+    sorted_pos = myAtoms.get_positions()
+    for n in range(0,3):
+        sorted_pos[:, n].sort()         # Sorts the columns in crystal
+    center_atom = sorted_pos[center]    # Grabs a center atom 
+    return center_atom                  # Return center position for the atom
+
+def insert_impurity(myAtoms, symbol, atom_pos):
+    insert_at_index = 0
+    for n in range(len(myAtoms)):
+        if (myAtoms.get_positions()[n] == atom_pos).all():
+            insert_at_index = n         # Where the new atom will be placed
+            break
+    del myAtoms[insert_at_index]        # Remove the atom for a new one
+    element = Atoms(symbol,
+            [(atom_pos[0], 
+                atom_pos[1], 
+                atom_pos[2])])          # Will only work with 1 row of atoms so e.g. H2 will fail
+    myAtoms += element                  # Add new atom at given position
+
+def create_vacancy(myAtoms):  # Removes a row of atoms and randomly displace the other atoms
+    del myAtoms[0]
+    myAtoms.rattle(0.1)

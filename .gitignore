@@ -1,5 +1,7 @@
 .github/
-__pycache__/
+*/__pycache__/
 *.traj
 kim.log
 *.png
+Calculations/__pycache__/*
+__pycache__/
