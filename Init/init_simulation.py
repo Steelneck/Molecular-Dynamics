@@ -9,18 +9,20 @@ import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase.gui import *
 
-def simulation(Name, EMT,openKIM, KIM_potential ,ASE, Materials_project ,
+def simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,
                         Symbol, Temperature, Steps, Interval,
-                        Size_X, Size_Y, Size_Z):
+                        Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
     """ Choose which init function to run. 
             init() for ASE configuration.
             init_MP() for materials project configuration.
         See init_values for configuration settings.
     """
     if (ASE == True) and (Materials_project == False) :
-        atoms = init(EMT, openKIM, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z)
+        atoms = init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                    lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
     elif (Materials_project == True) and (ASE == False):
-        atoms = init_MP(EMT,openKIM,KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z)
+        atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
     

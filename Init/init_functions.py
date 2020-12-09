@@ -50,7 +50,7 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     return lc_constants
 
 """ Takes out the information from the ordered dictionary and creates an atomobject """
-def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
+def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
 
     # Returns the chemical formula which is needed when creating the atoms object.
     chemical_formula_sum = str((dictionary[symbol])['_chemical_formula_sum'])
@@ -85,7 +85,8 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z):
     # Creates the atomobject
     atoms =Atoms(symbols= chemical_formula,
                 positions=position,
-                cell=[a, b, c, alpha, beta, gamma])
+                cell=[a, b, c, alpha, beta, gamma],
+                pbc=PBC)
 
     # Generates a supercell
     atoms = atoms*(Size_X,Size_Y,Size_Z)

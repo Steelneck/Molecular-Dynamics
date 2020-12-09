@@ -1,18 +1,31 @@
 {
     "Data": [
         {
-            "Name": "Cu_KIM",
-            "EMT": false,
-            "openKIM": true,
-            "KIM_potential": "",
-            "ASE": false,
-            "Materials_project": true,
+            "Name": "Cu_EMTASE",
+            "EMT": true,
+            "openKIM": false,
+            "KIM_potential": " ",
+            "ASE": true,
+            "Materials_project": false,
             "Symbol": "Cu",
             "Temperature": 300,
             "Steps":1000,
             "Interval":10,
             "Size_X":10,
             "Size_Y":10,
-            "Size_Z":10}
+            "Size_Z":10,
+            "API_Key": "rXy9SNuvaCUyoVmTDjDT", 
+            "PBC": [true, true, true],
+            "Directions": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+            "Miller" : [null, null, null],
+            "lc_a": 0,
+            "lc_b": 0,
+            "lc_c": 0,
+            "lc_alpha":0,
+            "lc_beta":0,
+            "lc_gamma":0
+
+        }
+
     ]
 }

@@ -31,16 +31,14 @@ from pymatgen.io.cif import CifParser
 
 # Set variables for your simulation
 # OBS! Combination of Directions and Miller only works when complete and consistent
-Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
-Miller = [None, None, None] # Basis of supercell and / or three surfaces
-Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
-Bravais = FaceCenteredCubic # Set the lattice
-lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
-lc_b = 0
-lc_c = 0
-lc_alpha = 0 # Degrees
-lc_beta = 0
-lc_gamma = 0
+#Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
+#Miller = [None, None, None] # Basis of supercell and / or three surfaces
+#lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
+#lc_b = 0
+#lc_c = 0
+#lc_alpha = 0 # Degrees
+#lc_beta = 0
+#lc_gamma = 0
 
 
 """ The following Bravais lattices can be used:
@@ -78,8 +76,6 @@ KIM('Insert_openKIM_potential_here')
     The size parameters, calculator and temperature above is also used when running materials project
 """
 
-m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
-
 """ MongoDB query to get desired data from materialsproject
         Query needs to be in a list format.
         Queries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
@@ -96,13 +92,15 @@ atoms_list = []
 
 #Check if the potential string is empty, then assign standard Lennard Jones potential
 def checkKIMpotential(potential):
-    if potential == "":
+    if (potential == "") or (potential == " "):
         return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
     else:
         return potential
 
 
-def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z):
+def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,
+            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
                                     lc_c,
@@ -111,7 +109,7 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_
                                     lc_gamma)
 
     # Set up a crystals
-    atoms = set_lattice(Bravais,
+    atoms = set_lattice(FaceCenteredCubic,
                     Lattice_Const,
                     Directions,
                     Miller,
@@ -119,7 +117,7 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_
                     Size_Y,
                     Size_Z,
                     Symbol,
-                    Pbc) 
+                    PBC) 
 
         
     # Set the momenta corresponding to T=300K 
@@ -139,7 +137,10 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_
     atoms_list.append(atoms)
     return atoms_list
     
-def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z):
+def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z,API_Key,PBC):
+    
+    m = MPRester(API_Key) 
+
     criteria_list= [{ "elements" : [Symbol]}]
     #Loop that takes out each critera for each query
     for criteria in criteria_list:
@@ -164,7 +165,7 @@ def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Si
                 pretty_formula = str((data[i])['pretty_formula'])
 
                 # Function that returns an atomobject depending on the information from the CIF
-                atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z)
+                atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
 
                 # Set the momenta corresponding to T=300K 
                 # (Note: Create a higher order function)
