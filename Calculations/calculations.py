@@ -85,7 +85,6 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
-    print("MSD = ", MSD, "[Å²]")
     return(MSD)
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
@@ -99,7 +98,6 @@ def Self_diffuse(MSD, timeStepIndex):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
-    print("D = ", D, "[Å²/fs]")
     return(D)
     
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""

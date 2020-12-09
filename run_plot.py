@@ -20,4 +20,4 @@ def plot_from_csvFile(csvFileName, x_str, y_str):
 
     plt.show()
 
-plot_from_csvFile("properties.csv", "Time", "S")
+plot_from_csvFile("properties.csv", "Time", "MSD")

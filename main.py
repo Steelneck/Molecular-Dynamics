@@ -34,7 +34,9 @@ def main():
         calc.write_atom_properties(atoms, "properties.csv", traj_eq)     
         #If-statement that checks if we ever reached equilibrium.
         MSD = calc.MSD_calc(atoms, traj_eq, 1)
+        print("MSD = ", MSD, "[Å²]")
         D = calc.Self_diffuse(MSD, len(traj_eq))
+        print("D = ", D, "[Å²/fs]")
         L = calc.Lindemann(traj_eq, MSD)
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
