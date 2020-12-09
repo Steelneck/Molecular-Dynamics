@@ -2,7 +2,13 @@ from ase import units
 from ase.data import atomic_masses, atomic_numbers
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
-# from ase.calculators.eam import EAM
+
+from ase.calculators.eam import EAM
+from ase.build import bulk
+from ase.io import read
+import sys, os
+
+from asap3 import EMT ###!!! Temporary
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
@@ -152,36 +158,94 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj_eq, timeStepIndex):
+def internal_temperature(myAtoms, traj_eq):
     """ Returns the average temperature within parameters """
-    #traj = Trajectory(trajectoryFile)
     N = len(traj_eq)
 
     eqTemp = 0
     for n in range(1, N):                       
-        eqTemp += traj_eq[n].get_temperature()                  # Sum returned value from ASE function over timesteps for sampling
+        eqTemp += traj_eq[n].get_temperature()              # Sum returned value from ASE function over timesteps for sampling
      
     internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
     print("Internal temperature:", internalTemp, "[K]")  
     return(internalTemp)
+    
+def cohesive_energy(myAtoms, traj_eq):
+    """ Returns the cohesive energy of the system """
+    N = len(traj_eq)
 
-def debye_temperature(myAtoms, traj_eq, timeStepIndex):
-    """ Returns the Debye temperature of the system """
-    #traj = Trajectory(trajectoryFile)
+    eqCohEn = 0
+    for n in range(1, N):
+        eqCohEn += traj_eq[n].get_potential_energy()/len(myAtoms)
+
+    avgCohEn = eqCohEn/N
+    print("Cohesive energy:", avgCohEn, "[eV/atom]")
+    return(avgCohEn)
+
+def debye_temperature(myAtoms, traj_eq, meanSquareDisplacement):
+    """ Calculates the Debye temperature of the system."""
     N = len(traj_eq)
 
     # Set values of necessary constants in eV-units
-    hbar = 6.582119569*10**(-34)
-    kB = 8.617333262145*10**(-5)
-    MSD = calc.MSD_calc(myAtoms, timeStepIndex)
+    # hbar = 6.582119569*10**(-34)
+    # kB = 8.617333262145*10**(-5)
 
     eqDebyeTemp = 0.0
     for n in range(1, N):
         T = traj_eq[n].get_temperature()
         m = sum(traj_eq[n].get_masses())*1.6605402*10**(-27)
-        eqDebyeTemp += np.sqrt(3*(hbar**2)*T/(m*kB*MSD))
+        eqDebyeTemp += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSquareDisplacement))   
 
-    avgDebyeTemp = eqDebyeTemp/N
-    print("Debye temperature:", avgDebyeTemp, "[K]")
-    return(avgDebyeTemp)
-    
+    avgDebye = eqDebyeTemp/N
+    print("Debye temperature:", avgDebye, "[K]")
+    return(avgDebye)
+
+def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
+    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
+        Calculates both a and c constant but those are equal for fcc cubic.
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
+    try: 
+        # Make a good initial guess on the lattice constant
+        a0 = 3.52 / np.sqrt(2) 
+        c0 = np.sqrt(8 / 3.0) * a0
+        
+        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
+        traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
+
+        # Generate 9 calculations of potential energy for different a and c values. 
+        eps = 0.01                                                              # A small deviation to generate a few more constants.
+        for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
+            for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
+                at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
+                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
+                traj.write(at)                                                  # Write bulk config to trajectory file
+
+        # Now we can get the energies and lattice constants from the traj file
+        configs = read(fileName + "@:")
+        energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
+
+        # From the bulk builder we can do at.cell to get the constant: a at position 0,0 and constant: c at position 2,2
+        a = np.array([config.cell[0, 0] for config in configs])                 
+        c = np.array([config.cell[2, 2] for config in configs])
+
+        # Fit the energy to lattice constants to the expression: 𝑝0+𝑝1𝑎+𝑝2𝑐+𝑝3𝑎^2+𝑝4𝑎𝑐+𝑝5𝑐^2
+        functions = np.array([a**0, a, c, a**2, a * c, c**2])
+        p = np.linalg.lstsq(functions.T, energies, rcond=-1)[0]
+        #print("Polynomial:", p, "\n")
+        #print("Functions: \n", functions.T)
+        
+        # Solve fitted function for a and c. The minimum is found by
+        p0 = p[0]
+        p1 = p[1:3]
+        p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
+        a0, c0 = np.linalg.solve(p2.T, -p1)
+
+        print("Lattice constant a:", a0) 
+        return(a0)
+        #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
+    except Exception as e:
+        print("An error occured when calculating the lattice constant:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
