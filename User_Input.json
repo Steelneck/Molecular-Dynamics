@@ -8,6 +8,10 @@
             "ASE": true,
             "Materials_project": false,
             "Symbol": "Cu",
+            "Vacancy": false,
+            "Impurity": false,
+            "Impurity_ele": "Ni",
+            "Impurity_pos": "Center",
             "Temperature": 300,
             "Steps":1000,
             "Interval":10,
@@ -24,7 +28,6 @@
             "lc_alpha":0,
             "lc_beta":0,
             "lc_gamma":0
-
         }
 
     ]

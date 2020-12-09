@@ -1,5 +1,4 @@
 """ Initiation of variables and system  """
-
 import math
 
 # 6 of the 7 lattice systems (rhombohedral is not available)
@@ -19,13 +18,14 @@ from asap3 import EMT
 from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
-from .init_functions import set_lattice
+from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
 from .init_functions import from_dictionary_to_atoms
 
 # Dependencies to run materials project
 from pymatgen.ext.matproj import MPRester
 from pymatgen.io.cif import CifParser
+from.init_functions import insert_impurity
 
 """ This section is where the user changes values """
 
@@ -40,6 +40,12 @@ from pymatgen.io.cif import CifParser
 #lc_beta = 0
 #lc_gamma = 0
 
+
+""" Insert impurity/vacancy in crystal """
+#Vacancy = False              # Set to true when run simulation with vacancy
+#Impurity = True             # Set to true when run simulation with foreign element
+#Impurity_ele = 'Au'         # Set an element (Gold baby)
+#Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
 
 """ The following Bravais lattices can be used:
  SimpleCubic                 Lattice constant: a
@@ -85,7 +91,7 @@ Note: Right now this function sorts out everything except for FCC crystals
 """ Decide timestepindex for the traj file """
 
 def timestepindex(timesteps, traj_interval):
-    trajindexes = math.floor(timesteps/traj_interval)
+    trajindexes = math.floor(timesteps/traj_interval) # Round down to avoid out-of-bounds index array
     return trajindexes
 
 atoms_list = []
@@ -98,9 +104,11 @@ def checkKIMpotential(potential):
         return potential
 
 
-def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,
-            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
-            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
+def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
+                    Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
+                    Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                    lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
+
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
                                     lc_c,
@@ -119,7 +127,16 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,
                     Symbol,
                     PBC) 
 
-        
+    if Impurity == True:
+        if Impurity_pos == "Center":
+            atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
+        else:
+            atom_pos = atoms.get_positions()[0] # Returns the first corner in crystal
+        insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
+
+    if Vacancy == True:
+        create_vacancy(atoms) # Create a vacancy
+
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
@@ -137,7 +154,9 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,
     atoms_list.append(atoms)
     return atoms_list
     
-def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Size_Y,Size_Z,API_Key,PBC):
+def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+                        Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
+                        Size_X,Size_Y,Size_Z,API_Key,PBC):
     
     m = MPRester(API_Key) 
 
@@ -166,6 +185,16 @@ def init_MP(EMT_Check, openKIM_Check, KIM_potential,Symbol,Temperature,Size_X,Si
 
                 # Function that returns an atomobject depending on the information from the CIF
                 atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
+
+                if Impurity == True:
+                    if Impurity_pos == "Center":
+                        atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
+                    else:
+                        atom_pos = atoms.get_positions()[0] # Returns the first corner in crystal
+                    insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
+
+                if Vacancy == True:
+                    create_vacancy(atoms) # Create a vacancy
 
                 # Set the momenta corresponding to T=300K 
                 # (Note: Create a higher order function)

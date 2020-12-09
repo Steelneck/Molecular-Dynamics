@@ -15,6 +15,10 @@ def main():
             ASE = row["ASE"]
             Materials_project = row["Materials_project"]
             Symbol = row["Symbol"]
+            Vacancy = row["Vacancy"]
+            Impurity = row["Impurity"]
+            Impurity_ele=row["Impurity_ele"]
+            Impurity_pos=row["Impurity_pos"]
             Temperature = row["Temperature"]
             Steps = row["Steps"]
             Interval = row["Interval"]
@@ -32,8 +36,9 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-            simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,
-                        Symbol, Temperature, Steps, Interval,
+            simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
+                        Vacancy, Impurity, Impurity_ele, Impurity_pos,
+                        Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
