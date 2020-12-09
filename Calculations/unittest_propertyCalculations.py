@@ -7,13 +7,14 @@ from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import Specific_Heat
+from calculations import internal_temperature
+from calculations import cohesive_energy
 from calculations import calc_instantaneous_pressure
 from calculations import calc_internal_pressure
 from calculations import eq_traj
 from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
-from calculations import internal_temperature
 from calculations import calc_lattice_constant_fcc_cubic
 
 import numpy
@@ -131,11 +132,18 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
+    
     def test_internal_temperature(self):
-        self.assertIsInstance(internal_temperature(atoms, trajObject, 1000), float)
+        self.assertIsInstance(internal_temperature(atoms, trajObject), float)
 
     def test_internal_temperature_not_negative(self):
-        self.assertGreaterEqual(internal_temperature(atoms, trajObject, 1000), 0)
+        self.assertGreaterEqual(internal_temperature(atoms, trajObject), 0)
+
+    def test_cohesive_energy(self):
+        self.assertIsInstance(cohesive_energy(atoms, trajObject), float)
+
+    def test_cohesive_energy_positive(self):
+        self.assertGreater(cohesive_energy(atoms, trajObject), 0)
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
