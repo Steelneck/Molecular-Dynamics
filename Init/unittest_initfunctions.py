@@ -68,10 +68,6 @@ class TestInit(unittest.TestCase):
             self.assertEqual(lc_constant['c'], 2)
             self.assertEqual(lc_constant['gamma'], 74)
 
-<<<<<<< HEAD
-        def test_timestepindex(self):
-            self.assertIsInstance(timeStepIndex, float)
-=======
         def test_set_lattice(self):
             self.assertEqual(atoms.get_chemical_symbols()[0], 'Cu')
             self.assertEqual(len(super_al), len(atoms)) # 32 in each
@@ -125,7 +121,6 @@ class TestInit(unittest.TestCase):
                 if (super_pd.get_positions()[n] == atom_pos).all():
                     pos = super_pd.get_positions()[n]
             self.assertIsNot(pos, atom_pos.all()) # pos will return zero here since it never found the same pos
->>>>>>> 64deecefd56a4995703c283f745d939eca76636f
 
 if __name__ == '__main__':
     tests = [unittest.TestLoader().loadTestsFromTestCase(TestInit)]
