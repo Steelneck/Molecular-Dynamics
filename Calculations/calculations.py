@@ -170,45 +170,62 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         return(None)
 
 def internal_temperature(myAtoms, traj_eq):
-    """ Returns the average temperature within parameters """
-    N = len(traj_eq)
 
-    eqTemp = 0
-    for n in range(1, N):                       
-        eqTemp += traj_eq[n].get_temperature()              # Sum returned value from ASE function over timesteps for sampling
-     
-    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value
-    print("Internal temperature:", internalTemp, "[K]")  
-    return(internalTemp)
+    """Calculates the internal temperature of the system"""
+    try:
+        eqTemp = 0
+        for n in range(1, len(traj_eq)):                       
+            eqTemp += traj_eq[n].get_temperature()                          # Sum returned value from ASE function over timesteps for sampling
+        avgTemp = eqTemp/len(traj_eq)                                       # Average over number of samples, return a final value
+
+    except Exception as e:
+        print("An error occured when checking the Lindemann criterion:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    print("Internal temperature: T =", avgTemp, "[K]")
+    return(avgTemp)
     
 def cohesive_energy(myAtoms, traj_eq):
+
     """ Returns the cohesive energy of the system """
-    N = len(traj_eq)
+    try:
+        eqEcoh = 0
+        for n in range(1, len(traj_eq)):
+            eqEcoh += traj_eq[n].get_potential_energy()/len(myAtoms)
+        avgEcoh = eqEcoh/len(traj_eq)
+    
+    except Exception as e:
+        print("An error occured when checking the Lindemann criterion:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    print("Cohesive energy: ", avgEcoh, "[eV/atom]")
+    return(avgEcoh)
 
-    eqCohEn = 0
-    for n in range(1, N):
-        eqCohEn += traj_eq[n].get_potential_energy()/len(myAtoms)
+def debye_temperature(myAtoms, traj_eq, meanSqDisp):
 
-    avgCohEn = eqCohEn/N
-    print("Cohesive energy:", avgCohEn, "[eV/atom]")
-    return(avgCohEn)
-
-def debye_temperature(myAtoms, traj_eq, meanSquareDisplacement):
     """ Calculates the Debye temperature of the system."""
-    N = len(traj_eq)
+    try: 
+        eqDebye = 0
+        for n in range(1, len(traj_eq)):
+            T = traj_eq[n].get_temperature()
+            m = sum(traj_eq[n].get_masses())*1.6605402*10**(-27)
+            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSqDisp))
+        avgDebye = eqDebye/len(traj_eq)
+    
+    except Exception as e:
+        print("An error occured when checking the Lindemann criterion:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
 
-    # Set values of necessary constants in eV-units
-    # hbar = 6.582119569*10**(-34)
-    # kB = 8.617333262145*10**(-5)
-
-    eqDebyeTemp = 0.0
-    for n in range(1, N):
-        T = traj_eq[n].get_temperature()
-        m = sum(traj_eq[n].get_masses())*1.6605402*10**(-27)
-        eqDebyeTemp += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSquareDisplacement))   
-
-    avgDebye = eqDebyeTemp/N
-    print("Debye temperature:", avgDebye, "[K]")
+    print("Debye temperature: ", avgDebye, "[K]")
     return(avgDebye)
 
 def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
