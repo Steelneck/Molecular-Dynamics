@@ -8,7 +8,6 @@ def main():
     with open('User_Input.json') as json_file:
         Input = json.load(json_file)
         for row in Input['Data']:
-            Name = row["Name"]
             EMT_Check = row["EMT"]
             openKIM_Check = row["openKIM"]
             KIM_potential = row["KIM_potential"]
@@ -17,8 +16,7 @@ def main():
             Symbol = row["Symbol"]
             Vacancy = row["Vacancy"]
             Impurity = row["Impurity"]
-            Impurity_ele=row["Impurity_ele"]
-            Impurity_pos=row["Impurity_pos"]
+            Impurity_ele_list=row["Impurity_ele_list"]
             Temperature = row["Temperature"]
             Steps = row["Steps"]
             Interval = row["Interval"]
@@ -36,8 +34,8 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-            simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
-                        Vacancy, Impurity, Impurity_ele, Impurity_pos,
+            simulation( EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
+                        Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)

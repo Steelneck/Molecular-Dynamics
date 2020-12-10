@@ -10,6 +10,8 @@ from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase import Atoms
 
+#from asap3 import OpenKIMcalculator
+
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
@@ -105,7 +107,7 @@ def checkKIMpotential(potential):
 
 
 def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
-                    Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
+                    Vacancy, Impurity, Impurity_ele,Temperature,
                     Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
                     lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
 
@@ -128,10 +130,7 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
                     PBC) 
 
     if Impurity == True:
-        if Impurity_pos == "Center":
-            atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
-        else:
-            atom_pos = atoms.get_positions()[0] # Returns the first corner in crystal
+        atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
         insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
     if Vacancy == True:
@@ -155,12 +154,12 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
     return atoms_list
     
 def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
-                        Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
+                        Vacancy, Impurity, Impurity_ele,Temperature,
                         Size_X,Size_Y,Size_Z,API_Key,PBC):
     
     m = MPRester(API_Key) 
 
-    criteria_list= [{ "elements" : [Symbol]}]
+    criteria_list= [{ "elements" : ["Cu", "Fe"]}]
     #Loop that takes out each critera for each query
     for criteria in criteria_list:
 
@@ -187,10 +186,7 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
                 atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
 
                 if Impurity == True:
-                    if Impurity_pos == "Center":
-                        atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
-                    else:
-                        atom_pos = atoms.get_positions()[0] # Returns the first corner in crystal
+                    atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
                     insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
                 if Vacancy == True:

@@ -2,6 +2,7 @@
 
 from collections import Counter
 from ase import Atoms
+import math
 
 # Parameters will decide values and bravais lattice
 def set_lattice(Bravais,
@@ -89,9 +90,10 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
                 pbc=PBC)
 
     # Generates a supercell
-    atoms = atoms*(Size_X,Size_Y,Size_Z)
+    #atoms = atoms*(Size_X,Size_Y,Size_Z)
     
     return atoms
+
 def find_crystal_center(myAtoms):
     N = len(myAtoms)                        
     center = math.ceil(N/2)             # Necessary to grab a center atom

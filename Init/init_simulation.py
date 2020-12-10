@@ -9,8 +9,8 @@ import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase.gui import *
 
-def simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
-                        Vacancy, Impurity, Impurity_ele, Impurity_pos,
+def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
+                        Vacancy, Impurity, Impurity_ele_list, 
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
@@ -20,15 +20,31 @@ def simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_projec
             init_MP() for materials project configuration.
         See init_values for configuration settings.
     """
-    if (ASE == True) and (Materials_project == False) :
-        atoms = init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
-                    Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
-                    Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
-                    lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
+    if (ASE == True) and (Materials_project == False):
+        if Impurity == True:
+            for Impurity_ele in Impurity_ele_list: 
+                print(Impurity_ele)
+                atoms = init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
+                            Vacancy, Impurity, Impurity_ele, Temperature,
+                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
+
+        else:
+            atoms = init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
+                            Vacancy, Impurity, Impurity_ele_list, Temperature,
+                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
     elif (Materials_project == True) and (ASE == False):
-        atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
-                        Vacancy, Impurity, Impurity_ele, Impurity_pos,Temperature,
-                        Size_X,Size_Y,Size_Z,API_Key,PBC)
+        if Impurity == True:
+            for Impurity_ele in Impurity_ele_list:
+                atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+                                Vacancy, Impurity, Impurity_ele, Temperature,
+                                Size_X,Size_Y,Size_Z,API_Key,PBC)
+
+        else:
+            atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+                                Vacancy, Impurity, Impurity_ele_list, Temperature,
+                                Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
     
@@ -36,8 +52,8 @@ def simulation(Name, EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_projec
         timeStepIndex = timestepindex(Steps, Interval)
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
         dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
-        trajFileName = Name + '.traj'
-        trajFileName_eq = Name + '_eq.traj'
+        trajFileName = str(atomobj.symbols) + '.traj'
+        trajFileName_eq = str(atomobj.symbols) + '_eq.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
         
         dyn.attach(traj.write, Interval)
