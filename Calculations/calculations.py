@@ -58,7 +58,7 @@ def Specific_Heat(myAtoms, trajObject):
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
       
-    bulk_mass=sum(myAtoms.get_masses())*1.6605402*10**(-27)
+    bulk_mass=sum(myAtoms.get_masses())*units._amu
     temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
     pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
                         - trajObject[0].get_potential_energy() /len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
@@ -170,13 +170,13 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         return(None)
 
 def internal_temperature(myAtoms, traj_eq):
-
     """Calculates the internal temperature of the system"""
+
     try:
         eqTemp = 0
         for n in range(1, len(traj_eq)):                       
-            eqTemp += traj_eq[n].get_temperature()                          # Sum returned value from ASE function over timesteps for sampling
-        avgTemp = eqTemp/len(traj_eq)                                       # Average over number of samples, return a final value
+            eqTemp += traj_eq[n].get_temperature()                          # Sum system temperatures for each trajectory object
+        avgTemp = eqTemp/len(traj_eq)                                       # Average sum over number of samples
 
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -185,17 +185,16 @@ def internal_temperature(myAtoms, traj_eq):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     
-    print("Internal temperature: T =", avgTemp, "[K]")
     return(avgTemp)
     
 def cohesive_energy(myAtoms, traj_eq):
-
     """ Returns the cohesive energy of the system """
+
     try:
         eqEcoh = 0
         for n in range(1, len(traj_eq)):
-            eqEcoh += traj_eq[n].get_potential_energy()/len(myAtoms)
-        avgEcoh = eqEcoh/len(traj_eq)
+            eqEcoh += traj_eq[n].get_potential_energy()/len(myAtoms)        # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/len(traj_eq)                                       # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -204,19 +203,18 @@ def cohesive_energy(myAtoms, traj_eq):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     
-    print("Cohesive energy: ", avgEcoh, "[eV/atom]")
     return(avgEcoh)
 
-def debye_temperature(myAtoms, traj_eq, meanSqDisp):
-
+def debye_temperature(myAtoms, traj_eq, meanSqD):
     """ Calculates the Debye temperature of the system."""
+
     try: 
         eqDebye = 0
         for n in range(1, len(traj_eq)):
-            T = traj_eq[n].get_temperature()
-            m = sum(traj_eq[n].get_masses())*1.6605402*10**(-27)
-            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSqDisp))
-        avgDebye = eqDebye/len(traj_eq)
+            T = traj_eq[n].get_temperature()                                # Set to system temperature                     
+            m = sum(traj_eq[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
+            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSqD)) # Sum Debye temperatures for each trajectory object
+        avgDebye = eqDebye/len(traj_eq)                                     # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -225,7 +223,6 @@ def debye_temperature(myAtoms, traj_eq, meanSqDisp):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
 
-    print("Debye temperature: ", avgDebye, "[K]")
     return(avgDebye)
 
 def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
