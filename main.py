@@ -23,7 +23,8 @@ def main():
     atoms = init()
 
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
+    # dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
+    dyn = Langevin(atoms, 5*units.fs, temperature=Temperature*units.kB, friction=0.02)
     traj = Trajectory("atoms.traj", "w", atoms)
 
     dyn.attach(traj.write, interval)
