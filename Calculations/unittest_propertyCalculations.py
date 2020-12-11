@@ -137,23 +137,56 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
 
+    """Unit tests for internal_temperature"""
+    # Test for correct data type (float) returned
     def test_internal_temperature(self):
-        self.assertIsInstance(internal_temperature(atoms, trajObject), float)
+        self.assertIsInstance(internal_temperature(trajObject), float)
 
+    # Test for non-negative temperature value
     def test_internal_temperature_not_negative(self):
-        self.assertGreaterEqual(internal_temperature(atoms, trajObject), 0)
+        self.assertGreaterEqual(internal_temperature(trajObject), 0)
 
+    # Test for wrong input, expected return is None
+    def test_internal_temperature_wrong_input_argument(self):
+        self.assertIsNone(internal_temperature(None))
+
+    # Test for returned value within 25% of ASE calculation
+    def test_internal_temperature_reasonable(self):
+        ASE = atoms.get_temperature()
+        self.assertAlmostEqual(internal_temperature(trajObject), ASE, delta=ASE/4)
+
+    """Unit tests for cohesive_energy"""
+    # Test for correct data type (float) returned
     def test_cohesive_energy(self):
         self.assertIsInstance(cohesive_energy(atoms, trajObject), float)
 
+    # Test for non-negative, non-zero energy value
     def test_cohesive_energy_positive(self):
         self.assertGreater(cohesive_energy(atoms, trajObject), 0)
 
-    def test_debye_temperature(self):
-        self.assertIsInstance(debye_temperature(atoms, trajObject, MSD_calc(atoms, trajObject, 10)), float)
+    # Test for wrong input, expected return is None
+    def test_cohesive_energy_wrong_input_argument(self):
+        self.assertIsNone(cohesive_energy(None, trajObject))
+        self.assertIsNone(cohesive_energy(atoms, None))
 
+    # Test for returned value within 25% of ASE calculation
+    def test_cohesive_energy_reasonable(self):
+        ASE = atoms.get_potential_energy()/len(atoms)
+        self.assertAlmostEqual(cohesive_energy(atoms, trajObject), ASE, delta=ASE/4)
+
+    """Unit tests for debye_temperature"""
+    # Test for correct data type (float) returned
+    def test_debye_temperature(self):
+        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, 10)), float)
+
+    # Test for non-negative temperature value
     def test_debye_temperature_not_negative(self):
-        self.assertGreaterEqual(debye_temperature(atoms, trajObject, MSD_calc(atoms, trajObject, 10)), 0)
+        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, 10)), 0)
+
+    # Test for wrong input, expected return is None
+    def test_debye_temperature_wrong_input_argument(self):
+        self.assertIsNone(debye_temperature(None, trajObject))
+        self.assertIsNone(debye_temperature(atoms, None))
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):

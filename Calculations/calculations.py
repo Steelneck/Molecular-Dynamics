@@ -169,14 +169,14 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj_eq):
+def internal_temperature(trajObject):
     """Calculates the internal temperature of the system"""
 
     try:
         eqTemp = 0
-        for n in range(1, len(traj_eq)):                       
-            eqTemp += traj_eq[n].get_temperature()                          # Sum system temperatures for each trajectory object
-        avgTemp = eqTemp/len(traj_eq)                                       # Average sum over number of samples
+        for n in range(1, len(trajObject)):                       
+            eqTemp += trajObject[n].get_temperature()                          # Sum system temperatures for each trajectory object
+        avgTemp = eqTemp/len(trajObject)                                       # Average sum over number of samples
 
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -187,14 +187,14 @@ def internal_temperature(myAtoms, traj_eq):
     
     return(avgTemp)
     
-def cohesive_energy(myAtoms, traj_eq):
+def cohesive_energy(atoms, trajObject):
     """ Returns the cohesive energy of the system """
 
     try:
         eqEcoh = 0
-        for n in range(1, len(traj_eq)):
-            eqEcoh += traj_eq[n].get_potential_energy()/len(myAtoms)        # Sum potential energies per atom for each trajectory object 
-        avgEcoh = eqEcoh/len(traj_eq)                                       # Average sum over number of samples
+        for n in range(1, len(trajObject)):
+            eqEcoh += trajObject[n].get_potential_energy()/len(atoms)        # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/len(trajObject)                                       # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -205,16 +205,16 @@ def cohesive_energy(myAtoms, traj_eq):
     
     return(avgEcoh)
 
-def debye_temperature(myAtoms, traj_eq, meanSqD):
+def debye_temperature(trajObject, MSD):
     """ Calculates the Debye temperature of the system."""
 
     try: 
         eqDebye = 0
-        for n in range(1, len(traj_eq)):
-            T = traj_eq[n].get_temperature()                                # Set to system temperature                     
-            m = sum(traj_eq[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
-            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*meanSqD)) # Sum Debye temperatures for each trajectory object
-        avgDebye = eqDebye/len(traj_eq)                                     # Average sum over number of samples
+        for n in range(1, len(trajObject)):
+            T = trajObject[n].get_temperature()                                # Set to system temperature                     
+            m = sum(trajObject[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
+            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*MSD))        # Sum Debye temperatures for each trajectory object
+        avgDebye = eqDebye/len(trajObject)                                     # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
