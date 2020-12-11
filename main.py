@@ -61,6 +61,7 @@ def main():
         print("Debye temperature: Θ =", Debye, "[K]")
 
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
+        e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
     else:
         print("System never reached equilibrium. No calculations are possible.")
 
