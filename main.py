@@ -3,6 +3,15 @@
 from Init.init_simulation import *
 import json
 
+""" Ignore the parallel rank deprecation warning """
+
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
+""" Main """
+
 def main():  
     """ Takes all the data from User_Input.json """
     with open('User_Input.json') as json_file:

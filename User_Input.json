@@ -1,8 +1,8 @@
 {
     "Data": [
         {
-            "EMT": false,
-            "openKIM": true,
+            "EMT": true,
+            "openKIM": false,
             "KIM_potential": " ",
             "ASE": true,
             "Materials_project": false,
@@ -14,9 +14,9 @@
             "Temperature": 300,
             "Steps":1000,
             "Interval":10,
-            "Size_X":4,
-            "Size_Y":4,
-            "Size_Z":4,
+            "Size_X":3,
+            "Size_Y":3,
+            "Size_Z":3,
             "API_Key": "rXy9SNuvaCUyoVmTDjDT", 
             "PBC": [true, true, true],
             "Directions": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],

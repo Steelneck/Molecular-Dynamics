@@ -9,6 +9,7 @@ import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase.gui import *
 
+
 def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol,Critera_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
@@ -51,7 +52,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
         dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
 
-        #Get a unique name for every simulation run 
+        #Creates a unique name for every simulation run 
         trajFileName = atomobj.get_chemical_formula() + '.traj'
         trajFileName_eq = atomobj.get_chemical_formula() + '_eq.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
@@ -61,18 +62,36 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
         
         traj = Trajectory(trajFileName)
         traj_eq = Trajectory(trajFileName_eq, "w", atomobj)
+
+        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         
         calc.eq_traj(atomobj, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
         if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             traj_eq = Trajectory(trajFileName_eq)
-            #If-statement that checks if we ever reached equilibrium.
-            MSD = calc.MSD_calc(atomobj, traj_eq, timeStepIndex)
-            D = calc.Self_diffuse(traj_eq, MSD)
+            calc.write_atom_properties(atoms, "Visualization/properties.csv", traj_eq)
+            
+            MSD = calc.MSD_calc(atoms, traj_eq, 1)
+            print("MSD = ", MSD, "[Å²]")
+            
+            D = calc.Self_diffuse(MSD, len(traj_eq))
+            print("D = ", D, "[Å²/fs]")
+            
             L = calc.Lindemann(traj_eq, MSD)
+            
             SHC = calc.Specific_Heat(atomobj, traj_eq)
-
-            # Internal temperature of the system
-            internalTemperature = calc.internal_temperature(atomobj, traj_eq, timeStepIndex)
+            print("C_p = ", SHC, "[J/K*Kg]")
+            
+            internalTemperature = calc.internal_temperature(atoms, traj_eq)
+            print("Internal temperature:", internalTemperature, "[K]")
+            
+            cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq)
+            print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
+            
+            internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
+            print("Internal Pressure:", internalPressure, "[eV / Å^3]")
+            
+            e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
+            print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)

@@ -31,77 +31,16 @@ from pymatgen.ext.matproj import MPRester
 from pymatgen.io.cif import CifParser
 from.init_functions import insert_impurity
 
-""" This section is where the user changes values """
-
-# Set variables for your simulation
-# OBS! Combination of Directions and Miller only works when complete and consistent
-#Directions = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] # Orientation of lattice
-#Miller = [None, None, None] # Basis of supercell and / or three surfaces
-#lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
-#lc_b = 0
-#lc_c = 0
-#lc_alpha = 0 # Degrees
-#lc_beta = 0
-#lc_gamma = 0
-
-
-""" Insert impurity/vacancy in crystal """
-#Vacancy = False              # Set to true when run simulation with vacancy
-#Impurity = True             # Set to true when run simulation with foreign element
-#Impurity_ele = 'Au'         # Set an element (Gold baby)
-#Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
-
-""" The following Bravais lattices can be used:
- SimpleCubic                 Lattice constant: a
- FaceCenteredCubic           Lattice constant: a (set a=0 to let ase set the constant)
- BodyCenteredCubic           Lattice constant: a
- SimpleTetragonal            Lattice constant: a,c
- CenteredTetragonal          Lattice constant: a,c
- SimpleOrthorhombic          Lattice constant: a,b,c
- BaseCenteredOrthorhombic    Lattice constant: a,b,c
- FaceCenteredOrthorhombic    Lattice constant: a,b,c
- BodyCenteredOrthorhombic    Lattice constant: a,b,c
- SimpleMonoclinic            Lattice constant: a,b,c,alpha
- BaseCenteredMonoclinic      Lattice constant: a,b,c,alpha
-"""
-
-""" The following Bravais lattices cannot be used:
- Diamond # (requires a basis - check ase how to define new lattice with Factory)
- Triclinic # Not sure how this one works, needs all constants a,b,c,alpha,beta,gamma
- Hexagonal # OBS! Currently broken, see ase/lattice/hexagonal.py line 60
- HexagonalClosedPacked # OBS! Currently broken (and requires a basis)
- Hexagonal / HexagonalClosedPacked needs constant a,c
- Graphite (requires a basis)
-"""
-
-""" The following Calculators can be used:
-EMT()
-    ASAP3 built in effective medium theory. Works for Ni, Cu, Pd, Ag, Pt and Au (and their alloys).
-KIM('Insert_openKIM_potential_here')
-    openKIM potentials can be found from https://openkim.org/
-    For standard lenard-jones potential use: LJ_ElliottAkerson_2015_Universal__MO_959249795837_003
-"""
-
-""" This section is only for parameters is concerned with Materials project 
-    The size parameters, calculator and temperature above is also used when running materials project
-"""
-
-""" MongoDB query to get desired data from materialsproject
-        Query needs to be in a list format.
-        Queries to use can be found on https://docs.mongodb.com/manual/reference/operator/query/
-Note: Right now this function sorts out everything except for FCC crystals
-"""
-
 atoms_list = []
 
-#Check if the potential string is empty, then assign standard Lennard Jones potential
+# Check if the potential string is empty, then assign standard Lennard Jones potential
 def checkKIMpotential(potential):
     if (potential == "") or (potential == " "):
         return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
     else:
         return potential
 
-
+# Init for ASE
 def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
                     Vacancy, Impurity, Impurity_ele,Temperature,
                     Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
@@ -125,10 +64,12 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
                     Symbol,
                     PBC) 
 
+    #places impurity in the crystal 
     if Impurity == True:
         atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
         insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
+    #Places vacancy in the crytal
     if Vacancy == True:
         create_vacancy(atoms) # Create a vacancy
 
@@ -136,8 +77,10 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
+    #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
     potential = checkKIMpotential(KIM_potential)
-    # Describe the interatomic interactions with the Effective Medium Theory
+
+    # Interatomic potential
     # (Note: Create a higher ordet function)
     if (EMT_Check == True) and (openKIM_Check == False):
         atoms.calc = EMT()
@@ -148,12 +91,14 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
 
     atoms_list.append(atoms)
     return atoms_list
-    
+
+# Init for Materials project
 def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                         Vacancy, Impurity, Impurity_ele,Temperature,
                         Size_X,Size_Y,Size_Z,API_Key,PBC):
-    print(Critera_list)
+    #API key to fetch data from Materials project
     m = MPRester(API_Key) 
+    
     #Loop that takes out each critera for each query
     for criteria in Critera_list:
 
@@ -179,10 +124,12 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                 # Function that returns an atomobject depending on the information from the CIF
                 atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
                 
+                #places impurity in the crystal 
                 if Impurity == True:
                     atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
                     insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
+                #Places vacancy in the crytal
                 if Vacancy == True:
                     create_vacancy(atoms) # Create a vacancy
 
@@ -190,11 +137,11 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                 # (Note: Create a higher order function)
                 MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
-                # Describe the interatomic interactions with the Effective Medium Theory
-                # (Note: Create a higher ordet function)
-
+                #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
                 potential = checkKIMpotential(KIM_potential)
 
+                # Interatomic potential
+                # (Note: Create a higher ordet function)
                 if (EMT_Check == True) and (openKIM_Check == False):
                     atoms.calc = EMT()
                 elif (EMT_Check == False) and (openKIM_Check == True):
