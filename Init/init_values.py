@@ -10,7 +10,7 @@ from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 
 # Algorithms and calculators for the simulation
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary, ZeroRotation
 from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 from ase import units
@@ -32,7 +32,7 @@ Size_X = 3 # How many times fundamental repeat unit is repeated
 Size_Y = 3
 Size_Z = 3
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
-Pbc = (False, False, False) # Set periodic boundary condition to True or False. 
+Pbc = (1, 1, 1) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0
@@ -42,12 +42,12 @@ lc_beta = 0
 lc_gamma = 0
 Temperature = 300
 Calculator = EMT()
-steps = 1000 # Timesteps for dyn.run
+steps = 10000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
 """ Insert impurity/vacancy in crystal """
 Vacancy = False              # Set to true when run simulation with vacancy
-Impurity = True             # Set to true when run simulation with foreign element
+Impurity = False             # Set to true when run simulation with foreign element
 Impurity_ele = 'Au'         # Set an element (Gold baby)
 Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
 
@@ -125,6 +125,8 @@ def init():
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+    Stationary(atoms) # Zero linear momentum
+    #ZeroRotation(atoms) # Zero angular momentum
     
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher order function to use EAM, KIM or EMT)

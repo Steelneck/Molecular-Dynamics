@@ -37,13 +37,17 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
             P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            if E_tot_diff_mean < 0.02 and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
+            print(E_tot_diff_mean, V_diff_mean, P_tot_diff_mean)
+            if E_tot_diff_mean < 0.002 and P_tot_diff_mean < 0.001: #Criteria for equilibrium.
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
             t += 1
         t = len(trajObject) - 1
-        for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
-            eq_trajObject.write(trajObject[i])
+        if eq_index != 0:
+            for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
+                eq_trajObject.write(trajObject[i])
+        else:
+            print("Your simulation never reached equilibrium.")
     except Exception as e:
         print("An error occured when calculating the checking the conditions for equilibrium:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -75,8 +79,8 @@ def Specific_Heat(myAtoms, trajObject):
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
 def MSD_calc(myAtoms, trajObject, timeStepIndex):
     try:
-        pos_eq = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-        pos_t = trajObject[timeStepIndex].get_positions() #position of atoms at time t
+        pos_eq = trajObject[timeStepIndex].get_positions() #position of atoms when system has reached equilibrium
+        pos_t = trajObject[-1].get_positions() #position of atoms at time t
         diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
@@ -106,7 +110,8 @@ def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
-        L = MSD/d #Lindemann criterion. Expect melting when L>0.1
+        print(d)
+        L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -305,4 +310,30 @@ def write_atom_properties(myAtoms, csvFileName, eq_trajObject):
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+
+def write_simulation_values(atomName, steps, MSD, D, Spec_heat, Int_T, Int_P, E_coh):
+    """Appends calculated values for each simulation and material values to a csv-file, containing all previous simulations, with one column per material and one row per simulation."""
+    try:
+        fileName = "Visualization/properties_" + atomName + "_" + str(steps) + ".csv" #Filename unique for atom type and number of steps
+        file = open(fileName,"a") #Either opens already existing file or creates a new one if this is the first simulation with that material."
+
+        fieldnames = ["MSD", "Self_diff", "Spec_heat", "Int_T", "Int_P", "E_coh"] #Properties we want to plot.
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         
+        if os.path.getsize(fileName) == 0: #If the file is empty we need to add the fieldnames as the header of the csv. Only needs to be done once."
+            writer.writeheader()
+            
+        writer.writerow({"MSD" : MSD,
+                         "Self_diff" : D,
+                         "Spec_heat" : Spec_heat,
+                         "Int_T" : Int_T,
+                         "Int_P" : Int_P,
+                         "E_coh" : E_coh})
+        
+    except Exception as e:
+        print("An error occured when writing simulation to .csv-file:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+
+    

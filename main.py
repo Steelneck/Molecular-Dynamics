@@ -42,9 +42,9 @@ def main():
         calc.write_atom_properties(atoms, "Visualization/properties.csv", traj_eq)
         #If-statement that checks if we ever reached equilibrium.
         MSD = calc.MSD_calc(atoms, traj_eq, 1)
-        print("MSD = ", MSD, "[Å²]")
+        print("Mean Square Displacement = ", MSD, "[Å²]")
         D = calc.Self_diffuse(MSD, len(traj_eq))
-        print("D = ", D, "[Å²/fs]")
+        print("Self Diffusion coefficient = ", D, "[Å²/fs]")
         L = calc.Lindemann(traj_eq, MSD)
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
@@ -56,6 +56,14 @@ def main():
         
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
         e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
+        calc.write_simulation_values(Symbol,
+                                     steps,
+                                     MSD,
+                                     D,
+                                     SHC,
+                                     internalTemperature,
+                                     internalPressure,
+                                     cohesiveEnergy)
     else:
         print("System never reached equilibrium. No calculations are possible.")
 

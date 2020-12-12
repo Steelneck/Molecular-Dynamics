@@ -5,3 +5,6 @@ kim.log
 *.png
 Calculations/__pycache__/*
 __pycache__/
+*.csv
+Visualization/*.csv
+Calculations/*.csv
