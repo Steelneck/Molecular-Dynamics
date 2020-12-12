@@ -9,21 +9,19 @@ import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase.gui import *
 
-def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
-                        Vacancy, Impurity, Impurity_ele_list, 
+def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol,Critera_list, 
+                        Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
     
-    """ Choose which init function to run. 
-            init() for ASE configuration.
-            init_MP() for materials project configuration.
-        See init_values for configuration settings.
+    """ Function that looks if the user wants to run ASE or Materials_project 
+        Checks if the simulation is going to add impurites or not
+        Impurites doesnt work with openKIM however
     """
     if (ASE == True) and (Materials_project == False):
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list: 
-                print(Impurity_ele)
                 atoms = init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
                             Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
@@ -37,23 +35,25 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
     elif (Materials_project == True) and (ASE == False):
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list:
-                atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+                atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
 
         else:
-            atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+            atoms = init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                                 Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
     
     for atomobj in atoms:
-        timeStepIndex = timestepindex(Steps, Interval)
+
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
         dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
-        trajFileName = str(atomobj.symbols) + '.traj'
-        trajFileName_eq = str(atomobj.symbols) + '_eq.traj'
+
+        #Get a unique name for every simulation run 
+        trajFileName = atomobj.get_chemical_formula() + '.traj'
+        trajFileName_eq = atomobj.get_chemical_formula() + '_eq.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
         
         dyn.attach(traj.write, Interval)
@@ -74,7 +74,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
             # Internal temperature of the system
             internalTemperature = calc.internal_temperature(atomobj, traj_eq, timeStepIndex)
 
-            #Moves the trajectory file to another folder for later use
+            #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
             shutil.move(trajFileName_eq, "Traj/" + trajFileName_eq)
 

@@ -4,7 +4,7 @@ from Init.init_simulation import *
 import json
 
 def main():  
-
+    """ Takes all the data from User_Input.json """
     with open('User_Input.json') as json_file:
         Input = json.load(json_file)
         for row in Input['Data']:
@@ -14,6 +14,7 @@ def main():
             ASE = row["ASE"]
             Materials_project = row["Materials_project"]
             Symbol = row["Symbol"]
+            Critera_list=row["Critera_list"]
             Vacancy = row["Vacancy"]
             Impurity = row["Impurity"]
             Impurity_ele_list=row["Impurity_ele_list"]
@@ -34,7 +35,7 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-            simulation( EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol, 
+            simulation( EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol,Critera_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,

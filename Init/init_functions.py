@@ -59,6 +59,8 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
     # Sometimes the chemical formula have spaces in between the elements. 
     # This function removes the spaces since creating the atom object wont work otherwise. 
     chemical_formula = chemical_formula_sum.replace(" ","")
+
+    print(chemical_formula)
     
     # Lattice constants
     a = float((dictionary[symbol])['_cell_length_a'])
@@ -77,20 +79,20 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
     # This will return the posistions between the atoms based on the structural chemical formula
     position = []
     for i in range(nr_of_atoms):
-        x = float(((dictionary[symbol])['_atom_site_fract_x'])[i])*a
-        y = float(((dictionary[symbol])['_atom_site_fract_y'])[i])*b
-        z = float(((dictionary[symbol])['_atom_site_fract_z'])[i])*c
+        x = float(((dictionary[symbol])['_atom_site_fract_x'])[i])
+        y = float(((dictionary[symbol])['_atom_site_fract_y'])[i])
+        z = float(((dictionary[symbol])['_atom_site_fract_z'])[i])
         pos = (x,y,z)
-        position.append(pos)        
+        position.append(pos)
 
-    # Creates the atomobject
+    #Creates the atomobject
     atoms =Atoms(symbols= chemical_formula,
-                positions=position,
+                scaled_positions=position,
                 cell=[a, b, c, alpha, beta, gamma],
                 pbc=PBC)
 
     # Generates a supercell
-    #atoms = atoms*(Size_X,Size_Y,Size_Z)
+    atoms = atoms*(Size_X,Size_Y,Size_Z)
     
     return atoms
 

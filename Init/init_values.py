@@ -11,6 +11,7 @@ from ase.lattice.hexagonal import *
 from ase import Atoms
 
 #from asap3 import OpenKIMcalculator
+from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
@@ -90,12 +91,6 @@ KIM('Insert_openKIM_potential_here')
 Note: Right now this function sorts out everything except for FCC crystals
 """
 
-""" Decide timestepindex for the traj file """
-
-def timestepindex(timesteps, traj_interval):
-    trajindexes = math.floor(timesteps/traj_interval) # Round down to avoid out-of-bounds index array
-    return trajindexes
-
 atoms_list = []
 
 #Check if the potential string is empty, then assign standard Lennard Jones potential
@@ -153,15 +148,13 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
     atoms_list.append(atoms)
     return atoms_list
     
-def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
+def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                         Vacancy, Impurity, Impurity_ele,Temperature,
                         Size_X,Size_Y,Size_Z,API_Key,PBC):
-    
+    print(Critera_list)
     m = MPRester(API_Key) 
-
-    criteria_list= [{ "elements" : ["Cu", "Fe"]}]
     #Loop that takes out each critera for each query
-    for criteria in criteria_list:
+    for criteria in Critera_list:
 
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
@@ -184,7 +177,7 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
 
                 # Function that returns an atomobject depending on the information from the CIF
                 atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
-
+                
                 if Impurity == True:
                     atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
                     insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
@@ -205,6 +198,7 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Symbol,
                     atoms.calc = EMT()
                 elif (EMT_Check == False) and (openKIM_Check == True):
                     atoms.calc = KIM(potential)
+                    #atoms.set_calculator(OpenKIMcalculator(potential))
                 else:
                     raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
 
