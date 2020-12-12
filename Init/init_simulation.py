@@ -70,7 +70,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
             traj_eq = Trajectory(trajFileName_eq)
             calc.write_atom_properties(atoms, "Visualization/properties.csv", traj_eq)
             
-            MSD = calc.MSD_calc(atoms, traj_eq, 1)
+            MSD = calc.MSD_calc(atomobj, traj_eq, 1)
             print("MSD = ", MSD, "[Å²]")
             
             D = calc.Self_diffuse(MSD, len(traj_eq))
@@ -81,16 +81,16 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symb
             SHC = calc.Specific_Heat(atomobj, traj_eq)
             print("C_p = ", SHC, "[J/K*Kg]")
             
-            internalTemperature = calc.internal_temperature(atoms, traj_eq)
+            internalTemperature = calc.internal_temperature(atomobj, traj_eq)
             print("Internal temperature:", internalTemperature, "[K]")
             
-            cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq)
+            cohesiveEnergy = calc.cohesive_energy(atomobj, traj_eq)
             print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
             
-            internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
+            internalPressure = calc.calc_internal_pressure(atomobj, traj_eq, Size_X * Size_Y * Size_Z)
             print("Internal Pressure:", internalPressure, "[eV / Å^3]")
             
-            e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
+            e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
             #Moves the trajectory file to another folder after it has been used
