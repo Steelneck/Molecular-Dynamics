@@ -51,7 +51,7 @@ interval = 10 # Writes in traj at n timestep
 
 """ Insert impurity/vacancy in crystal """
 Vacancy = False              # Set to true when run simulation with vacancy
-Impurity = True             # Set to true when run simulation with foreign element
+Impurity = False             # Set to true when run simulation with foreign element
 Impurity_ele = 'Au'         # Set an element (Gold baby)
 Impurity_pos = "Center"     # If anything but "Center" it adds to the first corner as default
 
