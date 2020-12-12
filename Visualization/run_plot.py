@@ -1,5 +1,6 @@
 import csv
 import matplotlib.pyplot as plt
+import numpy as np
 
 def plot_prop_vs_time(csvFileName, prop_str):
     file = open(csvFileName, "r")
@@ -13,7 +14,11 @@ def plot_prop_vs_time(csvFileName, prop_str):
         count += 1
         
     plt.scatter(x_list,y_list)
-   
+
+    z = np.polyfit(x_list, y_list, 1)
+    p = np.poly1d(z)
+    plt.plot(x_list, p(x_list), "r--")
+
     plt.title(prop_str + " vs time scatter plot")
     plt.xlabel("Time [fs]")
     plt.ylabel(prop_str)
@@ -32,6 +37,10 @@ def plot_prop_per_simulation(AtomName, prop1_str, prop2_str):
         count += 1
 
     plt.scatter(x_list, y_list)
+
+    z = np.polyfit(x_list, y_list, 1)
+    p = np.poly1d(z)
+    plt.plot(x_list, p(x_list), "r--")
 
     plt.title(prop2_str
               + " vs "

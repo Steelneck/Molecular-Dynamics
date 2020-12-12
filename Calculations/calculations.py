@@ -37,13 +37,12 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
             P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            print(E_tot_diff_mean, V_diff_mean, P_tot_diff_mean)
             if E_tot_diff_mean < 0.002 and P_tot_diff_mean < 0.001: #Criteria for equilibrium.
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
             t += 1
         t = len(trajObject) - 1
-        if eq_index != 0:
+        if eq_index != 0: #Check that eq_index was changed from 0
             for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
                 eq_trajObject.write(trajObject[i])
         else:
@@ -110,7 +109,6 @@ def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
-        print(d)
         L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
@@ -320,7 +318,7 @@ def write_simulation_values(atomName, steps, MSD, D, Spec_heat, Int_T, Int_P, E_
         fieldnames = ["MSD", "Self_diff", "Spec_heat", "Int_T", "Int_P", "E_coh"] #Properties we want to plot.
         writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         
-        if os.path.getsize(fileName) == 0: #If the file is empty we need to add the fieldnames as the header of the csv. Only needs to be done once."
+        if os.path.getsize(fileName) == 0: #If the file is empty we need to add the fieldnames as the header of the csv. Should only happen once per file."
             writer.writeheader()
             
         writer.writerow({"MSD" : MSD,
