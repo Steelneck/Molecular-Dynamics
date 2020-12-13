@@ -20,7 +20,7 @@ from asap3 import EMT
 # Initiation functions to separate them from variables
 from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
-from.init_functions import insert_impurity
+from .init_functions import insert_impurity
 
 """ This section is where the user changes values """
 
@@ -32,7 +32,7 @@ Size_X = 3 # How many times fundamental repeat unit is repeated
 Size_Y = 3
 Size_Z = 3
 Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
-Pbc = (False, False, False) # Set periodic boundary condition to True or False. 
+Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
 lc_b = 0
