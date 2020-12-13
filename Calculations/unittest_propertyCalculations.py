@@ -235,7 +235,7 @@ class PropertyCalculationTests(unittest.TestCase):
         atoms.set_cell(cell, scale_atoms=True)          # Reset cell
 
 
-        atoms.set_cell(cell * 5, scale_atoms=True)     # Modify cell an absurd amount. Minimum at ends gives error here.
+        atoms.set_cell(cell * 6, scale_atoms=True)     # Modify cell an absurd amount. Minimum at ends gives error here.
         e0, v0, B = calc_bulk_modulus(atoms)
         self.assertIsNone(e0)
         self.assertIsNone(v0)
