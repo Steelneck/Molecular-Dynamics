@@ -19,6 +19,8 @@ def main():
         for row in Input['Data']:
             EMT_Check = row["EMT"]
             openKIM_Check = row["openKIM"]
+            Verlocity_Verlet_Check = row["Verlocity_Verlet"]
+            Langevin_Check = row["Langevin"]
             KIM_potential = row["KIM_potential"]
             ASE = row["ASE"]
             Materials_project = row["Materials_project"]
@@ -44,7 +46,8 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-            simulation( EMT_Check,openKIM_Check,KIM_potential,ASE, Materials_project,Symbol,Critera_list, 
+            simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
+                        ASE, Materials_project,Symbol,Critera_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,

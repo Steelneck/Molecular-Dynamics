@@ -41,10 +41,10 @@ def checkKIMpotential(potential):
         return potential
 
 # Init for ASE
-def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
-                    Vacancy, Impurity, Impurity_ele,Temperature,
-                    Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
-                    lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
+def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
+                            Vacancy, Impurity, Impurity_ele, Temperature,
+                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
 
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
@@ -73,18 +73,16 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
     if Vacancy == True:
         create_vacancy(atoms) # Create a vacancy
 
-    # Set the momenta corresponding to T=300K 
-    # (Note: Create a higher order function)
-    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-
-    #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
-    potential = checkKIMpotential(KIM_potential)
+    # Set the momenta corresponding to desired temperature when running Verlocity Verlet
+    if Verlocity_Verlet_Check == True:
+        MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
     # Interatomic potential
-    # (Note: Create a higher ordet function)
     if (EMT_Check == True) and (openKIM_Check == False):
         atoms.calc = EMT()
     elif (EMT_Check == False) and (openKIM_Check == True):
+        #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
+        potential = checkKIMpotential(KIM_potential)
         atoms.calc = KIM(potential)
     else:
         raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
@@ -93,9 +91,9 @@ def init(EMT_Check, openKIM_Check, KIM_potential,Symbol,
     return atoms_list
 
 # Init for Materials project
-def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
-                        Vacancy, Impurity, Impurity_ele,Temperature,
-                        Size_X,Size_Y,Size_Z,API_Key,PBC):
+def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+                                Vacancy, Impurity, Impurity_ele, Temperature,
+                                Size_X,Size_Y,Size_Z,API_Key,PBC):
     #API key to fetch data from Materials project
     m = MPRester(API_Key) 
     
@@ -133,18 +131,16 @@ def init_MP(EMT_Check,openKIM_Check,KIM_potential,Critera_list,
                 if Vacancy == True:
                     create_vacancy(atoms) # Create a vacancy
 
-                # Set the momenta corresponding to T=300K 
-                # (Note: Create a higher order function)
-                MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-
-                #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
-                potential = checkKIMpotential(KIM_potential)
+                # Set the momenta corresponding to desired temperature when running Verlocity Verlet
+                if Verlocity_Verlet_Check == True:
+                    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
 
                 # Interatomic potential
-                # (Note: Create a higher ordet function)
                 if (EMT_Check == True) and (openKIM_Check == False):
                     atoms.calc = EMT()
                 elif (EMT_Check == False) and (openKIM_Check == True):
+                    #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
+                    potential = checkKIMpotential(KIM_potential)
                     atoms.calc = KIM(potential)
                     #atoms.set_calculator(OpenKIMcalculator(potential))
                 else:

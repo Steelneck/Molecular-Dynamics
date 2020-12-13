@@ -3,6 +3,8 @@
         {
             "EMT": true,
             "openKIM": false,
+            "Verlocity_Verlet": true,
+            "Langevin" : false,
             "KIM_potential": " ",
             "ASE": true,
             "Materials_project": false,
