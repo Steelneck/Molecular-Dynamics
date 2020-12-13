@@ -170,14 +170,14 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(trajObject):
+def internal_temperature(atoms, trajObject):
     """Calculates the internal temperature of the system"""
 
     try:
-        eqTemp = 0
+        eqEkin = 0
         for n in range(1, len(trajObject)):                       
-            eqTemp += trajObject[n].get_temperature()                          # Sum system temperatures for each trajectory object
-        avgTemp = eqTemp/len(trajObject)                                       # Average sum over number of samples
+            eqEkin += trajObject[n].get_kinetic_energy()/len(atoms)                          # Sum kinetic energies for each trajectory object
+        avgTemp = (2*eqEkin)/(3*units.kB*len(trajObject))                          # Average sum over number of samples and calculate temperature
 
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")

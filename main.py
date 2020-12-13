@@ -49,7 +49,7 @@ def main():
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
-        Temp = calc.internal_temperature(traj_eq)
+        Temp = calc.internal_temperature(atoms, traj_eq)
         print("Internal temperature: T =", Temp, "[K]")
 
         # Cohesive energy of the system
