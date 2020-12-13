@@ -171,7 +171,16 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         return(None)
 
 def internal_temperature(atoms, trajObject):
-    """Calculates the internal temperature of the system"""
+    """
+    Calculates the internal temperature of the system
+    
+    Parameters
+        atoms       :   Lattice of atoms being simulated
+        trajObject  :   TrajectoryReader
+
+    Returns the average of a sum of samples using the equation T = 2K/3kB,
+    where K is the kinetic energy per atom
+    """
 
     try:
         eqEkin = 0
@@ -180,7 +189,7 @@ def internal_temperature(atoms, trajObject):
         avgTemp = (2*eqEkin)/(3*units.kB*len(trajObject))                          # Average sum over number of samples and calculate temperature
 
     except Exception as e:
-        print("An error occured when checking the Lindemann criterion:")
+        print("An error occured when calculating the internal temperature")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
@@ -189,16 +198,24 @@ def internal_temperature(atoms, trajObject):
     return(avgTemp)
     
 def cohesive_energy(atoms, trajObject):
-    """ Returns the cohesive energy of the system """
+    """
+    Returns the cohesive energy of the system
+
+    Parameters
+        atoms       :   Lattice of atoms being simulated
+        trajObject  :   TrajectoryReader
+
+    Returns the average of a sum of samples over the potential energy per atom
+    """
 
     try:
         eqEcoh = 0
         for n in range(1, len(trajObject)):
-            eqEcoh += trajObject[n].get_potential_energy()/len(atoms)        # Sum potential energies per atom for each trajectory object 
-        avgEcoh = eqEcoh/len(trajObject)                                       # Average sum over number of samples
+            eqEcoh += trajObject[n].get_potential_energy()/len(atoms)           # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/len(trajObject)                                        # Average sum over number of samples
     
     except Exception as e:
-        print("An error occured when checking the Lindemann criterion:")
+        print("An error occured when calculating the cohesive energy")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
@@ -207,8 +224,16 @@ def cohesive_energy(atoms, trajObject):
     return(avgEcoh)
 
 def debye_temperature(trajObject, MSD):
-    """ Calculates the Debye temperature of the system."""
+    """
+    Calculates the Debye temperature of the system.
 
+    Parameters
+        trajObject  : TrajectoryReader
+        MSD         : Returned from MSD_calc()
+
+    Uses the functions for temperature, atom masses converted to kg and mean square displacement 
+    Returns the average of a sum of samples over the Debye temperature of the system
+    """
     try: 
         eqDebye = 0
         for n in range(1, len(trajObject)):
@@ -218,7 +243,7 @@ def debye_temperature(trajObject, MSD):
         avgDebye = eqDebye/len(trajObject)                                     # Average sum over number of samples
     
     except Exception as e:
-        print("An error occured when checking the Lindemann criterion:")
+        print("An error occured when calculating the Debye temperature:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
