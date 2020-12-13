@@ -36,7 +36,7 @@ Miller = [None, None, None] # Basis of supercell and / or three surfaces
 Size_X = 3 # How many times fundamental repeat unit is repeated
 Size_Y = 3
 Size_Z = 3
-Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
+#Symbol = "Cu" # Element specified by atomic symbol e.g. Cu for copper (OBS! requires string)
 Pbc = (True, True, True) # Set periodic boundary condition to True or False. 
 Bravais = FaceCenteredCubic # Set the lattice
 lc_a = 0 # When lattice constants are zero => FaceCenteredCubic retrieves lc_a from ase
@@ -143,6 +143,8 @@ def init(Calculator,Symbol):
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher order function to use EAM, KIM or EMT)
     atoms.calc = Calculator
+
+    print(Symbol)
 
     atoms_list.append(atoms)
     return atoms_list

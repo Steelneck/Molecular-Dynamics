@@ -15,7 +15,7 @@ def super_simulation(Calculator,Symbol):
             init_MP() for materials project configuration.
         See init_values for configuration settings.
     """
-    atoms = init_MP(Calculator,Symbol)
+    atoms = init(Calculator,Symbol)
     
     for atomobj in atoms:
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
