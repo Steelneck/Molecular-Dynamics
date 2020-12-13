@@ -16,7 +16,6 @@ from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
 from calculations import calc_lattice_constant_fcc_cubic
-from calculations import calc_bulk_modulus
 from calculations import write_atom_properties
 
 import numpy
@@ -141,20 +140,21 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unit tests for internal_temperature"""
     # Test for correct data type (float) returned
     def test_internal_temperature(self):
-        self.assertIsInstance(internal_temperature(trajObject), float)
+        self.assertIsInstance(internal_temperature(atoms, trajObject), float)
 
     # Test for non-negative temperature value
     def test_internal_temperature_not_negative(self):
-        self.assertGreaterEqual(internal_temperature(trajObject), 0)
+        self.assertGreaterEqual(internal_temperature(atoms, trajObject), 0)
 
     # Test for wrong input, expected return is None
     def test_internal_temperature_wrong_input_argument(self):
-        self.assertIsNone(internal_temperature(None))
+        self.assertIsNone(internal_temperature(None, trajObject))
+        self.assertIsNone(internal_temperature(atoms, None))
 
     # Test for returned value within 25% of ASE calculation
     def test_internal_temperature_reasonable(self):
         ASE = atoms.get_temperature()
-        self.assertAlmostEqual(internal_temperature(trajObject), ASE, delta=ASE/4)
+        self.assertAlmostEqual(internal_temperature(atoms, trajObject), ASE, delta=ASE/4)
 
     """Unit tests for cohesive_energy"""
     # Test for correct data type (float) returned
@@ -211,37 +211,6 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_lattice_constant_output_type(self):
         self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu', EMT()), float)
 
-    """Unittests for calculation of Bulk Modulus"""
-    def test_bulk_modulus_wrong_input_argument(self):
-        e01, v01, B1 = calc_bulk_modulus(None)
-        self.assertIsNone(e01)
-        self.assertIsNone(v01)
-        self.assertIsNone(B1)
-
-    def test_bulk_modulus_output_type(self):
-        e0, v0, B = calc_bulk_modulus(atoms)
-        self.assertIsInstance(e0, float)
-        self.assertIsInstance(v0, float)
-        self.assertIsInstance(B, float)
-        
-    def test_minimum_energy_bulk_modulus(self):
-        # Warning increasing lattice constant even more, to 20 * cell will make the function execute but values will be crazy. No error handling for this yet.
-        cell = atoms.get_cell()
-        atoms.set_cell(cell * 10, scale_atoms=True)     # Modify cell an absurd amount. EOS will give error here
-        e0, v0, B = calc_bulk_modulus(atoms)
-        self.assertIsNone(e0)
-        self.assertIsNone(v0)
-        self.assertIsNone(B)
-        atoms.set_cell(cell, scale_atoms=True)          # Reset cell
-
-
-        atoms.set_cell(cell * 6, scale_atoms=True)     # Modify cell an absurd amount. Minimum at ends gives error here.
-        e0, v0, B = calc_bulk_modulus(atoms)
-        self.assertIsNone(e0)
-        self.assertIsNone(v0)
-        self.assertIsNone(B)
-        atoms.set_cell(cell, scale_atoms=True)          # Reset cell
-
     
     def test_csv_writer_wrong_input_argument(self):
         csv1 = write_atom_properties(None, "properties_test.csv", trajObject)
@@ -267,3 +236,4 @@ if __name__ == '__main__':
     testsuite = unittest.TestSuite(tests)
     result = unittest.TextTestRunner(verbosity=0).run(testsuite)
     sys.exit(not result.wasSuccessful())
+
