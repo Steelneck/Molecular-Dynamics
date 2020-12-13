@@ -6,6 +6,7 @@ import os
 import Calculations.calculations as calc
 from asap3 import Trajectory
 from ase import *
+#from ase.geometry import crystal_structure_from_cell, Cell
 import shutil
 
 """ Ignore the parallel rank deprecation warning """
@@ -46,6 +47,7 @@ def main():
         D = calc.Self_diffuse(MSD, len(traj_eq))
         print("Self Diffusion coefficient = ", D, "[Å²/fs]")
         L = calc.Lindemann(traj_eq, MSD)
+        print("L = ", L)
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
@@ -56,10 +58,15 @@ def main():
         
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
         e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
+        
         calc.write_simulation_values(Symbol,
-                                     steps,
+                                     atoms.get_cell().get_bravais_lattice(),
+                                     Size_X * Size_Y * Size_Z,
+                                     latticeConstant_a,
+                                     Temperature,
                                      MSD,
                                      D,
+                                     L,
                                      SHC,
                                      internalTemperature,
                                      internalPressure,

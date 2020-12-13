@@ -44,6 +44,7 @@ dyn.attach(trajWriter.write, interval=10)
 dyn.run(200)
 
 trajObject = Trajectory("test.traj")
+print(len(trajObject))
 
 class PropertyCalculationTests(unittest.TestCase):
  
@@ -136,7 +137,7 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(D2)
         
     def test_Lindemann_return_type(self):
-        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
+        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), float)
 
     def test_internal_temperature(self):
         self.assertIsInstance(internal_temperature(atoms, trajObject), float)
@@ -207,7 +208,7 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_csv_writer_wrong_input_argument(self):
         csv1 = write_atom_properties(None, "properties_test.csv", trajObject)
         csv2 = write_atom_properties(atoms, None, trajObject)
-        csv3 = write_atom_properties(atoms, "properties.csv", None)
+        csv3 = write_atom_properties(atoms, "properties_test.csv", None)
 
         #All should return none.
         self.assertIsNone(csv1)
@@ -217,10 +218,8 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_csv_writer_check_csv(self):
         #Check that the .csv-file exists and is not empty.
-        eq_trajObject = Trajectory("test_eq.traj", "w", atoms)
-        eq_traj(atoms, trajObject, eq_trajObject, 3*3*3)
-        eq_trajObject = Trajectory("test_eq.traj")
-        write_atom_properties(atoms, "properties_test.csv", eq_trajObject)
+        write_atom_properties(atoms, "properties_test.csv", trajObject)
+        print("Filesize is", os.path.getsize("properties_test.csv"))
         self.assertTrue(os.path.getsize("properties_test.csv") != 0)      
 
 if __name__ == '__main__':

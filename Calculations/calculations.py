@@ -22,9 +22,12 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
             P_tot_diff = 0
             E_tot_diff = 0
             V_diff = 0
+            T_diff = 0
             for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
                 curr_element = t+i
                 next_element = t+i+1
+                T_1 = trajObject[curr_element].get_temperature()
+                T_2 = trajObject[next_element].get_temperature()
                 E_tot_1 = trajObject[curr_element].get_total_energy() #Total energy of two consecutive timesteps
                 E_tot_2 = trajObject[next_element].get_total_energy()
                 P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
@@ -34,12 +37,17 @@ def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
                 V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
                 P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
                 E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
+                T_diff += abs(T_2 - T_1)
             P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            if E_tot_diff_mean < 0.002 and P_tot_diff_mean < 0.001: #Criteria for equilibrium.
-                eq_index = t #saves index of first atom that has reached equilibrium.
-                break
+            T_diff_mean = T_diff/3
+            print(E_tot_diff_mean, T_diff_mean, P_tot_diff_mean)
+            if E_tot_diff_mean < 0.002 and T_diff_mean < 50:
+                if P_tot_diff_mean < 0.001: #Criteria for equilibrium.
+                    eq_index = t #saves index of first atom that has reached equilibrium.
+                    print(eq_index)
+                    break
             t += 1
         t = len(trajObject) - 1
         if eq_index != 0: #Check that eq_index was changed from 0
@@ -116,12 +124,7 @@ def Lindemann(trajObject, MSD):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
-    if L > 0.1:
-        print("MELTING!")
-        return True 
-    else:
-        print("NOT MELTING!")
-        return False
+    return(L)
 
 def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT).
@@ -309,13 +312,13 @@ def write_atom_properties(myAtoms, csvFileName, eq_trajObject):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
 
-def write_simulation_values(atomName, steps, MSD, D, Spec_heat, Int_T, Int_P, E_coh):
+def write_simulation_values(atomName, Structure, SuperCellSize, Lattice_constant, Temperature, MSD, D, L, Spec_heat, Int_T, Int_P, E_coh):
     """Appends calculated values for each simulation and material values to a csv-file, containing all previous simulations, with one column per material and one row per simulation."""
     try:
-        fileName = "Visualization/properties_" + atomName + "_" + str(steps) + ".csv" #Filename unique for atom type and number of steps
+        fileName = "Visualization/properties_" + atomName + "_" + str(Structure) + "_" + str(SuperCellSize) + "_" + str(Lattice_constant) + "_" + str(Temperature) + ".csv" #Filename unique for atom type and number of steps
         file = open(fileName,"a") #Either opens already existing file or creates a new one if this is the first simulation with that material."
 
-        fieldnames = ["MSD", "Self_diff", "Spec_heat", "Int_T", "Int_P", "E_coh"] #Properties we want to plot.
+        fieldnames = ["MSD", "Self_diff", "Lindemann",  "Spec_heat", "Int_T", "Int_P", "E_coh"] #Properties we want to plot.
         writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         
         if os.path.getsize(fileName) == 0: #If the file is empty we need to add the fieldnames as the header of the csv. Should only happen once per file."
@@ -323,6 +326,7 @@ def write_simulation_values(atomName, steps, MSD, D, Spec_heat, Int_T, Int_P, E_
             
         writer.writerow({"MSD" : MSD,
                          "Self_diff" : D,
+                         "Lindemann" : L,
                          "Spec_heat" : Spec_heat,
                          "Int_T" : Int_T,
                          "Int_P" : Int_P,

@@ -40,9 +40,10 @@ lc_c = 0
 lc_alpha = 0 # Degrees
 lc_beta = 0
 lc_gamma = 0
+
 Temperature = 300
 Calculator = EMT()
-steps = 10000 # Timesteps for dyn.run
+steps = 1000 # Timesteps for dyn.run
 interval = 10 # Writes in traj at n timestep
 
 """ Insert impurity/vacancy in crystal """
@@ -126,7 +127,6 @@ def init():
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
     Stationary(atoms) # Zero linear momentum
-    #ZeroRotation(atoms) # Zero angular momentum
     
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher order function to use EAM, KIM or EMT)

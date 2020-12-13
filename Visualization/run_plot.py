@@ -25,8 +25,8 @@ def plot_prop_vs_time(csvFileName, prop_str):
 
     plt.show()
 
-def plot_prop_per_simulation(AtomName, prop1_str, prop2_str):
-    file = open("properties_" + AtomName + ".csv", "r")
+def plot_prop_per_simulation(AtomName, Temperature, prop1_str, prop2_str):
+    file = open("properties_" + AtomName + "_" + str(Temperature) +  ".csv", "r")
     reader = csv.DictReader(file, delimiter=";")
     count = 1
     x_list = []
@@ -68,8 +68,8 @@ def hist_prop_per_simulation(AtomName, prop_str):
     
     plt.show()
 
-plot_prop_vs_time("properties.csv", "MSD")
-#plot_prop_per_simulation("Cu", "Int_P", "Int_T")
+#plot_prop_vs_time("properties.csv", "MSD")
+#plot_prop_per_simulation("Cu", 1000, "Int_T", "MSD")
 #hist_prop_per_simulation("Cu", "MSD")
 
 
