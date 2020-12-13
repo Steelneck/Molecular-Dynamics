@@ -11,55 +11,60 @@ import sys, os
 from asap3 import EMT ###!!! Temporary
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
-def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
+def eq_traj(myAtoms, trajObject, superCellSize):
     try:
         t = 0
         eq_index = 0
         while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
-            P_tot_diff = 0
+            #P_tot_diff = 0
             E_tot_diff = 0
-            V_diff = 0
+            #V_diff = 0
             for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
                 curr_element = t+i
                 next_element = t+i+1
                 E_tot_1 = trajObject[curr_element].get_total_energy() #Total energy of two consecutive timesteps
                 E_tot_2 = trajObject[next_element].get_total_energy()
-                P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
-                P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
-                V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
-                V_2 = trajObject[next_element].get_volume() * superCellSize 
-                V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
-                P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
+                #P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
+                #P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
+                #V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
+                #V_2 = trajObject[next_element].get_volume() * superCellSize 
+                #V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
+                #P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
                 E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
-            P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
-            V_diff_mean = V_diff/3
+            #P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
+            #V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            if E_tot_diff_mean < 0.02 and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
+            if E_tot_diff_mean < 0.002: # and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
             t += 1
-        t = len(trajObject) - 1
-        for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
-            eq_trajObject.write(trajObject[i])
+        #t = len(trajObject) - 1
+        #for i in range(eq_index, len(trajObject)): #while loop that goes through all atoms objects in equilibrium and writes them to new .traj-file
+        #    eq_trajObject.write(trajObject[i])
+        if eq_index != 0:
+            return eq_index
     except Exception as e:
         print("An error occured when checking equilibrium conditions", e)
-        return(None)
+        print("Eq code called")
+        return None
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(myAtoms, trajObject):   
+def Specific_Heat(myAtoms, trajObject, eq_index):   
     try:
         myAtoms.get_masses() # Tries if the attribute exists, skips except if it does
     except AttributeError:
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
+
+    eq_next = eq_index + 1
       
     bulk_mass=sum(myAtoms.get_masses())*1.6605402*10**(-27)
-    temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
-    pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
-                        - trajObject[0].get_potential_energy() /len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
+    temp_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) - trajObject[eq_index].get_kinetic_energy() /len(trajObject[eq_index])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
+    pot_energy_diff = (trajObject[eq_next].get_potential_energy() /len(trajObject[eq_next]) 
+                        - trajObject[eq_index].get_potential_energy() /len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
 
-    kin_energy_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) 
-                            - trajObject[0].get_kinetic_energy()/len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
+    kin_energy_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) 
+                            - trajObject[eq_index].get_kinetic_energy()/len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
     
     heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
     print("C_p = ", heat_capcity, "[J/K*Kg]")
@@ -67,11 +72,10 @@ def Specific_Heat(myAtoms, trajObject):
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
-def MSD_calc(myAtoms, trajObject, timeStepIndex):
+def MSD_calc(myAtoms, trajObject, eq_index):
     try:
-        time = len(trajObject)-timeStepIndex
         pos_eq = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-        pos_t = trajObject[1].get_positions() #position of atoms at time t
+        pos_t = trajObject[eq_index].get_positions() #position of atoms at time t
         diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
@@ -83,9 +87,10 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(trajObject, MSD):
+def Self_diffuse(trajObject, eq_index, MSD):
     try:
-        D = 5*MSD/(6*len(trajObject)) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
+        eq_traj_length = len(trajObject) - eq_index
+        D = 5*MSD/(6*eq_traj_length) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
     except Exception as e:
         print("An error ocurred when calculating the self diffusion coefficient.", e)
         return(None)
@@ -158,7 +163,7 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj, timeStepIndex):
+def internal_temperature(myAtoms, traj):
     """ Returns the average temperature within parameters """
     N = len(traj)
 
@@ -215,6 +220,7 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
+        print("Calc_lattic called")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)

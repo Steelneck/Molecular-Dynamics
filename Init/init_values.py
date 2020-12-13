@@ -24,8 +24,8 @@ from.init_functions import insert_impurity
 from .init_functions import from_dictionary_to_atoms
 
 # Dependencies to run materials project
-from pymatgen.ext.matproj import MPRester
-from pymatgen.io.cif import CifParser
+#from pymatgen.ext.matproj import MPRester
+#from pymatgen.io.cif import CifParser
 
 """ This section is where the user changes values """
 
@@ -90,7 +90,7 @@ KIM('Insert_openKIM_potential_here')
     The size parameters, calculator and temperature above is also used when running materials project
 """
 
-m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
+#m = MPRester('rXy9SNuvaCUyoVmTDjDT') # Insert your API-Key from https://materialsproject.org/
 
 """ MongoDB query to get desired data from materialsproject
         Query needs to be in a list format.
