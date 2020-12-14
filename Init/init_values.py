@@ -125,6 +125,7 @@ def init():
     # Set the momenta corresponding to T=300K 
     # (Note: Create a higher order function)
     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+    Stationary(atoms) #Zero linear momentum
     
     # Describe the interatomic interactions with the Effective Medium Theory
     # (Note: Create a higher order function to use EAM, KIM or EMT)
