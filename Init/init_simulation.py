@@ -59,7 +59,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
         #Creates a unique name for every simulation run 
         trajFileName = atomobj.get_chemical_formula() + '.traj'
-        
+
         traj = Trajectory(trajFileName, "w", atomobj)
         
         dyn.attach(traj.write, Interval)
