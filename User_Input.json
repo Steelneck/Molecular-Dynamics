@@ -12,7 +12,7 @@
             "Critera_list": [{ "elements" :["Cu"]}],
             "Vacancy": false,
             "Impurity": false,
-            "Impurity_ele_list": ["Ni"],
+            "Impurity_ele_list": ["Au"],
             "Temperature": 300,
             "Steps":1000,
             "Interval":10,

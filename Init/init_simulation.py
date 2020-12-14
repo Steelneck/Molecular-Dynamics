@@ -67,7 +67,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         
         traj = Trajectory(trajFileName)
 
-        #latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         if eq_index != 0:
