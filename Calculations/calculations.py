@@ -11,7 +11,8 @@ from ase.units import kJ
 from ase.eos import EquationOfState
 
 import csv
-import datetime
+import json
+import time
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, superCellSize):
@@ -111,12 +112,7 @@ def Lindemann(trajObject, MSD):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
-    if L > 0.1:
-        print("MELTING!")
-        return True 
-    else:
-        print("NOT MELTING!")
-        return False
+    return(L)
 
 def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT).
@@ -361,3 +357,37 @@ def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+
+
+
+def write_simulation_to_json(myAtoms, temperature, MSD, S, L, SHC, Int_T, E_coh, Int_P, Bulk_modulus, Lattice_constant, run_time):
+    data ={
+        "Simulation input": {
+            "Chemical formula": myAtoms.get_chemical_formula(),
+            "Lattice structure": str(myAtoms.get_cell().get_bravais_lattice()),
+            "a": myAtoms.get_cell_lengths_and_angles()[0],
+            "b": myAtoms.get_cell_lengths_and_angles()[1],
+            "c": myAtoms.get_cell_lengths_and_angles()[2],
+            "Alpha": myAtoms.get_cell_lengths_and_angles()[3],
+            "Beta": myAtoms.get_cell_lengths_and_angles()[4],
+            "Gamma": myAtoms.get_cell_lengths_and_angles()[5],
+            "Volume": myAtoms.get_volume(),
+            "Initial Temperature": temperature,
+            "Run time [fs]": run_time
+        },
+        "Simulation output": {
+            "Mean Square Displacement [A^2]": MSD,
+            "Self diffusion coefficient [A^2/fs]": S,
+            "Lindemann Criterion": L,
+            "Specific Heat [J/K*Kg]": SHC,
+            "Internal Temperature [K]": Int_T,
+            "Cohesive Energy [eV/atom]": E_coh,
+            "Internal Pressure [eV / A^3]": Int_P,
+            "Bulk_modulus [GPa]": Bulk_modulus,
+            "Lattice_constant [A]": Lattice_constant
+        },
+    }
+    filename = "Json/simulation_" + myAtoms.get_chemical_formula() + "_" + str(int(time.time())) + ".json"
+
+    with open(filename, "w") as file:
+        json.dump(data, file, indent = 4)

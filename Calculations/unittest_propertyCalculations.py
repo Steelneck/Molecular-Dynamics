@@ -128,7 +128,7 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(D2)
         
     def test_Lindemann_return_type(self):
-        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
+        self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), float)
 
     """Unit tests for internal_temperature"""
     # Test for correct data type (float) returned

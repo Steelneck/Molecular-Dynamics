@@ -42,7 +42,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
         else:
             atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
-                                Vacancy, Impurity, Impurity_ele, Temperature,
+                                Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
@@ -81,6 +81,10 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             print("D = ", D, "[Å²/fs]")
             
             L = calc.Lindemann(traj, MSD)
+            if L>0.1:
+                print("Melting according to Lindemann criterion.")
+            else:
+                print("Not melting according to Lindemann criterion.")
             
             SHC = calc.Specific_Heat(atomobj, traj, eq_index)
             print("C_p = ", SHC, "[J/K*Kg]")
@@ -99,6 +103,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
+            calc.write_simulation_to_json(atomobj, Temperature, MSD, D, L, SHC, internalTemperature, cohesiveEnergy, internalPressure, B_GPa, latticeConstant_a, Steps*5)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
