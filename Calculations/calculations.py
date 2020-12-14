@@ -11,6 +11,7 @@ from ase.units import kJ
 from ase.eos import EquationOfState
 
 import csv
+import datetime
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, superCellSize):
@@ -360,4 +361,3 @@ def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
-        
