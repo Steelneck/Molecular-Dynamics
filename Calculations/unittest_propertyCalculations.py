@@ -215,7 +215,7 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_csv_writer_wrong_input_argument(self):
         csv1 = write_atom_properties(None, "properties_test.csv", trajObject)
         csv2 = write_atom_properties(atoms, None, trajObject)
-        csv3 = write_atom_properties(atoms, "properties.csv", None)
+        csv3 = write_atom_properties(atoms, "properties_test.csv", None)
 
         #All should return none.
         self.assertIsNone(csv1)
