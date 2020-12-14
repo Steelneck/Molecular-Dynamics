@@ -51,11 +51,17 @@ def main():
         SHC = calc.Specific_Heat(atoms, traj_eq)
 
         # Internal temperature of the system
-        internalTemperature = calc.internal_temperature(atoms, traj_eq)
+        Temp = calc.internal_temperature(atoms, traj_eq)
+        print("Internal temperature: T =", Temp, "[K]")
 
         # Cohesive energy of the system
-        cohesiveEnergy = calc.cohesive_energy(atoms, traj_eq)
-        
+        Ecoh = calc.cohesive_energy(atoms, traj_eq)
+        print("Cohesive energy: Eᴄᴏʜ =", Ecoh, "[eV/atom]")
+
+        # Debye temperature of the system
+        Debye = calc.debye_temperature(traj_eq, MSD)
+        print("Debye temperature: Θ =", Debye, "[K]")
+
         internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
         e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
         
