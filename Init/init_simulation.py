@@ -42,7 +42,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
         else:
             atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
-                                Vacancy, Impurity, Impurity_ele, Temperature,
+                                Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
