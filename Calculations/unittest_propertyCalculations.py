@@ -1,7 +1,6 @@
-import sys, unittest, os
+import sys, unittest, os, numpy
 
 from ase.lattice.cubic import FaceCenteredCubic
-
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
@@ -9,6 +8,7 @@ from ase import units
 from calculations import Specific_Heat
 from calculations import internal_temperature
 from calculations import cohesive_energy
+from calculations import debye_temperature
 from calculations import calc_instantaneous_pressure
 from calculations import calc_internal_pressure
 from calculations import eq_traj
@@ -16,7 +16,6 @@ from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
 from calculations import calc_lattice_constant_fcc_cubic
-from calculations import calc_bulk_modulus
 from calculations import write_atom_properties
 
 import numpy
@@ -138,17 +137,57 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, 10)), int)
 
+    """Unit tests for internal_temperature"""
+    # Test for correct data type (float) returned
     def test_internal_temperature(self):
         self.assertIsInstance(internal_temperature(atoms, trajObject), float)
 
+    # Test for non-negative temperature value
     def test_internal_temperature_not_negative(self):
         self.assertGreaterEqual(internal_temperature(atoms, trajObject), 0)
 
+    # Test for wrong input, expected return is None
+    def test_internal_temperature_wrong_input_argument(self):
+        self.assertIsNone(internal_temperature(None, trajObject))
+        self.assertIsNone(internal_temperature(atoms, None))
+
+    # Test for returned value within 25% of ASE calculation
+    def test_internal_temperature_reasonable(self):
+        ASE = atoms.get_temperature()
+        self.assertAlmostEqual(internal_temperature(atoms, trajObject), ASE, delta=ASE/4)
+
+    """Unit tests for cohesive_energy"""
+    # Test for correct data type (float) returned
     def test_cohesive_energy(self):
         self.assertIsInstance(cohesive_energy(atoms, trajObject), float)
 
+    # Test for non-negative, non-zero energy value
     def test_cohesive_energy_positive(self):
         self.assertGreater(cohesive_energy(atoms, trajObject), 0)
+
+    # Test for wrong input, expected return is None
+    def test_cohesive_energy_wrong_input_argument(self):
+        self.assertIsNone(cohesive_energy(None, trajObject))
+        self.assertIsNone(cohesive_energy(atoms, None))
+
+    # Test for returned value within 25% of ASE calculation
+    def test_cohesive_energy_reasonable(self):
+        ASE = atoms.get_potential_energy()/len(atoms)
+        self.assertAlmostEqual(cohesive_energy(atoms, trajObject), ASE, delta=ASE/4)
+
+    """Unit tests for debye_temperature"""
+    # Test for correct data type (float) returned
+    def test_debye_temperature(self):
+        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, 10)), float)
+
+    # Test for non-negative temperature value
+    def test_debye_temperature_not_negative(self):
+        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, 10)), 0)
+
+    # Test for wrong input, expected return is None
+    def test_debye_temperature_wrong_input_argument(self):
+        self.assertIsNone(debye_temperature(None, trajObject))
+        self.assertIsNone(debye_temperature(atoms, None))
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
@@ -207,7 +246,7 @@ class PropertyCalculationTests(unittest.TestCase):
     def test_csv_writer_wrong_input_argument(self):
         csv1 = write_atom_properties(None, "properties_test.csv", trajObject)
         csv2 = write_atom_properties(atoms, None, trajObject)
-        csv3 = write_atom_properties(atoms, "properties.csv", None)
+        csv3 = write_atom_properties(atoms, "properties_test.csv", None)
 
         #All should return none.
         self.assertIsNone(csv1)
@@ -228,3 +267,4 @@ if __name__ == '__main__':
     testsuite = unittest.TestSuite(tests)
     result = unittest.TextTestRunner(verbosity=0).run(testsuite)
     sys.exit(not result.wasSuccessful())
+

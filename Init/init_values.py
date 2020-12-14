@@ -14,7 +14,7 @@ from ase import Atoms
 from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
 from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 from ase import units

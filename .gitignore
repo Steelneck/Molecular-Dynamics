@@ -5,4 +5,10 @@ kim.log
 *.png
 Calculations/__pycache__/*
 __pycache__/
+<<<<<<< HEAD
 Traj/.traj
+=======
+Visualization/*.csv
+Calculations/*.csv
+*.csv
+>>>>>>> development

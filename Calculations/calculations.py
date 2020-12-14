@@ -58,7 +58,7 @@ def Specific_Heat(myAtoms, trajObject):
         print("You have not entered a valid system.") # Message for user if no attribute
         return False # Ends the function
       
-    bulk_mass=sum(myAtoms.get_masses())*1.6605402*10**(-27)
+    bulk_mass=sum(myAtoms.get_masses())*units._amu
     temp_diff = (trajObject[1].get_kinetic_energy() /len(trajObject[1]) - trajObject[0].get_kinetic_energy() /len(trajObject[0])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
     pot_energy_diff = (trajObject[1].get_potential_energy() /len(trajObject[1]) 
                         - trajObject[0].get_potential_energy() /len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
@@ -167,27 +167,86 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, traj_eq):
-    """ Returns the average temperature within parameters """
-    N = len(traj_eq)
-
-    eqTemp = 0
-    for n in range(1, N):                       
-        eqTemp += traj_eq[n].get_temperature()              # Sum returned value from ASE function over timesteps for sampling
-     
-    internalTemp = eqTemp/N                                 # Average over number of samples, return a final value  
-    return(internalTemp)
+def internal_temperature(atoms, trajObject):
+    """
+    Calculates the internal temperature of the system
     
-def cohesive_energy(myAtoms, traj_eq):
-    """ Returns the cohesive energy of the system """
-    N = len(traj_eq)
+    Parameters
+        atoms       :   Lattice of atoms being simulated
+        trajObject  :   TrajectoryReader
 
-    eqCohEn = 0
-    for n in range(1, N):
-        eqCohEn += traj_eq[n].get_potential_energy()/len(myAtoms)
+    Returns the average of a sum of samples using the equation T = 2K/3kB,
+    where K is the kinetic energy per atom
+    """
 
-    avgCohEn = eqCohEn/N
-    return(avgCohEn)
+    try:
+        eqEkin = 0
+        for n in range(1, len(trajObject)):                       
+            eqEkin += trajObject[n].get_kinetic_energy()/len(atoms)                          # Sum kinetic energies for each trajectory object
+        avgTemp = (2*eqEkin)/(3*units.kB*len(trajObject))                          # Average sum over number of samples and calculate temperature
+
+    except Exception as e:
+        print("An error occured when calculating the internal temperature")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    return(avgTemp)
+    
+def cohesive_energy(atoms, trajObject):
+    """
+    Returns the cohesive energy of the system
+
+    Parameters
+        atoms       :   Lattice of atoms being simulated
+        trajObject  :   TrajectoryReader
+
+    Returns the average of a sum of samples over the potential energy per atom
+    """
+
+    try:
+        eqEcoh = 0
+        for n in range(1, len(trajObject)):
+            eqEcoh += trajObject[n].get_potential_energy()/len(atoms)           # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/len(trajObject)                                        # Average sum over number of samples
+    
+    except Exception as e:
+        print("An error occured when calculating the cohesive energy")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    return(avgEcoh)
+
+def debye_temperature(trajObject, MSD):
+    """
+    Calculates the Debye temperature of the system.
+
+    Parameters
+        trajObject  : TrajectoryReader
+        MSD         : Returned from MSD_calc()
+
+    Uses the functions for temperature, atom masses converted to kg and mean square displacement 
+    Returns the average of a sum of samples over the Debye temperature of the system
+    """
+    try: 
+        eqDebye = 0
+        for n in range(1, len(trajObject)):
+            T = trajObject[n].get_temperature()                                # Set to system temperature                     
+            m = sum(trajObject[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
+            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*MSD))        # Sum Debye temperatures for each trajectory object
+        avgDebye = eqDebye/len(trajObject)                                     # Average sum over number of samples
+    
+    except Exception as e:
+        print("An error occured when calculating the Debye temperature:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+
+    return(avgDebye)
 
 def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
     """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
