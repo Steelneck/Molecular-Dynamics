@@ -74,9 +74,9 @@ def main():
                                      D,
                                      L,
                                      SHC,
-                                     internalTemperature,
+                                     Temp,
                                      internalPressure,
-                                     cohesiveEnergy)
+                                     Ecoh)
     else:
         print("System never reached equilibrium. No calculations are possible.")
 

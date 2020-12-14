@@ -17,6 +17,7 @@ from calculations import Self_diffuse
 from calculations import Lindemann
 from calculations import calc_lattice_constant_fcc_cubic
 from calculations import write_atom_properties
+from calculations import calc_bulk_modulus
 
 import numpy
 from asap3 import Trajectory, EMT
