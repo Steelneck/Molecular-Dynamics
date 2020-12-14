@@ -249,55 +249,55 @@ def debye_temperature(trajObject, MSD):
 
     return(avgDebye)
 
-# def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
-#     """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
-#         Calculates both a and c constant but those are equal for fcc cubic.
-#         Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
-#     try: 
-#         # Make a good initial guess on the lattice constant
-#         a0 = 3.52 / np.sqrt(2) 
-#         c0 = np.sqrt(8 / 3.0) * a0
+def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
+    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
+        Calculates both a and c constant but those are equal for fcc cubic.
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
+    try: 
+        # Make a good initial guess on the lattice constant
+        a0 = 3.52 / np.sqrt(2) 
+        c0 = np.sqrt(8 / 3.0) * a0
         
-#         fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
-#         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
+        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
+        traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
 
-#         # Generate 9 calculations of potential energy for different a and c values. 
-#         eps = 0.01                                                              # A small deviation to generate a few more constants.
-#         for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
-#             for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-#                 at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
-#                 at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
-#                 traj.write(at)                                                  # Write bulk config to trajectory file
+        # Generate 9 calculations of potential energy for different a and c values. 
+        eps = 0.01                                                              # A small deviation to generate a few more constants.
+        for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
+            for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
+                at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
+                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
+                traj.write(at)                                                  # Write bulk config to trajectory file
 
-#         # Now we can get the energies and lattice constants from the traj file
-#         configs = read(fileName + "@:")
-#         energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
+        # Now we can get the energies and lattice constants from the traj file
+        configs = read(fileName + "@:")
+        energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
 
-#         # From the bulk builder we can do at.cell to get the constant: a at position 0,0 and constant: c at position 2,2
-#         a = np.array([config.cell[0, 0] for config in configs])                 
-#         c = np.array([config.cell[2, 2] for config in configs])
+        # From the bulk builder we can do at.cell to get the constant: a at position 0,0 and constant: c at position 2,2
+        a = np.array([config.cell[0, 0] for config in configs])                 
+        c = np.array([config.cell[2, 2] for config in configs])
 
-#         # Fit the energy to lattice constants to the expression: 𝑝0+𝑝1𝑎+𝑝2𝑐+𝑝3𝑎^2+𝑝4𝑎𝑐+𝑝5𝑐^2
-#         functions = np.array([a**0, a, c, a**2, a * c, c**2])
-#         p = np.linalg.lstsq(functions.T, energies, rcond=-1)[0]
-#         #print("Polynomial:", p, "\n")
-#         #print("Functions: \n", functions.T)
+        # Fit the energy to lattice constants to the expression: 𝑝0+𝑝1𝑎+𝑝2𝑐+𝑝3𝑎^2+𝑝4𝑎𝑐+𝑝5𝑐^2
+        functions = np.array([a**0, a, c, a**2, a * c, c**2])
+        p = np.linalg.lstsq(functions.T, energies, rcond=-1)[0]
+        #print("Polynomial:", p, "\n")
+        #print("Functions: \n", functions.T)
         
-#         # Solve fitted function for a and c. The minimum is found by
-#         p0 = p[0]
-#         p1 = p[1:3]
-#         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
-#         a0, c0 = np.linalg.solve(p2.T, -p1)
+        # Solve fitted function for a and c. The minimum is found by
+        p0 = p[0]
+        p1 = p[1:3]
+        p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
+        a0, c0 = np.linalg.solve(p2.T, -p1)
 
-#         print("Lattice constant a:", a0) 
-#         return(a0)
-#         #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
-#     except Exception as e:
-#         print("An error occured when calculating the lattice constant:")
-#         exc_type, exc_obj, exc_traceBack = sys.exc_info()
-#         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
-#         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
-#         return(None)
+        print("Lattice constant a:", a0) 
+        return(a0)
+        #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
+    except Exception as e:
+        print("An error occured when calculating the lattice constant:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
 
 def calc_bulk_modulus(atoms):
     """
