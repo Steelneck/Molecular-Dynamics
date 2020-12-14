@@ -76,6 +76,7 @@ def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
     # Set the momenta corresponding to desired temperature when running Verlocity Verlet
     if Verlocity_Verlet_Check == True:
         MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+        Stationary(atoms) # Set linear momentum to zero
 
     # Interatomic potential
     if (EMT_Check == True) and (openKIM_Check == False):
@@ -134,6 +135,7 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 # Set the momenta corresponding to desired temperature when running Verlocity Verlet
                 if Verlocity_Verlet_Check == True:
                     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+                    Stationary(atoms) # Set linear momentum to zero
 
                 # Interatomic potential
                 if (EMT_Check == True) and (openKIM_Check == False):
