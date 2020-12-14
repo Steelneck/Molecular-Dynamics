@@ -12,7 +12,6 @@ from ase.eos import EquationOfState
 
 import csv
 
-
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, eq_trajObject, superCellSize):
     try:
@@ -68,7 +67,6 @@ def Specific_Heat(myAtoms, trajObject):
                             - trajObject[0].get_kinetic_energy()/len(trajObject[0])) # potential energy difference when ystem has reached equilibrium
     
     heat_capcity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
-    print("C_p = ", heat_capcity, "[J/K*Kg]")
     return heat_capcity
 
 
@@ -164,7 +162,6 @@ def calc_internal_pressure(myAtoms, trajObject, superCellSize):
         
         internalPressure = allInstantPressures / M                      # Internal pressure is the MD average of the instantaneous pressures. 
                                                                         # Unit summation of instantaneosPressures => [eV / Å^3]
-        print("Internal Pressure:", internalPressure, "[eV / Å^3]")
         return(internalPressure)
     except Exception as e:
         print("An error occured in internal pressure function:", e)
@@ -330,8 +327,7 @@ def calc_bulk_modulus(atoms):
 
         if not (e0 < energies[0] and e0 < energies[-1]):        # Have to check that minmum is not an endpoint. Can replicate with bad lattice constant guess. 
             raise ValueError("Minumum is endpoint, use a different intervall. Or make a better guess on lattice constant.")
-
-        print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].') 
+ 
         eos.plot(atomsConfigName + '_eos.png')                  # Saves an images of the plot. Might not want this?
 
         return(e0, v0, B_GPa)                                   # Return min E=e0 at volume V=v0 and Bulkmodulus with unit GPa

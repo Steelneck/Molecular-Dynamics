@@ -1,12 +1,7 @@
 """Demonstrates molecular dynamics with constant energy."""
 
-from Init.init_values import *
-from tkinter import *
-import os
-import Calculations.calculations as calc
-from asap3 import Trajectory
-from ase import *
-import shutil
+from Init.init_simulation import *
+import json
 
 """ Ignore the parallel rank deprecation warning """
 
@@ -18,52 +13,45 @@ warnings.warn = warn
 """ Main """
 
 def main():  
-    # Initiate the crystal based on the chosen variables
-    # This will eventually become "Initiate the system" => system depends on user's choice
-    atoms = init()
+    """ Takes all the data from User_Input.json """
+    with open('User_Input.json') as json_file:
+        Input = json.load(json_file)
+        for row in Input['Data']:
+            EMT_Check = row["EMT"]
+            openKIM_Check = row["openKIM"]
+            Verlocity_Verlet_Check = row["Verlocity_Verlet"]
+            Langevin_Check = row["Langevin"]
+            KIM_potential = row["KIM_potential"]
+            ASE = row["ASE"]
+            Materials_project = row["Materials_project"]
+            Symbol = row["Symbol"]
+            Critera_list=row["Critera_list"]
+            Vacancy = row["Vacancy"]
+            Impurity = row["Impurity"]
+            Impurity_ele_list=row["Impurity_ele_list"]
+            Temperature = row["Temperature"]
+            Steps = row["Steps"]
+            Interval = row["Interval"]
+            Size_X = row["Size_X"]
+            Size_Y = row["Size_Y"]
+            Size_Z = row["Size_Z"]
+            API_Key = row["API_Key"]
+            PBC = row["PBC"]
+            Directions = row["Directions"]
+            Miller = row["Miller"]
+            lc_a=row["lc_a"]
+            lc_b=row["lc_b"]
+            lc_c=row["lc_c"]
+            lc_alpha=row["lc_alpha"]
+            lc_beta=row["lc_beta"]
+            lc_gamma=row["lc_gamma"]
 
-    # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5*units.fs)  # 5 fs time step.
-    traj = Trajectory("atoms.traj", "w", atoms)
-
-    dyn.attach(traj.write, interval)
-    dyn.run(steps)
-    
-    traj = Trajectory("atoms.traj")
-    traj_eq = Trajectory("atoms_eq.traj", "w", atoms)
-
-    # I believe that when assigning Calculator to atoms.calc the Calculator object is modified like it is a pointer object/referenced. Thus passing Calculator does not work. 
-    # Please feel free to switch EMT() argument to Calculator and see the error message. print(atoms.calc, Calculator) then print(EMT()) proves that Calculator is modified, like a pointer object.
-    latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())         
-    
-    calc.eq_traj(atoms, traj, traj_eq, Size_X * Size_Y * Size_Z)#Creates new .traj-file containing trajectory post equilibrium.
-    if os.path.getsize("atoms_eq.traj") != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-        traj_eq = Trajectory("atoms_eq.traj")
-        calc.write_atom_properties(atoms, "Visualization/properties.csv", traj_eq)
-        #If-statement that checks if we ever reached equilibrium.
-        MSD = calc.MSD_calc(atoms, traj_eq, 1)
-        print("MSD = ", MSD, "[Å²]")
-        D = calc.Self_diffuse(MSD, len(traj_eq))
-        print("D = ", D, "[Å²/fs]")
-        L = calc.Lindemann(traj_eq, MSD)
-        SHC = calc.Specific_Heat(atoms, traj_eq)
-
-        # Internal temperature of the system
-        Temp = calc.internal_temperature(atoms, traj_eq)
-        print("Internal temperature: T =", Temp, "[K]")
-
-        # Cohesive energy of the system
-        Ecoh = calc.cohesive_energy(atoms, traj_eq)
-        print("Cohesive energy: Eᴄᴏʜ =", Ecoh, "[eV/atom]")
-
-        # Debye temperature of the system
-        Debye = calc.debye_temperature(traj_eq, MSD)
-        print("Debye temperature: Θ =", Debye, "[K]")
-
-        internalPressure = calc.calc_internal_pressure(atoms, traj_eq, Size_X * Size_Y * Size_Z)
-        e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
-    else:
-        print("System never reached equilibrium. No calculations are possible.")
+            simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
+                        ASE, Materials_project,Symbol,Critera_list, 
+                        Vacancy, Impurity, Impurity_ele_list,
+                        Temperature, Steps, Interval,
+                        Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
 if __name__ == "__main__":
     main()

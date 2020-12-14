@@ -1,8 +1,7 @@
 """ Initiation functions """
 
 from collections import Counter
-from operator import index
-from ase import *
+from ase import Atoms
 import math
 
 # Parameters will decide values and bravais lattice
@@ -50,6 +49,52 @@ def set_lattice_const(lc_a, lc_b, lc_c, lc_alpha, lc_beta, lc_gamma):
     
     # Returns a dict with all the values
     return lc_constants
+
+""" Takes out the information from the ordered dictionary and creates an atomobject """
+def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
+
+    # Returns the chemical formula which is needed when creating the atoms object.
+    chemical_formula_sum = str((dictionary[symbol])['_chemical_formula_sum'])
+    
+    # Sometimes the chemical formula have spaces in between the elements. 
+    # This function removes the spaces since creating the atom object wont work otherwise. 
+    chemical_formula = chemical_formula_sum.replace(" ","")
+
+    print(chemical_formula)
+    
+    # Lattice constants
+    a = float((dictionary[symbol])['_cell_length_a'])
+    b = float((dictionary[symbol])['_cell_length_b'])
+    c = float((dictionary[symbol])['_cell_length_c'])
+    
+    # Angles for the unit cell
+    alpha = float((dictionary[symbol])['_cell_angle_alpha'])
+    beta = float((dictionary[symbol])['_cell_angle_beta'])
+    gamma = float((dictionary[symbol])['_cell_angle_gamma'])
+    
+    # Nr of atoms in the structural chemical formula
+    nr_of_atoms = len(((dictionary[symbol])['_atom_site_fract_x']))
+
+    # Extracts the fractional coordinates that is then multipled with corresponding lattice constant
+    # This will return the posistions between the atoms based on the structural chemical formula
+    position = []
+    for i in range(nr_of_atoms):
+        x = float(((dictionary[symbol])['_atom_site_fract_x'])[i])
+        y = float(((dictionary[symbol])['_atom_site_fract_y'])[i])
+        z = float(((dictionary[symbol])['_atom_site_fract_z'])[i])
+        pos = (x,y,z)
+        position.append(pos)
+
+    #Creates the atomobject
+    atoms =Atoms(symbols= chemical_formula,
+                scaled_positions=position,
+                cell=[a, b, c, alpha, beta, gamma],
+                pbc=PBC)
+
+    # Generates a supercell
+    atoms = atoms*(Size_X,Size_Y,Size_Z)
+    
+    return atoms
 
 def find_crystal_center(myAtoms):
     N = len(myAtoms)                        
