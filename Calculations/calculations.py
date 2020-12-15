@@ -34,7 +34,6 @@ def eq_traj(myAtoms, trajObject, superCellSize):
             #P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             #V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            print(E_tot_diff_mean)
             if E_tot_diff_mean < 0.002: # and V_diff_mean < 0.1 and P_tot_diff_mean < 1e-6 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break

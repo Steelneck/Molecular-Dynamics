@@ -21,16 +21,17 @@ def super_simulation(Calculator,Symbol):
         # We want to run MD with constant energy using the VelocityVerlet algorithm.
         dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
 
-
-        traj = Trajectory("atoms.traj", "w", atomobj)
+        fileName = Symbol + ".traj"
+        traj = Trajectory(fileName, "w", atomobj)
 
         dyn.attach(traj.write, interval)
         dyn.run(steps)
         
-        traj = Trajectory("atoms.traj")
+        traj = Trajectory(fileName)
 
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         print(eq_index)
+        print("Calc of", Symbol, "gave:")
         
         #If-statement that checks if we ever reached equilibrium.
         if eq_index != 0:
