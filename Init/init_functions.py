@@ -2,6 +2,7 @@
 
 from collections import Counter
 from ase import Atoms
+#from asap3 import Atoms
 import math
 
 # Parameters will decide values and bravais lattice
@@ -59,6 +60,8 @@ def from_dictionary_to_atoms(dictionary, symbol, Size_X, Size_Y, Size_Z,PBC):
     # Sometimes the chemical formula have spaces in between the elements. 
     # This function removes the spaces since creating the atom object wont work otherwise. 
     chemical_formula = chemical_formula_sum.replace(" ","")
+
+    print(chemical_formula)
     
     # Lattice constants
     a = float((dictionary[symbol])['_cell_length_a'])

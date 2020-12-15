@@ -1,6 +1,6 @@
 """ Initiation of variables and system  """
 import math
-
+import shutil
 # 6 of the 7 lattice systems (rhombohedral is not available)
 from ase.lattice.cubic import *
 from ase.lattice.tetragonal import *
@@ -8,7 +8,8 @@ from ase.lattice.orthorhombic import *
 from ase.lattice.monoclinic import *
 from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
-from ase import Atoms
+from ase.atom import *
+import ase.io
 
 #from asap3 import OpenKIMcalculator
 from asap3 import Trajectory
@@ -109,20 +110,33 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 # Takes out the space group and crystal structure query
                 space_group = ((data[i])['spacegroup'])['symbol']
                 crystal_structure = ((data[i])['spacegroup'])['crystal_system']
+                pretty_formula = str((data[i])['pretty_formula'])
             
                 # Function that skips the element if it not an FCC crystal
-                if space_group[0] != 'F' or crystal_structure != 'cubic':
-                    continue
+                # if space_group[0] != 'F' or crystal_structure != 'cubic':
+                #     continue
                 
                 # Ordered dictionary of the CIF
-                cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
+                #cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
+                cif_Info=(data[i])["cif"]
+
+
+                f = open(pretty_formula + ".cif", "w+")
+                f.write(cif_Info)
+                f.close()
 
                 #Pretty formula for the element
-                pretty_formula = str((data[i])['pretty_formula'])
+                #pretty_formula = str((data[i])['pretty_formula'])
 
                 # Function that returns an atomobject depending on the information from the CIF
-                atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
-                
+                # atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
+                # print(atoms.todict())
+                atoms = ase.io.read(pretty_formula + ".cif")
+                atoms = atoms*(Size_X,Size_Y,Size_Z)
+
+                # atoms = atoms*(Size_X,Size_Y,Size_Z)
+                # print(atoms.todict())
+
                 #places impurity in the crystal 
                 if Impurity == True:
                     atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
@@ -143,11 +157,13 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 elif (EMT_Check == False) and (openKIM_Check == True):
                     #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
                     potential = checkKIMpotential(KIM_potential)
-                    atoms.calc = KIM(potential)
+                    atoms.calc = KIM(potential, options={"ase_neigh": True})
                     #atoms.set_calculator(OpenKIMcalculator(potential))
                 else:
                     raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
-
+                
+                #Moves the trajectory file to another folder after it has been used
+                shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
                 atoms_list.append(atoms)
         else:
             raise Exception("The query/queries returned no elements!") 

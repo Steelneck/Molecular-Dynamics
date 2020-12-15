@@ -65,10 +65,11 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         
         dyn.attach(traj.write, Interval)
         dyn.run(Steps)
+        print(atomobj.get_chemical_formula())
         
         traj = Trajectory(trajFileName)
 
-        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        #latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         if eq_index != 0:
@@ -78,30 +79,30 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             MSD = calc.MSD_calc(atomobj, traj, eq_index)
             print("MSD = ", MSD, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
-            print("D = ", D, "[Å²/fs]")
+            # D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
+            # print("D = ", D, "[Å²/fs]")
             
-            L = calc.Lindemann(traj, MSD)
+            # L = calc.Lindemann(traj, MSD)
             
-            SHC = calc.Specific_Heat(atomobj, traj, eq_index)
-            print("C_p = ", SHC, "[J/K*Kg]")
+            # SHC = calc.Specific_Heat(atomobj, traj, eq_index)
+            # print("C_p = ", SHC, "[J/K*Kg]")
             
-            internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
-            print("Internal temperature:", internalTemperature, "[K]")
+            # internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
+            # print("Internal temperature:", internalTemperature, "[K]")
             
-            cohesiveEnergy = calc.cohesive_energy(atomobj, traj, eq_index)
-            print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
+            # cohesiveEnergy = calc.cohesive_energy(atomobj, traj, eq_index)
+            # print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
             
-            internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
-            print("Internal Pressure:", internalPressure, "[eV / Å^3]")
+            # internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
+            # print("Internal Pressure:", internalPressure, "[eV / Å^3]")
             
-            e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
-            print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
+            #e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
+            #print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            translate_to_optimade(atomobj, MSD)
+            # translate_to_optimade(atomobj, MSD)
 
             #Moves the trajectory file to another folder after it has been used
-            shutil.move(trajFileName, "Traj/" + trajFileName)
+            #shutil.move(trajFileName, "Traj/" + trajFileName)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
