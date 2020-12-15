@@ -11,7 +11,7 @@ from ase.lattice.hexagonal import *
 from ase.atom import *
 import ase.io
 
-#from asap3 import OpenKIMcalculator 
+from asap3 import OpenKIMcalculator 
 from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
@@ -84,8 +84,8 @@ def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
     elif (EMT_Check == False) and (openKIM_Check == True):
         #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
         potential = checkKIMpotential(KIM_potential)
-        atoms.calc = KIM(potential, options={"ase_neigh": True})
-        #atoms.set_calculator(OpenKIMcalculator(potential))
+        #atoms.calc = KIM(potential, options={"ase_neigh": True})
+        atoms.set_calculator(OpenKIMcalculator(potential))
     else:
         raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
 

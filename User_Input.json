@@ -44,7 +44,7 @@
             "Impurity": true,
             "Impurity_ele_list": ["Ni", "Cu", "Pb", "Ag", "Au", "Pt", "Cr", "Ti", "He", "Ar", "Kr", "O", "C", "Mn", "Co", "Sc"],
             "Temperature": 300,
-            "Steps":1000,
+            "Steps":100,
             "Interval":10,
             "Size_X":4,
             "Size_Y":4,
