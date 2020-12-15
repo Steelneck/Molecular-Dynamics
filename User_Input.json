@@ -13,7 +13,7 @@
             "Vacancy": false,
             "Impurity": false,
             "Impurity_ele_list": ["Au"],
-            "Temperature": 300,
+            "Temperature": 1000,
             "Steps":1000,
             "Interval":10,
             "Size_X":3,

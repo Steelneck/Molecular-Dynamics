@@ -18,7 +18,7 @@ import time
 def eq_traj(myAtoms, trajObject, superCellSize):
     try:
         t = 0
-        eq_index = 0
+        eq_index = 20
         while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
             P_tot_diff = 0
             E_tot_diff = 0
@@ -38,8 +38,8 @@ def eq_traj(myAtoms, trajObject, superCellSize):
             P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            print(E_tot_diff_mean)
-            if E_tot_diff_mean < 0.001 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
+            print(trajObject[curr_element].get_temperature())
+            if E_tot_diff_mean < 0.000000001 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
             t += 1
@@ -89,9 +89,10 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(MSD, timeStepIndex):
+def Self_diffuse(MSD, timeStepIndex, interval):
     try:
-        D = 5*MSD/(6*timeStepIndex) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
+        t = timeStepIndex/(5*interval) #Each timestep is 5 fs and each element of traj is taken in intervals.
+        D = MSD/(6*t) #How to connect mean squre displacement to self-diffusion coefficient. 
     except Exception as e:
         print("An error occured when calculating the self diffusion coefficient:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -105,7 +106,7 @@ def Lindemann(trajObject, MSD):
     try:
         nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
-        L = MSD/d #Lindemann criterion. Expect melting when L>0.1
+        L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -358,36 +359,4 @@ def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
 
-
-
-def write_simulation_to_json(myAtoms, temperature, MSD, S, L, SHC, Int_T, E_coh, Int_P, Bulk_modulus, Lattice_constant, run_time):
-    data ={
-        "Simulation input": {
-            "Chemical formula": myAtoms.get_chemical_formula(),
-            "Lattice structure": str(myAtoms.get_cell().get_bravais_lattice()),
-            "a": myAtoms.get_cell_lengths_and_angles()[0],
-            "b": myAtoms.get_cell_lengths_and_angles()[1],
-            "c": myAtoms.get_cell_lengths_and_angles()[2],
-            "Alpha": myAtoms.get_cell_lengths_and_angles()[3],
-            "Beta": myAtoms.get_cell_lengths_and_angles()[4],
-            "Gamma": myAtoms.get_cell_lengths_and_angles()[5],
-            "Volume": myAtoms.get_volume(),
-            "Initial Temperature": temperature,
-            "Run time [fs]": run_time
-        },
-        "Simulation output": {
-            "Mean Square Displacement [A^2]": MSD,
-            "Self diffusion coefficient [A^2/fs]": S,
-            "Lindemann Criterion": L,
-            "Specific Heat [J/K*Kg]": SHC,
-            "Internal Temperature [K]": Int_T,
-            "Cohesive Energy [eV/atom]": E_coh,
-            "Internal Pressure [eV / A^3]": Int_P,
-            "Bulk_modulus [GPa]": Bulk_modulus,
-            "Lattice_constant [A]": Lattice_constant
-        },
-    }
-    filename = "Json/simulation_" + myAtoms.get_chemical_formula() + "_" + str(int(time.time())) + ".json"
-
-    with open(filename, "w") as file:
-        json.dump(data, file, indent = 4)
+ 

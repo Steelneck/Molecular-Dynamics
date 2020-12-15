@@ -5,12 +5,13 @@ import shutil
 from .init_values import *
 from tkinter import *
 import Calculations.calculations as calc
+import Json.write_json as write_json
 from asap3 import Trajectory
 from ase.gui import *
 
 
 def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
-                        ASE, Materials_project,Symbol,Critera_list, 
+                        ASE, Materials_project,Symbol,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
@@ -36,12 +37,12 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
     elif (Materials_project == True) and (ASE == False):
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list:
-                atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+                atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
 
         else:
-            atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+            atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
@@ -77,14 +78,14 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             MSD = calc.MSD_calc(atomobj, traj, eq_index)
             print("MSD = ", MSD, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
+            D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval)
             print("D = ", D, "[Å²/fs]")
             
             L = calc.Lindemann(traj, MSD)
             if L>0.1:
-                print("Melting according to Lindemann criterion.")
+                print(L, "Melting according to Lindemann criterion.")
             else:
-                print("Not melting according to Lindemann criterion.")
+                print(L, "Not melting according to Lindemann criterion.")
             
             SHC = calc.Specific_Heat(atomobj, traj, eq_index)
             print("C_p = ", SHC, "[J/K*Kg]")
@@ -103,7 +104,52 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
-            calc.write_simulation_to_json(atomobj, Temperature, MSD, D, L, SHC, internalTemperature, cohesiveEnergy, internalPressure, B_GPa, latticeConstant_a, Steps*5)
+
+            #Makes a simulation-specific json-file with all the relevant input and output.
+
+            database = ""
+            ele_symbol = ""
+            potential = ""
+            integrator = ""
+            
+            if Materials_project == True and ASE == False:
+                ele_symbol = Criteria_list[0]["elements"][0]
+            else:
+                ele_symbol = Symbol
+                
+            if EMT == True:
+                potential = "EMT"
+            elif KIM_potential == " ":
+                potential = "Leonnard-Jones"
+            else:
+                potential = KIM_potential
+
+            if Verlocity_Verlet_Check == True:
+                integrator = "Velocity-Verlet"
+            else:
+                integrator = "Langevin"
+                
+            if Materials_project == True:
+                database = "Materials Project"
+            else:
+                database = "ASE"
+                
+            write_json.write_simulation_to_json(ele_symbol,
+                                                database,
+                                                potential,
+                                                integrator,
+                                                atomobj,
+                                                Temperature,
+                                                MSD,
+                                                D,
+                                                L,
+                                                SHC,
+                                                internalTemperature,
+                                                cohesiveEnergy,
+                                                internalPressure,
+                                                B_GPa,
+                                                latticeConstant_a,
+                                                Steps*5)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
