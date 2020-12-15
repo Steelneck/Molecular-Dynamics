@@ -25,7 +25,7 @@ def main():
             ASE = row["ASE"]
             Materials_project = row["Materials_project"]
             Symbol = row["Symbol"]
-            Critera_list=row["Critera_list"]
+            Criteria_list=row["Criteria_list"]
             Vacancy = row["Vacancy"]
             Impurity = row["Impurity"]
             Impurity_ele_list=row["Impurity_ele_list"]
@@ -47,7 +47,7 @@ def main():
             lc_gamma=row["lc_gamma"]
 
             simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
-                        ASE, Materials_project,Symbol,Critera_list, 
+                        ASE, Materials_project,Symbol,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,

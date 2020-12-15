@@ -11,7 +11,7 @@ from ase.gui import *
 
 
 def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
-                        ASE, Materials_project,Symbol,Critera_list, 
+                        ASE, Materials_project,Symbol,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
                         Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
@@ -37,19 +37,18 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
     elif (Materials_project == True) and (ASE == False):
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list:
-                atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+                atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
 
         else:
-            atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+            atoms = init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
     
     for atomobj in atoms:
-        print(atomobj)
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
             dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
@@ -59,17 +58,13 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
         #Creates a unique name for every simulation run 
         trajFileName = atomobj.get_chemical_formula() + '.traj'
-        print(trajFileName)
         traj = Trajectory(trajFileName, "w", atomobj)
-        print("traj")
         dyn.attach(traj.write, Interval)
-        print("dyn.attach")
         dyn.run(Steps)
-        print(atomobj.get_chemical_formula())
         
         traj = Trajectory(trajFileName)
 
-        #latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         if eq_index != 0:
@@ -79,30 +74,30 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             MSD = calc.MSD_calc(atomobj, traj, eq_index)
             print("MSD = ", MSD, "[Å²]")
             
-            # D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
-            # print("D = ", D, "[Å²/fs]")
+            D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
+            print("D = ", D, "[Å²/fs]")
             
-            # L = calc.Lindemann(traj, MSD)
+            L = calc.Lindemann(traj, MSD)
             
-            # SHC = calc.Specific_Heat(atomobj, traj, eq_index)
-            # print("C_p = ", SHC, "[J/K*Kg]")
+            SHC = calc.Specific_Heat(atomobj, traj, eq_index)
+            print("C_p = ", SHC, "[J/K*Kg]")
             
-            # internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
-            # print("Internal temperature:", internalTemperature, "[K]")
+            internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
+            print("Internal temperature:", internalTemperature, "[K]")
             
-            # cohesiveEnergy = calc.cohesive_energy(atomobj, traj, eq_index)
-            # print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
+            cohesiveEnergy = calc.cohesive_energy(atomobj, traj, eq_index)
+            print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
             
-            # internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
-            # print("Internal Pressure:", internalPressure, "[eV / Å^3]")
+            internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
+            print("Internal Pressure:", internalPressure, "[eV / Å^3]")
             
-            #e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
-            #print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
+            e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
+            print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            # translate_to_optimade(atomobj, MSD)
+            translate_to_optimade(atomobj, MSD)
 
             #Moves the trajectory file to another folder after it has been used
-            #shutil.move(trajFileName, "Traj/" + trajFileName)
+            shutil.move(trajFileName, "Traj/" + trajFileName)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
