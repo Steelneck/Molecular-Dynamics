@@ -124,6 +124,7 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 
                 #Creates the atom object from the CIF information
                 atoms = ase.io.read(pretty_formula + ".cif")
+                atoms.set_pbc(PBC)
                 
                 #Creates a supercell
                 atoms = atoms*(Size_X,Size_Y,Size_Z)
