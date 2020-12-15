@@ -11,7 +11,7 @@ from ase.lattice.hexagonal import *
 from ase.atom import *
 import ase.io
 
-#from asap3 import OpenKIMcalculator
+#from asap3 import OpenKIMcalculator 
 from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
@@ -85,7 +85,8 @@ def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
     elif (EMT_Check == False) and (openKIM_Check == True):
         #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
         potential = checkKIMpotential(KIM_potential)
-        atoms.calc = KIM(potential)
+        atoms.calc = KIM(potential, options={"ase_neigh": True})
+        #atoms.set_calculator(OpenKIMcalculator(potential))
     else:
         raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
 
@@ -131,7 +132,9 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 # Function that returns an atomobject depending on the information from the CIF
                 # atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
                 # print(atoms.todict())
+                
                 atoms = ase.io.read(pretty_formula + ".cif")
+                
                 atoms = atoms*(Size_X,Size_Y,Size_Z)
 
                 # atoms = atoms*(Size_X,Size_Y,Size_Z)

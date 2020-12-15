@@ -49,7 +49,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
     
     for atomobj in atoms:
-
+        print(atomobj)
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
             dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
@@ -57,13 +57,13 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             dyn = Langevin(atomobj, 5*units.fs, units.kB*Temperature, 0.002)
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
-
         #Creates a unique name for every simulation run 
         trajFileName = atomobj.get_chemical_formula() + '.traj'
-
+        print(trajFileName)
         traj = Trajectory(trajFileName, "w", atomobj)
-        
+        print("traj")
         dyn.attach(traj.write, Interval)
+        print("dyn.attach")
         dyn.run(Steps)
         print(atomobj.get_chemical_formula())
         
