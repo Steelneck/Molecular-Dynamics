@@ -1,18 +1,18 @@
 {
     "Data": [
         {
-            "EMT": true,
-            "openKIM": false,
+            "EMT": false,
+            "openKIM": true,
             "Verlocity_Verlet": true,
             "Langevin" : false,
             "KIM_potential": " ",
             "ASE": true,
             "Materials_project": false,
-            "Symbol": "Cu",
+            "Symbol": "Al",
             "Criteria_list": [{ "elements" :{"$in" :["Cu", "Ni"]}, "nelements": 2 }],
             "Vacancy": false,
-            "Impurity": false,
-            "Impurity_ele_list": ["Au"],
+            "Impurity": true,
+            "Impurity_ele_list": ["Ni", "Cu", "Pd", "Ag", "Pt", "Au", "Fe"],
             "Temperature": 300,
             "Steps":1000,
             "Interval":10,
