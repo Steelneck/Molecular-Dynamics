@@ -47,7 +47,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
-    
+
     for atomobj in atoms:
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
@@ -65,6 +65,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         traj = Trajectory(trajFileName)
 
         latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        print("Lattice constant a:", latticeConstant_a) 
         
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         if eq_index != 0:
@@ -98,7 +99,6 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
 
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
-
         else:
             print("System never reached equilibrium. No calculations are possible.")
     atoms.clear()

@@ -25,7 +25,6 @@ from ase.calculators.kim.kim import KIM
 # Initiation functions to separate them from variables
 from .init_functions import create_vacancy, find_crystal_center, set_lattice
 from .init_functions import set_lattice_const
-from .init_functions import from_dictionary_to_atoms
 
 # Dependencies to run materials project
 from pymatgen.ext.matproj import MPRester
@@ -114,31 +113,20 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                 pretty_formula = str((data[i])['pretty_formula'])
             
                 # Function that skips the element if it not an FCC crystal
-                # if space_group[0] != 'F' or crystal_structure != 'cubic':
-                #     continue
+                if space_group[0] != 'F' or crystal_structure != 'cubic':
+                    continue
                 
-                # Ordered dictionary of the CIF
-                #cif_Info=(CifParser.from_string((data[i])["cif"])).as_dict()
+                #Takes out the CIF information and creates a unique file
                 cif_Info=(data[i])["cif"]
-
-
                 f = open(pretty_formula + ".cif", "w+")
                 f.write(cif_Info)
                 f.close()
-
-                #Pretty formula for the element
-                #pretty_formula = str((data[i])['pretty_formula'])
-
-                # Function that returns an atomobject depending on the information from the CIF
-                # atoms = from_dictionary_to_atoms(cif_Info, pretty_formula, Size_X, Size_Y, Size_Z,PBC)
-                # print(atoms.todict())
                 
+                #Creates the atom object from the CIF information
                 atoms = ase.io.read(pretty_formula + ".cif")
                 
+                #Creates a supercell
                 atoms = atoms*(Size_X,Size_Y,Size_Z)
-
-                # atoms = atoms*(Size_X,Size_Y,Size_Z)
-                # print(atoms.todict())
 
                 #places impurity in the crystal 
                 if Impurity == True:
