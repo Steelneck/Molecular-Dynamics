@@ -1,0 +1,13 @@
+{
+  "_id": {
+    "oid": "2aeb538fd12732fc8c76bf330fd624ea"
+  },
+  "elements": [
+    "Cu"
+  ],
+  "nelements": 1,
+  "nsites": 32,
+  "element_ratios": [
+    1.0
+  ]
+}
