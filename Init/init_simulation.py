@@ -5,7 +5,6 @@ import shutil
 from .init_values import *
 from tkinter import *
 import Calculations.calculations as calc
-from Optimade.optimade import translate_to_optimade
 from asap3 import Trajectory
 from ase.gui import *
 
