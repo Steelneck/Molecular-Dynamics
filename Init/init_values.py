@@ -9,17 +9,17 @@ from ase.lattice.monoclinic import *
 from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase import Atoms
+from ase import units
 
-#from asap3 import OpenKIMcalculator
 from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
 from ase.md.verlet import VelocityVerlet
-from ase.md.langevin import Langevin
-from ase import units
+from asap3.md.langevin import Langevin
 from asap3 import EMT
 from ase.calculators.kim.kim import KIM
+#from asap3 import OpenKIMcalculator
 
 # Initiation functions to separate them from variables
 from .init_functions import create_vacancy, find_crystal_center, set_lattice

@@ -75,16 +75,16 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         #if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             #calc.write_atom_properties(atoms, "Visualization/properties.csv", traj, eq_index)
             
-            MSD = calc.MSD_calc(atomobj, traj, eq_index)
-            print("MSD = ", MSD, "[Å²]")
+            meansSquareDisplacement = calc.MSD_calc(atomobj, traj, eq_index)
+            print("MSD = ", meansSquareDisplacement, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
-            print("D = ", D, "[Å²/fs]")
+            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index))
+            print("D = ", selfDiffusionCoffecient, "[Å²/fs]")
             
-            L = calc.Lindemann(traj, MSD)
+            lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             
-            SHC = calc.Specific_Heat(atomobj, traj, eq_index)
-            print("C_p = ", SHC, "[J/K*Kg]")
+            specificHeatCapacity = calc.Specific_Heat(atomobj, traj, eq_index)
+            print("C_p = ", specificHeatCapacity, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
@@ -98,7 +98,8 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            translate_to_optimade(atomobj, MSD)
+            translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
+                                    internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
