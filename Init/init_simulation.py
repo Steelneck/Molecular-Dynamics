@@ -73,9 +73,9 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
         if eq_index != 0:
         #if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-            #calc.write_atom_properties(atoms, "Visualization/properties.csv", traj, eq_index)
+            calc.write_time_averages_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval)
             
-            MSD = calc.MSD_calc(atomobj, traj, eq_index)
+            MSD = calc.MSD_calc(atomobj, traj, eq_index, -1)
             print("MSD = ", MSD, "[Å²]")
             
             D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval)
@@ -117,7 +117,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             else:
                 ele_symbol = Symbol
                 
-            if EMT == True:
+            if EMT_Check == True:
                 potential = "EMT"
             elif KIM_potential == " ":
                 potential = "Leonnard-Jones"

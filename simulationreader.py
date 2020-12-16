@@ -1,4 +1,4 @@
-import os, csv, json
+import os, csv, json, operator
 
 def write_json_to_csv(path):
     files = os.listdir(path)
@@ -27,7 +27,7 @@ def write_json_to_csv(path):
                     Lattice_constant = sim_out["Lattice constant"]
 
             csvfilepath = "Visualization/sim_properties.csv"
-            with open(csvfilepath, "a") as csvfile:
+            with open(csvfilepath, "a", newline = "") as csvfile:
                 fieldnames = ["Element",
                               "Database",
                               "Potential",
@@ -66,6 +66,5 @@ def write_json_to_csv(path):
                                  "Int_P" : Int_P,
                                  "Bulk_mod" : Bulk_mod,
                                  "Lattice_constant": Lattice_constant})
-
 
 write_json_to_csv("Json/")

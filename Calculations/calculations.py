@@ -18,7 +18,7 @@ import time
 def eq_traj(myAtoms, trajObject, superCellSize):
     try:
         t = 0
-        eq_index = 20
+        eq_index = 5
         while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
             P_tot_diff = 0
             E_tot_diff = 0
@@ -38,7 +38,6 @@ def eq_traj(myAtoms, trajObject, superCellSize):
             P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
             V_diff_mean = V_diff/3
             E_tot_diff_mean = E_tot_diff/3
-            print(trajObject[curr_element].get_temperature())
             if E_tot_diff_mean < 0.000000001 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
                 eq_index = t #saves index of first atom that has reached equilibrium.
                 break
@@ -72,10 +71,10 @@ def Specific_Heat(myAtoms, trajObject, eq_index):
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
-def MSD_calc(myAtoms, trajObject, timeStepIndex):
+def MSD_calc(myAtoms, trajObject, timeStepIndex, eq_index):
     try:
-        pos_t = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-        pos_eq = trajObject[timeStepIndex].get_positions() #position of atoms at time t
+        pos_t = trajObject[timeStepIndex].get_positions() #position of atoms when system has reached equilibrium
+        pos_eq = trajObject[eq_index].get_positions() #position of atoms at time t
         diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
@@ -208,7 +207,7 @@ def cohesive_energy(atoms, trajObject, eq_index):
         eqEcoh = 0
         for n in range(eq_index, len(trajObject)):
             eqEcoh += trajObject[n].get_potential_energy()/len(atoms)           # Sum potential energies per atom for each trajectory object 
-        avgEcoh = eqEcoh/eq_length                                        # Average sum over number of samples
+        avgEcoh = np.absolute(eqEcoh/eq_length)                                        # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the cohesive energy")
@@ -338,7 +337,7 @@ def calc_bulk_modulus(atoms):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None, None, None)
 
-def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
+def write_time_averages_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval):
     """calculates a set of chosen properties and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
     try:
         eq_length = len(trajObject) - eq_index
@@ -348,9 +347,8 @@ def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
         t = 1
         writer.writeheader() #Sets fieldnames as first rows in file.
         while t < eq_length: #Checks time evolution of chosen properties.
-            time_after_eq = eq_length - t
-            MSD = MSD_calc(myAtoms, trajObject, time_after_eq)
-            S = Self_diffuse(MSD, t)
+            MSD = MSD_calc(myAtoms, trajObject,t, 1)
+            S = Self_diffuse(MSD, t, interval)
             writer.writerow({"Time" : t, "MSD" : MSD, "S" : S}) #Writes values at time t to csv-file. A new row is a new timestep.
             t += 1
     except Exception as e:
