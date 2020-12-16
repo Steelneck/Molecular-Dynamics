@@ -3,6 +3,10 @@ import time
 
 from ase import *
 
+"""
+Function that will go through all the important input and output from the simulation run in main and saves it too a simulation-specific .json-file.
+"""
+
 def write_simulation_to_json(atomName, database, potential, integrator, myAtoms, temperature, MSD, D, L, SHC, Int_T, E_coh, Int_P, Bulk_modulus, Lattice_constant, run_time):
     data = {
         "Simulation input": [
@@ -37,8 +41,10 @@ def write_simulation_to_json(atomName, database, potential, integrator, myAtoms,
             }
         ]
     }
-    filename = "Json/simulation_" + myAtoms.get_chemical_formula() + "_" + str(int(time.time())) + ".json"
+    #Included timestamp (in seconds) in filename to make sure it is always saved as a separate file. .
+    filename = "Json/simulation_" + myAtoms.get_chemical_formula() + "_" + str(time.time()) + ".json"
 
+    #Make sure all data is saved to the .json-file
     with open(filename, "w") as file:
         json.dump(data, file, indent = 4)
 

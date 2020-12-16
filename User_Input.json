@@ -8,7 +8,7 @@
             "KIM_potential": " ",
             "ASE": true,
             "Materials_project": false,
-            "Symbol": "Au",
+            "Symbol": "Cu",
             "Critera_list": [{ "elements" :["Cu"]}],
             "Vacancy": false,
             "Impurity": false,

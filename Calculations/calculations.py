@@ -337,18 +337,18 @@ def calc_bulk_modulus(atoms):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None, None, None)
 
-def write_time_averages_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval):
-    """calculates a set of chosen properties and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
+def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval):
+    """Calculates the time evolution of a set of chosen properties (at the moment only MSD and Self diffusion) and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
     try:
-        eq_length = len(trajObject) - eq_index
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         file = open(csvFileName, "w", newline="")
-        fieldnames = ["Time", "MSD", "S"] #These will be the first rows in each column specifying the property."
-        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";") #makes a dictionary-writer for csv-files.
+        fieldnames = ["Time", "MSD", "S"] #These will be the first rows in each column specifying the property in that column."
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";") #Makes a dictionary-writer for csv-files.
         t = 1
         writer.writeheader() #Sets fieldnames as first rows in file.
-        while t < eq_length: #Checks time evolution of chosen properties.
-            MSD = MSD_calc(myAtoms, trajObject,t, 1)
-            S = Self_diffuse(MSD, t, interval)
+        while t < eq_length: #Checks time evolution of chosen properties. When t reaches eq_length we will have reached the index of the trajectory.
+            MSD = MSD_calc(myAtoms, trajObject,eq_index + t, eq_index) #Calculate MSD from equilibrium to time eq_index + t.
+            S = Self_diffuse(MSD, t, interval) #Calculate self diffusion coefficient at time t after equilibrium.
             writer.writerow({"Time" : t, "MSD" : MSD, "S" : S}) #Writes values at time t to csv-file. A new row is a new timestep.
             t += 1
     except Exception as e:

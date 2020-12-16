@@ -71,9 +71,9 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
         latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         
         eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
+        
         if eq_index != 0:
         #if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-            calc.write_time_averages_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval)
             
             MSD = calc.MSD_calc(atomobj, traj, eq_index, -1)
             print("MSD = ", MSD, "[Å²]")
@@ -102,10 +102,13 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
+            #Writes a .csv-file with time evolution of the mean square displacement
+            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval)
+
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
 
-            #Makes a simulation-specific json-file with all the relevant input and output.
+            #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
             database = ""
             ele_symbol = ""
@@ -116,7 +119,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
                 ele_symbol = Criteria_list[0]["elements"][0]
             else:
                 ele_symbol = Symbol
-                
+            
             if EMT_Check == True:
                 potential = "EMT"
             elif KIM_potential == " ":
@@ -133,7 +136,8 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
                 database = "Materials Project"
             else:
                 database = "ASE"
-                
+
+            #Makes a simulation-specific json-file with all the relevant input and output.  
             write_json.write_simulation_to_json(ele_symbol,
                                                 database,
                                                 potential,
