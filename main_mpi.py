@@ -17,17 +17,11 @@ def main():
     with open('User_Input.json') as json_file:
         Input = json.load(json_file)
         for row in Input['Data']:
-            EMT_Check = row["EMT"]
-            openKIM_Check = row["openKIM"]
-            Verlocity_Verlet_Check = row["Verlocity_Verlet"]
-            Langevin_Check = row["Langevin"]
+            Calculator_Check = row["Calculator"]
+            Algorithm_Check = row["Algorithm"]
             KIM_potential = row["KIM_potential"]
-            ASE = row["ASE"]
-            Materials_project = row["Materials_project"]
             Symbol = row["Symbol"]
-            Criteria_list=row["Criteria_list"]
-            Vacancy = row["Vacancy"]
-            Impurity = row["Impurity"]
+            Defect_Check = row["Defect"]
             Impurity_ele_list=row["Impurity_ele_list"]
             Temperature = row["Temperature"]
             Steps = row["Steps"]
@@ -46,12 +40,28 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-        simulation_mpi(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
-                        ASE, Materials_project,Symbol,Criteria_list, 
-                        Vacancy, Impurity, Impurity_ele_list,
-                        Temperature, Steps, Interval,
-                        Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
+        simulation_mpi(Calculator_Check, 
+                        Algorithm_Check, 
+                        KIM_potential,
+                        Symbol,
+                        Defect_Check,
+                        Impurity_ele_list,
+                        Temperature,
+                        Steps,
+                        Interval,
+                        Size_X,
+                        Size_Y,
+                        Size_Z,
+                        API_Key,
+                        PBC,
+                        Directions,
+                        Miller,
+                        lc_a,
+                        lc_b,
+                        lc_c,
+                        lc_alpha,
+                        lc_beta,
+                        lc_gamma)
 
 if __name__ == "__main__":
     main()

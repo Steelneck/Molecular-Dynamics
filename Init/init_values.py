@@ -1,6 +1,7 @@
 """ Initiation of variables and system  """
 import math
 import shutil
+
 # 6 of the 7 lattice systems (rhombohedral is not available)
 from ase.lattice.cubic import *
 from ase.lattice.tetragonal import *
@@ -11,15 +12,17 @@ from ase.lattice.hexagonal import *
 from ase.atom import *
 import ase.io
 
-from asap3 import OpenKIMcalculator 
+#from asap3 import OpenKIMcalculator 
 from asap3 import Trajectory
 
 # Algorithms and calculators for the simulation
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
 from ase.md.verlet import VelocityVerlet
+import asap3.md.verlet
 from ase.md.langevin import Langevin
 from ase import units
 from asap3 import EMT
+import asap3
 from ase.calculators.kim.kim import KIM
 
 # Initiation functions to separate them from variables
@@ -29,68 +32,72 @@ from .init_functions import set_lattice_const
 # Dependencies to run materials project
 from pymatgen.ext.matproj import MPRester
 from pymatgen.io.cif import CifParser
-from.init_functions import insert_impurity
+from .init_functions import insert_impurity
+import Init.init_functions
 
-atoms_list = []
+input_list = []
 
 # Check if the potential string is empty, then assign standard Lennard Jones potential
-def checkKIMpotential(potential):
-    if (potential == "") or (potential == " "):
-        return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
-    else:
-        return potential
+# def checkKIMpotential(potential):
+#     if (potential == "") or (potential == " "):
+#         return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+#     else:
+#         return potential
+
 
 # Init for ASE
-def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
-                            Vacancy, Impurity, Impurity_ele, Temperature,
-                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
-                            lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
+def init(Calculator_Check, 
+         Algorithm_Check, 
+         KIM_potential,
+         Symbol,
+         Defect_Check,
+         Impurity_ele_list,
+         Temperature,
+         Steps,
+         Interval,
+         Size_X,
+         Size_Y,
+         Size_Z,
+         API_Key,
+         PBC,
+         Directions,
+         Miller,
+         lc_a,
+         lc_b,
+         lc_c,
+         lc_alpha,
+         lc_beta,
+         lc_gamma):
 
-    Lattice_Const = set_lattice_const(lc_a,
-                                    lc_b,
-                                    lc_c,
-                                    lc_alpha,
-                                    lc_beta,
-                                    lc_gamma)
+    """ Try to create an array of input arguments and list the arrays """
 
-    # Set up a crystals
-    atoms = set_lattice(FaceCenteredCubic,
-                    Lattice_Const,
-                    Directions,
-                    Miller,
-                    Size_X,
-                    Size_Y,
-                    Size_Z,
-                    Symbol,
-                    PBC) 
+    input_list = np.array([Calculator_Check, 
+                        Algorithm_Check, 
+                        KIM_potential,
+                        Symbol,
+                        Defect_Check,
+                        Impurity_ele_list,
+                        Temperature,
+                        Steps,
+                        Interval,
+                        Size_X,
+                        Size_Y,
+                        Size_Z,
+                        API_Key,
+                        PBC,
+                        Directions,
+                        Miller,
+                        lc_a,
+                        lc_b,
+                        lc_c,
+                        lc_alpha,
+                        lc_beta,
+                        lc_gamma])
 
-    #places impurity in the crystal 
-    if Impurity == True:
-        atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
-        insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
+    return input_list
 
-    #Places vacancy in the crytal
-    if Vacancy == True:
-        create_vacancy(atoms) # Create a vacancy
+    
 
-    # Set the momenta corresponding to desired temperature when running Verlocity Verlet
-    if Verlocity_Verlet_Check == True:
-        MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-        Stationary(atoms) # Set linear momentum to zero
-
-    # Interatomic potential
-    if (EMT_Check == True) and (openKIM_Check == False):
-        atoms.calc = EMT()
-    elif (EMT_Check == False) and (openKIM_Check == True):
-        #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
-        potential = checkKIMpotential(KIM_potential)
-        #atoms.calc = KIM(potential, options={"ase_neigh": True})
-        atoms.set_calculator(OpenKIMcalculator(potential))
-    else:
-        raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
-
-    atoms_list.append(atoms)
-    return atoms_list
 
 # Init for Materials project
 def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
