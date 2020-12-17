@@ -152,13 +152,13 @@ def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepInde
     return(instantP)
 
 def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
-    """ Internal pressure is the MD average of the instantaneous pressures. 
+    """Calculates the internal pressure of the system in units of electronvolt the MD average of the instantaneous pressures. 
     IMPORTANT! trajObject must contain the atoms objects when the system has reached equilibrium,
     in order to get internal temperature from a stable crystal. 
     superCellSize is the repetition of unit cell in each direction in 3D space."""
     try:  
-        iterationsInEqulibrium = len(trajObject) - eq_index                        # Will be the amount of iterations in equilibrium
-        M = iterationsInEqulibrium                                      # M = (iterations * deltaT) / deltaT
+        iterationsInEqulibrium = len(trajObject) - eq_index              # Will be the amount of iterations in equilibrium
+        M = iterationsInEqulibrium                                       # M = (iterations * deltaT) / deltaT
         
         # MD average
         allInstantPressures = 0
@@ -177,20 +177,20 @@ def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
         return(None)
 
 def internal_temperature(myAtoms, trajObject, eq_index):
-    """Calculates the internal temperature of the system in units of Kelvin by dividing get_kinetic_energy()
+    """Calculates the internal temperature of the system in units of Kelvin by dividing `get_kinetic_energy`
     by the number of atoms to get the kinetic energy per atom (K in the equation below), then evaluating
         T = 2*K / 3*kB
     where kB is the Boltzmann constant.
     
     Parameters
     ----------
-        myAtoms: Lattice
-        trajObject: TrajectoryReader
-        eq_index: int
+        myAtoms : Lattice
+        trajObject : TrajectoryReader
+        eq_index : int
 
     Returns
     -------
-        avgTemp: float
+        avgTemp : float
             Sampled internal temperature in units of Kelvin.
     """
 
@@ -214,25 +214,25 @@ def cohesive_energy(myAtoms, trajObject, eq_index):
     """NOTE: Requires usage of the EAM calculator for reasonable output!
 
     Calculates the cohesive energy of the system by dividing the potential energy of the system
-    as returned by get_potential_energy(), with the number of atoms which is given by the length of the atoms object.
+    as returned by `get_potential_energy`, with the number of atoms which is given by the length of the atoms object.
 
     Parameters
     ----------
-        myAtoms: Lattice
-        trajObject: TrajectoryReader
-        eq_index: int
+        myAtoms : Lattice
+        trajObject : TrajectoryReader
+        eq_index : int
 
     Returns
     -------
-        avgEcoh: float
-            Sampled potential energy per atom (i.e. cohesive energy of material) in units of electron volt per atom.
+        avgEcoh : float
+            Sampled potential energy per atom (i.e. cohesive energy of material) in units of electronvolt per atom.
     """
     try:
         eq_length = len(trajObject) - eq_index
         eqEcoh = 0
         for n in range(eq_index, len(trajObject)):
-            eqEcoh += trajObject[n].get_potential_energy()/len(myAtoms)           # Sum potential energies per atom for each trajectory object 
-        avgEcoh = eqEcoh/eq_length                                              # Average sum over number of samples
+            eqEcoh += trajObject[n].get_potential_energy()/len(myAtoms)             # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/eq_length                                                  # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the cohesive energy")
@@ -244,17 +244,19 @@ def cohesive_energy(myAtoms, trajObject, eq_index):
     return(avgEcoh)
 
 def debye_temperature(trajObject, MSD):
-    """Calculates the Debye temperature of the system. Uses returns of functions get_temperature(),
-    get_masses() summed over all atoms and converted to kg, and MSD_calc() to evaluate the equation
+    """Calculates the Debye temperature of the system. Uses returns of functions `get_temperature`,
+    get_masses() summed over all atoms and converted to kg, and `MSD_calc` to evaluate the equation
+
         Θ = √[(3*ℏ²*T)/(m*kB*<r²>)]
+
     where ℏ is the reduced Planck's constant, T is the temperature, m is the bulk mass,
     kB is the Boltzmann constant and <r²> is the mean square displacement.
 
     Parameters
     ----------
-        trajObject: TrajectoryReader
-        MSD: float
-            Mean square displacement as returned by MSD_calc().
+        trajObject : TrajectoryReader
+        MSD : float
+            Mean square displacement as returned by `MSD_calc`.
 
     Returns
     -------
