@@ -60,7 +60,6 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     species_list = []
     
     for x in elements:
-
       species_list.append({"chemical_symbols" : [x], "concentration" : [element_amount_dict[x]], "name": x})
 
     # Sets the disorder flag if there are more than 1 element present
