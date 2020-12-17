@@ -69,8 +69,6 @@ def run_config(input_config):
     dyn.attach(traj.write, Interval)
     dyn.run(Steps)
     traj.close()
-    time.sleep(2)
-    print(os.listdir("."), trajFileName)
     
     traj = Trajectory(trajFileName)
 
