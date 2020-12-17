@@ -119,13 +119,14 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
                 ele_symbol = Criteria_list[0]["elements"][0]
             else:
                 ele_symbol = Symbol
-            
-            if EMT_Check == True:
-                potential = "EMT"
-            elif KIM_potential == " ":
-                potential = "Leonnard-Jones"
+
+            if EMT_Check == False:
+                if KIM_potential == " ":
+                    potential = "Leonnard-Jones"
+                else:
+                  potential = KIM_potential
             else:
-                potential = KIM_potential
+                potential = "EMT"
 
             if Verlocity_Verlet_Check == True:
                 integrator = "Velocity-Verlet"

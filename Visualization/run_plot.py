@@ -5,7 +5,7 @@ import numpy as np
 def plot_prop_vs_time(csvFileName, prop_str):
 
     """
-    Function which plots the time evolution of property specified by input prop_str. csvFileName is the .csv-file where the time-evolution is saved."
+    Function which plots the time evolution of property specified by input prop_str. csvFileName is the .csv-file where the time-evolution of the latest run simulation is saved.
     """
     file = open(csvFileName, "r")
     reader = csv.DictReader(file, delimiter=";")
@@ -41,16 +41,21 @@ def plot_prop_per_simulation(atomName,
                              database,
                              integrator,
                              potential):
-    
+    """
+    Functions that creates a scatterplot with prop_1 str on the x-axis and prop2_str on the y-axis for element with name atomName taken from database, simulated with integrator and potential.
+    """
     file = open("sim_properties.csv", "r")
-    reader = csv.DictReader(file, delimiter=";")
+    reader = csv.DictReader(file, delimiter=";") #file is of dictionary format so the reader needs to be a dictreader. ";" separates the columns.
     count = 1
     x_list = []
     y_list = []
+    #loop over all elements in the dictionary.
     for row in reader:
+        #Check if the current row has the correct simulation input.
         if row["Database"] == database and row["Integrator"] == integrator:
             if row["Potential"] == potential:
                 if row["Element"] == atomName and row["Struct"].startswith(struct_str):
+                    #If all criteria is fullfilled, the value on the current row in column prop1_str and prop2_str is appended to two separate lists.
                     x_list.append(float(row[prop1_str]))
                     y_list.append(float(row[prop2_str]))
                     count += 1             
@@ -72,54 +77,79 @@ def plot_prop_per_simulation(atomName,
 
     plt.show()
 
-def plot_prop_different_elements(prop1_str,
-                                 prop2_str,
-                                 struct_str,
-                                 database,
-                                 integrator,
-                                 potential):
+def plot_prop_different_elements(prop1_str, prop2_str, struct_str,
+                                 database, integrator):
+    """
+    Function which plots two properties (specified by prop1_str and prop2_str taken from .csv-file sim_properties.csv) and creates a scatter plot of all atom-types and potentials separating them with colors and markers. Currently very ugly function but lack of time stops me from cleaning it up. It does the job.
+    """
     file = open("sim_properties.csv", "r")
+    marker_list = ["+", "o", "*", "x", "v", "d", "^", "s", "2"] #Make a list with markers that can be looped through when plotting multiple datatypes in the same scatterplot.
     x_list = []
     y_list = []
     reader = csv.DictReader(file, delimiter = ";")
-    sort = sorted(reader, key = operator.itemgetter("Element"))
-    element = sort[0]["Element"]
-    row = 0
-    column = 0
-    simulation_matrix = np.empty([1000,1000])
-    element_list = ["Symbols"]
+    sort = sorted(reader, key = operator.itemgetter("Element", "Potential")) #Create sorted list after element and then potential to make it easier to loop through
+    element = sort[0]["Element"] #Save first element to compare.
+    potential = sort[0]["Potential"] #Save first potential to compare.
+    row = 0 #Row index for simulation_matrix
+    column = 0 #Column index for simulation_matrix
+    simulation_matrix = np.empty([1000,5000]) #Make a list that is big enough to handle the largest datasets that we will run. This will be trimmed depending on how many values we append.
+    element_list = ["Symbols followed by potential"] #List that will contain the symbols of each element followed by the potential both as strings.
     for listrow in sort:
-        if listrow["Database"] == database and listrow["Potential"] == potential:
-            if listrow["Integrator"] == integrator and listrow["Struct"].startswith(struct_str):
+        #Check criteria for correct input.
+        if listrow["Database"] == database and listrow["Integrator"]:
+            if listrow["Struct"].startswith(struct_str):
+                #This is where the current config for "Potential and "Element" are compared to the previous iteration to see if we need too switch rows.
                 if listrow["Element"] == element:
-                    if column == 0:
-                        element_list.append(listrow["Element"])
-                        element_list.append("Empty")
-                        simulation_matrix[row,column] = listrow[prop1_str]
-                        simulation_matrix[row + 1, column] = listrow[prop2_str]
-                        column += 1
+                    if listrow["Potential"] == potential:
+                        #If column is 0 we want to save dict values under "Element" and "Potential" to element_list and also append the values to simulation matrix.
+                        if column == 0:
+                            element_list.append(listrow["Element"])
+                            element_list.append(listrow["Potential"])
+                            simulation_matrix[row,column] = listrow[prop1_str]
+                            simulation_matrix[row + 1, column] = listrow[prop2_str]
+                            column +=1
+                        else:
+                            #If column != 0 we only want to add values to simulation_matrix.
+                            simulation_matrix[row,column] = listrow[prop1_str]
+                            simulation_matrix[row + 1, column] = listrow[prop2_str]
+                            column +=1
+                    #If the current row has a new potential, we want to jump down in simulation_matrix and then save the values to that row on column index 0.
                     else:
+                        row += 2
+                        column = 0
+                        element_list.append(listrow["Element"])
+                        element_list.append(listrow["Potential"])
                         simulation_matrix[row,column] = listrow[prop1_str]
                         simulation_matrix[row + 1, column] = listrow[prop2_str]
                         column +=1
-                        element = listrow["Element"]
+                #If the current row has a new element we also want to jump down in simulation_matrix.
                 else:
                     row += 2
                     column = 0
-                    element = listrow["Element"]
-
+                    element_list.append(listrow["Element"])
+                    element_list.append(listrow["Potential"])
+                    simulation_matrix[row,column] = listrow[prop1_str]
+                    simulation_matrix[row + 1, column] = listrow[prop2_str]
+                    column+=1
+        #Save the current values to compare in next iteration.
+        potential = listrow["Potential"]
+        element = listrow["Element"]
+        
     i = 0
-    n = 0
+    marker_counter = 0 #Used to change markers in marker_list for different plots.
+    #Now loop through all rows of simulation_matrix and make separate plots for each element and potential, separated by color and marker type.
     while i < len(simulation_matrix):
-        if simulation_matrix[i,0] != 0:
+        if simulation_matrix[i,0] != 0 and i+2<len(element_list):
             x_list = list(filter(lambda a: a != 0, simulation_matrix[i]))
             y_list = list(filter(lambda a: a != 0, simulation_matrix[i+1]))
-            plt.scatter(x_list, y_list, label = element_list[i+1])
+            #Make sure the label says what element and potential the marker and color represents.
+            plt.scatter(x_list, y_list, label = element_list[i+1] + " with potential " + element_list[i+2], marker = marker_list[marker_counter])
             #Add trendline to scatterplots.
             #z = np.polyfit(x_list, y_list, 1)
             #p = np.poly1d(z)
             #plt.plot(x_list, p(x_list), "r--")
             i += 2
+            marker_counter += 1
         else:
             break
 
@@ -130,6 +160,7 @@ def plot_prop_different_elements(prop1_str,
               + " scatter plot")
     plt.xlabel(prop1_str)
     plt.ylabel(prop2_str)
+    plt.ylim(0,0.1)
     plt.legend()
     plt.show()
     
@@ -140,10 +171,14 @@ def hist_prop_per_simulation(atomName,
                              database,
                              integrator,
                              potential):
+    """
+    Function that makes a histogram plot of a chosen property (prop_str) for atom with atomName and structure struct_str, simulated with database, integrator and potential.
+    """
     file = open("sim_properties.csv", "r")
     reader = csv.DictReader(file, delimiter=";")
     count = 1
     plot_list = []
+    #Similar to previous function. Loop through sim_properties with dictionary reader and add property to plot_list if input criteria is fulfilled.
     for row in reader:
         if row["Database"] == database and row["Potential"] == potential:
             if row["Integrator"] == integrator and row["Struct"].startswith(struct_str):
@@ -169,9 +204,9 @@ Available properties for plotting: "MSD", "D", "L", "SHC", "Int_T", "E_coh", "In
 Structures: Look in the sim_properties.csv too see which structures are saved.
 """
 
-#Run plot functions. Will appear one after another.
+#Run plot functions. If multiple are active they will appear one after another.
 
-plot_prop_vs_time("properties.csv", "MSD")
-plot_prop_per_simulation("Cu", "CUB", "Int_T", "L", "ASE", "Velocity-Verlet", "EMT")
-plot_prop_different_elements("Int_T", "E_coh", "CUB", "ASE", "Velocity-Verlet", "EMT")
-hist_prop_per_simulation("Cu", "MSD", "CUB", "ASE", "Velocity-Verlet", "EMT")
+#plot_prop_vs_time("properties.csv", "MSD")
+#plot_prop_per_simulation("Cu", "CUB", "Int_T", "L", "ASE", "Velocity-Verlet", "EMT")
+plot_prop_different_elements("Int_T", "MSD", "CUB", "ASE", "Velocity-Verlet")
+#hist_prop_per_simulation("Cu", "MSD", "CUB", "ASE", "Velocity-Verlet", "EMT")
