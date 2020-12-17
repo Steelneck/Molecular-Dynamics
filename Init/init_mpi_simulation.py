@@ -22,6 +22,9 @@ from mpi4py import MPI
 import os
 import numpy as np
 
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
 def run_config(input_config):
 
@@ -96,8 +99,8 @@ def run_config(input_config):
         internalPressure = calc.calc_internal_pressure(atoms, traj, eq_index, Size_X * Size_Y * Size_Z)
         print("Internal Pressure:", internalPressure, "[eV / Å^3]")
         
-        # e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
-        # print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
+        e0, v0, B_GPa = calc.calc_bulk_modulus(atoms)
+        print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
     else:
         print("System never reached equilibrium. No calculations are possible.")
 
@@ -105,11 +108,25 @@ def run_config(input_config):
     #shutil.move(trajFileName, "Traj/" + trajFileName)
 
 
-# def simulation_mpi(input_list):
+def simulation_mpi(input_list):
 
 
-#     # Här fixar jag query
+    # Här fixar jag query
 
     # for input_config in input_list:
     #     run_config(input_config)
 
+    if rank == 0:
+        job_array = np.array_split(input_list, size)
+        print("We have", size, "processors.")
+        for i in range(0, size):
+            comm.isend(job_array[i], dest=i, tag=i)
+
+    my_jobs = comm.recv(source=0, tag=rank)
+    print(my_jobs)
+    result = [run_config(input_config) for input_config in input_list]
+    comm.isend(result, dest=0, tag=0)
+
+    if rank == 0:
+        for i in range(0, size):
+            result = comm.recv(source=i, tag=0)
