@@ -3,6 +3,11 @@
 from Init.init_mpi_simulation import *
 import json
 
+os.environ['OPENBLAS_NUM_THREADS'] = "1"
+os.environ['MKL_NUM_THREADS'] = "1"
+os.environ['NUMEXPR_NUM_THREADS'] = "1"
+os.environ['OMP_NUM_THREADS'] = "1"
+
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
@@ -60,17 +65,10 @@ def main():
         for i in range(0, size):
             comm.isend(job_array[i], dest=i, tag=i)
 
-        if rank==0:
-            my_jobs = comm.recv(source=0, tag=rank)
-            print(my_jobs)
-            result = [run_config(my_jobs)]
-            comm.isend(result, dest=0, tag=0)
-        
-        if rank==1:
-            my_jobs = comm.recv(source=0, tag=rank)
-            print(my_jobs)
-            result = [run_config(my_jobs)]
-            comm.isend(result, dest=0, tag=0)
+        my_jobs = comm.recv(source=0, tag=rank)
+        print(my_jobs)
+        result = [run_config(my_jobs)]
+        comm.isend(result, dest=0, tag=0)
 
     if rank == 0:
         for i in range(0, size):
