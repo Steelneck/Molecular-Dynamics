@@ -55,13 +55,14 @@ def main():
                                     Miller,lc_a,lc_b,lc_c,lc_a,lc_alpha,lc_beta,lc_gamma])
         
 
-        job_array = np.array_split(input_list, size)
+        job_array = input_list
         print("We have", size, "processors.")
         for i in range(0, size):
             comm.isend(job_array[i], dest=i, tag=i)
 
     my_jobs = comm.recv(source=0, tag=rank)
-    result = [run_config(my_jobs[0])]
+    print(my_jobs)
+    result = [run_config(my_job)]
     comm.isend(result, dest=0, tag=0)
 
     if rank == 0:
