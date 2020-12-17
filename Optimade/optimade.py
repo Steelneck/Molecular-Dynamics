@@ -3,7 +3,7 @@ import hashlib
 from ase.atoms import *
 from pymatgen import Composition
 from ase import cell
-from datetime import datetime, timezone
+from datetime import datetime
 """
 This is the interface to convert the simulation output to optimade format.
 
@@ -30,7 +30,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     id = 0                                                  # Init an id, changes below.
 
     # Creates a timestamp in iso format 
-    local_time = datetime.now(timezone.utc).astimezone()
+    local_time = datetime.now()
     local_time.isoformat()
 
     """
@@ -42,23 +42,28 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
             elements.append(atomSymbol)
     """
     symbols_count_dict = atomobj.symbols.formula.count()
-    elements = list(symbols_count_dict.keys())          # All elements as Chemical symbols in a list (only type)
+    elements = sorted(list(symbols_count_dict.keys()))          # All elements as Chemical symbols in a list (only type)
     element_ratios = []
     for amount in symbols_count_dict.values():
         element_ratios.append(float(amount/nsites))     # Ratio of each element in structure. Float-cast to ensure floats
     
     nelements = len(elements)                        # Number of _different_ elements
-    Pretty_formula = Comp.reduced_formula
     Chemical_formula_anonymous = Comp.anonymized_formula
     Chemical_formula_descriptive = atomobj.get_chemical_formula()
-    Chemical_formula_reduced = Pretty_formula
+    Chemical_formula_reduced = atomobj.get_chemical_formula()
     dimension_types = [1,1,1]
     nperiodic_dimensions = 3
+    element_amount_dict = Comp.get_el_amt_dict()
     lattice_vectors = cell[:]
     cartesian_site_positions = atomobj.get_positions() 
     species_at_sites = atomobj.get_chemical_symbols()
-    # species = 
-     
+    species_list = []
+    
+    for x in elements:
+
+      species_list.append({"chemical_symbols" : [x], "concentration" : [element_amount_dict[x]], "name": x})
+
+    # Sets the disorder flag if there are more than 1 element present
     
     # Init a dictionary
     data_dict = {}
@@ -71,12 +76,12 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["internal_temperature"] = internalTemperature
     data_dict["cohesive_energy"] = cohesiveEnergy
     data_dict["internal_pressure"] = internalPressure
-    data_dict["bul_modulus"] = bulkModulus
+    data_dict["bulk_modulus"] = bulkModulus
     data_dict["cartesian_site_positions"] = cartesian_site_positions.tolist()
     data_dict["dimension_types"] = dimension_types
     data_dict["nperiodic_dimensions"] = nperiodic_dimensions
     data_dict["elements"] = elements
-    data_dict["element_ratios"] = element_ratios
+    data_dict["elements_ratios"] = element_ratios
     data_dict["formula_anonymous"] = Chemical_formula_anonymous
     data_dict["last_modified"] = { "$date" : local_time.isoformat() + "Z"}
     data_dict["lattice_vectors"] = lattice_vectors.tolist()
@@ -84,21 +89,23 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["nsites"] = nsites
     data_dict["chemical_formula_descriptive"] = Chemical_formula_descriptive
     data_dict["chemical_formula_reduced"] = Chemical_formula_reduced
-    data_dict["structure_feature"] : []
-    #print(element_ratios)
+    data_dict["species"] = species_list
+    data_dict["species_at_sites"] = species_at_sites
+    data_dict["structure_features"] = []
+    data_dict["task_id"] = id
+    data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : id}]}}
 
 
     # Make JSON object
     data_json = json.dumps(data_dict)
         # Create unique id from contents
     unique_id = hashlib.md5(data_json.encode("utf-8")).hexdigest()
-    data_dict["_id"] = {"oid" : unique_id}
+    data_dict["_id"] = unique_id
     # Add id to data object and recreate a json object to write to destinationfile
     with open("Optimade/data_format_optimade.json", 'w') as json_data_file:
-        json.dump(data_dict, json_data_file, indent=2)
+        json.dump([data_dict], json_data_file, indent=2)
 
     print("Data for optimade is temporarly stored in 'Optimade/data_format_optimade.json'.")
-
 
 """
 [
@@ -113,7 +120,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
       "internal_temperature": 12,
       "cohesive_energy": 12,
       "internal_pressure": 12,
-      "bul_modulus": 12,
+      "bulk_modulus": 12,
       "cartesian_site_positions": [
         [
           0.17570227444196573,
@@ -179,7 +186,8 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
           "data": [
             {
               "type": "references",
-              "id": "dijkstra1968"
+              "id": "Group1",
+
             }
           
           ]
