@@ -90,10 +90,13 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             
             cohesiveEnergy = calc.cohesive_energy(atomobj, traj, eq_index)
             print("Cohesive energy:", cohesiveEnergy, "[eV/atom]")
+
+            debyeTemperature = calc.debye_temperature(traj, MSD)
+            print("Debye temperature:", debyeTemperature, "[K]")
             
             internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
             print("Internal Pressure:", internalPressure, "[eV / Å^3]")
-            
+
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 

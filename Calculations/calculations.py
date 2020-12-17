@@ -13,8 +13,17 @@ from ase.eos import EquationOfState
 import csv
 import datetime
 
-"""Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_traj(myAtoms, trajObject, superCellSize):
+    """Takes all the atoms objects after the system has reached equilibrium (constant total energy, volume and pressure)
+    and writes them over to a new .traj file. Goes through the elements of trajObject and writes to eq_index.
+
+    Uses SuperCellSize to calculate volume.
+    
+    Parameters
+    ----------
+
+    """
+
     try:
         t = 0
         eq_index = 0
@@ -167,23 +176,29 @@ def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(atoms, trajObject, eq_index):
-    """
-    Calculates the internal temperature of the system
+def internal_temperature(myAtoms, trajObject, eq_index):
+    """Calculates the internal temperature of the system in units of Kelvin by dividing get_kinetic_energy()
+    by the number of atoms to get the kinetic energy per atom (K in the equation below), then evaluating
+        T = 2*K / 3*kB
+    where kB is the Boltzmann constant.
     
     Parameters
-        atoms       :   Lattice of atoms being simulated
-        trajObject  :   TrajectoryReader
+    ----------
+        myAtoms: Lattice
+        trajObject: TrajectoryReader
+        eq_index: int
 
-    Returns the average of a sum of samples using the equation T = 2K/3kB,
-    where K is the kinetic energy per atom
+    Returns
+    -------
+        avgTemp: float
+            Sampled internal temperature in units of Kelvin.
     """
 
     try:
         eq_length = len(trajObject) - eq_index
         eqEkin = 0
         for n in range(eq_index, len(trajObject)):                       
-            eqEkin += trajObject[n].get_kinetic_energy()/len(atoms)                          # Sum kinetic energies for each trajectory object
+            eqEkin += trajObject[n].get_kinetic_energy()/len(myAtoms)        # Sum kinetic energies for each trajectory object
         avgTemp = (2*eqEkin)/(3*units.kB*eq_length)                          # Average sum over number of samples and calculate temperature
 
     except Exception as e:
@@ -195,23 +210,29 @@ def internal_temperature(atoms, trajObject, eq_index):
     
     return(avgTemp)
     
-def cohesive_energy(atoms, trajObject, eq_index):
-    """
-    Returns the cohesive energy of the system
+def cohesive_energy(myAtoms, trajObject, eq_index):
+    """NOTE: Requires usage of the EAM calculator for reasonable output!
+
+    Calculates the cohesive energy of the system by dividing the potential energy of the system
+    as returned by get_potential_energy(), with the number of atoms which is given by the length of the atoms object.
 
     Parameters
-        atoms       :   Lattice of atoms being simulated
-        trajObject  :   TrajectoryReader
+    ----------
+        myAtoms: Lattice
+        trajObject: TrajectoryReader
+        eq_index: int
 
-    Returns the average of a sum of samples over the potential energy per atom
+    Returns
+    -------
+        avgEcoh: float
+            Sampled potential energy per atom (i.e. cohesive energy of material) in units of electron volt per atom.
     """
-
     try:
         eq_length = len(trajObject) - eq_index
         eqEcoh = 0
         for n in range(eq_index, len(trajObject)):
-            eqEcoh += trajObject[n].get_potential_energy()/len(atoms)           # Sum potential energies per atom for each trajectory object 
-        avgEcoh = eqEcoh/eq_length                                        # Average sum over number of samples
+            eqEcoh += trajObject[n].get_potential_energy()/len(myAtoms)           # Sum potential energies per atom for each trajectory object 
+        avgEcoh = eqEcoh/eq_length                                              # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the cohesive energy")
@@ -223,15 +244,22 @@ def cohesive_energy(atoms, trajObject, eq_index):
     return(avgEcoh)
 
 def debye_temperature(trajObject, MSD):
-    """
-    Calculates the Debye temperature of the system.
+    """Calculates the Debye temperature of the system. Uses returns of functions get_temperature(),
+    get_masses() summed over all atoms and converted to kg, and MSD_calc() to evaluate the equation
+        Θ = √[(3*ℏ²*T)/(m*kB*<r²>)]
+    where ℏ is the reduced Planck's constant, T is the temperature, m is the bulk mass,
+    kB is the Boltzmann constant and <r²> is the mean square displacement.
 
     Parameters
-        trajObject  : TrajectoryReader
-        MSD         : Returned from MSD_calc()
+    ----------
+        trajObject: TrajectoryReader
+        MSD: float
+            Mean square displacement as returned by MSD_calc().
 
-    Uses the functions for temperature, atom masses converted to kg and mean square displacement 
-    Returns the average of a sum of samples over the Debye temperature of the system
+    Returns
+    -------
+        avgDebye: float
+            Sampled Debye temperature in units of Kelvin.
     """
     try: 
         eqDebye = 0
