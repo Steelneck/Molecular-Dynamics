@@ -21,6 +21,7 @@ from Init.init_functions import set_lattice_const, set_lattice
 from mpi4py import MPI
 import os
 import numpy as np
+import time
 
 
 def run_config(input_config):
@@ -67,6 +68,9 @@ def run_config(input_config):
     traj = Trajectory(trajFileName, "w", atoms)
     dyn.attach(traj.write, Interval)
     dyn.run(Steps)
+    traj.close()
+    time.sleep(2)
+    print(os.listdir("."), trajFileName)
     
     traj = Trajectory(trajFileName)
 

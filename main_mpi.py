@@ -26,7 +26,7 @@ def main():
     if rank == 0:
         input_list = []
         """ Takes all the data from User_Input.json """
-        
+    
         with open('User_Input.json') as json_file:
             Input = json.load(json_file)
             for row in Input['Data']:
@@ -58,12 +58,18 @@ def main():
                                     Defect_Check, Impurity_ele_list,Temperature,
                                     Steps, Interval, Size_X, Size_Y, Size_Z, API_Key,PBC,bravais_lattice,Directions, 
                                     Miller,lc_a,lc_b,lc_c,lc_a,lc_alpha,lc_beta,lc_gamma])
-        
+        #print("We will be scattering:", input_list)
+    # for input_config in input_list:
+    #     run_config(input_config)
+    # else:
+    #     input_list = None
 
-        job_array = input_list
-        print("We have", size, "processors.")
-        for i in range(0, size):
-            comm.isend(job_array[i], dest=i, tag=i)
+        # data = comm.scatter(input_list, root=0)
+        # print("rank", rank, "has data: ", data)
+            job_array = input_list
+            print("We have", size, "processors.")
+            for i in range(0, size):
+                comm.isend(job_array[i], dest=i, tag=i)
 
     my_jobs = comm.recv(source=0, tag=rank)
     print(my_jobs)
