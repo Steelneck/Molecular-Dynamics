@@ -19,12 +19,19 @@ def main():
         for row in Input['Data']:
             EMT_Check = row["EMT"]
             openKIM_Check = row["openKIM"]
+            Lennard_Jones_Check = row["Lennard_Jones"]
+            LJ_epsilon = row["LJ_epsilon"]
+            LJ_sigma = row["LJ_sigma"]
+            LJ_cutoff = row["LJ_cutoff"]
             Verlocity_Verlet_Check = row["Verlocity_Verlet"]
             Langevin_Check = row["Langevin"]
+            Langevin_friction = row["Langevin_friction"]
+            time_step = row["time_step"]
             KIM_potential = row["KIM_potential"]
             ASE = row["ASE"]
-            Materials_project = row["Materials_project"]
             Symbol = row["Symbol"]
+            Materials_project = row["Materials_project"]
+            API_Key = row["API_Key"]
             Criteria_list=row["Criteria_list"]
             Vacancy = row["Vacancy"]
             Impurity = row["Impurity"]
@@ -35,7 +42,6 @@ def main():
             Size_X = row["Size_X"]
             Size_Y = row["Size_Y"]
             Size_Z = row["Size_Z"]
-            API_Key = row["API_Key"]
             PBC = row["PBC"]
             Directions = row["Directions"]
             Miller = row["Miller"]
@@ -46,11 +52,13 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-            simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, Langevin_Check,
-                        ASE, Materials_project,Symbol,Criteria_list, 
+            simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
+                        LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
+                        Langevin_Check, Langevin_friction, time_step, KIM_potential,
+                        ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,
-                        Size_X, Size_Y, Size_Z,API_Key,PBC,Directions,Miller,
+                        Size_X, Size_Y, Size_Z,PBC,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
 if __name__ == "__main__":

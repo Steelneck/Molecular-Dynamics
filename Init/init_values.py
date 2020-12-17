@@ -2,6 +2,7 @@
 import math
 import shutil
 # 6 of the 7 lattice systems (rhombohedral is not available)
+import ase.io
 from ase.lattice.cubic import *
 from ase.lattice.tetragonal import *
 from ase.lattice.orthorhombic import *
@@ -9,27 +10,25 @@ from ase.lattice.monoclinic import *
 from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase.atom import *
-import ase.io
-
-#from asap3 import OpenKIMcalculator 
-from asap3 import Trajectory
-
-# Algorithms and calculators for the simulation
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
-from ase.md.verlet import VelocityVerlet
-from ase.md.langevin import Langevin
 from ase import units
-from asap3 import EMT
 from ase.calculators.kim.kim import KIM
 
-# Initiation functions to separate them from variables
-from .init_functions import create_vacancy, find_crystal_center, set_lattice
-from .init_functions import set_lattice_const
+# Algorithms and calculators for the simulation
+from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
+from asap3.md.verlet import VelocityVerlet
+from asap3.md.langevin import Langevin
+from asap3 import EMT
+from asap3 import Trajectory
+from asap3 import LennardJones
+#from asap3 import OpenKIMcalculator 
 
 # Dependencies to run materials project
 from pymatgen.ext.matproj import MPRester
 from pymatgen.io.cif import CifParser
-from.init_functions import insert_impurity
+
+# Initiation functions to separate them from variables
+from .init_functions import create_vacancy, find_crystal_center, set_lattice
+from .init_functions import set_lattice_const, insert_impurity
 
 atoms_list = []
 
@@ -41,7 +40,8 @@ def checkKIMpotential(potential):
         return potential
 
 # Init for ASE
-def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
+def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
+                            LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
                             Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
@@ -79,24 +79,26 @@ def init(EMT_Check, openKIM_Check, Verlocity_Verlet_Check, KIM_potential,Symbol,
         Stationary(atoms) # Set linear momentum to zero
 
     # Interatomic potential
-    if (EMT_Check == True) and (openKIM_Check == False):
+    if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
         atoms.calc = EMT()
-    elif (EMT_Check == False) and (openKIM_Check == True):
+    elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
         #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
         potential = checkKIMpotential(KIM_potential)
         atoms.calc = KIM(potential, options={"ase_neigh": True})
         #atoms.set_calculator(OpenKIMcalculator(potential))
+    elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
+        atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
     else:
-        raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
+        raise Exception("Only one can true at the same time!")
 
     atoms_list.append(atoms)
     return atoms_list
 
 # Init for Materials project
-def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera_list,
+def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
+                                LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC):
-    #API key to fetch data from Materials project
     m = MPRester(API_Key) 
     
     #Loop that takes out each critera for each query
@@ -104,6 +106,7 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
 
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
+        print(data)
         if len(data) != 0:
             for i in range(len(data)):
             
@@ -144,15 +147,18 @@ def init_MP(EMT_Check,openKIM_Check,Verlocity_Verlet_Check,KIM_potential,Critera
                     Stationary(atoms) # Set linear momentum to zero
 
                 # Interatomic potential
-                if (EMT_Check == True) and (openKIM_Check == False):
+                if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
                     atoms.calc = EMT()
-                elif (EMT_Check == False) and (openKIM_Check == True):
+                elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
                     #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
                     potential = checkKIMpotential(KIM_potential)
                     atoms.calc = KIM(potential, options={"ase_neigh": True})
                     #atoms.set_calculator(OpenKIMcalculator(potential))
+                elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
+                        atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
+
                 else:
-                    raise Exception("EMT=openKIM. Both cannot be true/false at the same time!")
+                    raise Exception("Only one can true at the same time!")
                 
                 #Moves the trajectory file to another folder after it has been used
                 shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
