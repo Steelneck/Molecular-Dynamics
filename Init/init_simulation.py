@@ -5,7 +5,7 @@ import shutil
 from .init_values import *
 from tkinter import *
 import Calculations.calculations as calc
-from Optimade.optimade import translate_to_optimade
+from Optimade.optimade import translate_to_optimade, concatenateOptimadeDataFiles
 from asap3 import Trajectory
 from ase.gui import *
 
@@ -101,6 +101,8 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
                                     internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
+            concatenateOptimadeDataFiles("run1")
+            
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
 
