@@ -338,7 +338,9 @@ def calc_bulk_modulus(atoms):
         return(None, None, None)
 
 def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval):
+    
     """Calculates the time evolution of a set of chosen properties (at the moment only MSD and Self diffusion) and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
+    
     try:
         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         file = open(csvFileName, "w", newline="")

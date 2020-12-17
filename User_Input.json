@@ -1,11 +1,11 @@
 {
     "Data": [
         {
-            "EMT": false,
-            "openKIM": true,
+            "EMT": true,
+            "openKIM": false,
             "Verlocity_Verlet": true,
             "Langevin" : false,
-            "KIM_potential": "EAM_Dynamo_AdamsFoilesWolfer_1989Universal6_Pd__MO_169076431435_000",
+            "KIM_potential": " ",
             "ASE": true,
             "Materials_project": false,
             "Symbol": "Pd",
