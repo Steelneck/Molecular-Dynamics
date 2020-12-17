@@ -207,7 +207,7 @@ def cohesive_energy(atoms, trajObject, eq_index):
         eqEcoh = 0
         for n in range(eq_index, len(trajObject)):
             eqEcoh += trajObject[n].get_potential_energy()/len(atoms)           # Sum potential energies per atom for each trajectory object 
-        avgEcoh = np.absolute(eqEcoh/eq_length)                                        # Average sum over number of samples
+        avgEcoh = eqEcoh/eq_length                                        # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the cohesive energy")
