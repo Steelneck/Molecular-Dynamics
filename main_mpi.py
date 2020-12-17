@@ -65,10 +65,10 @@ def main():
         for i in range(0, size):
             comm.isend(job_array[i], dest=i, tag=i)
 
-        my_jobs = comm.recv(source=0, tag=rank)
-        print(my_jobs)
-        result = [run_config(my_jobs)]
-        comm.isend(result, dest=0, tag=0)
+    my_jobs = comm.recv(source=0, tag=rank)
+    print(my_jobs)
+    result = [run_config(my_jobs)]
+    comm.isend(result, dest=0, tag=0)
 
     if rank == 0:
         for i in range(0, size):
