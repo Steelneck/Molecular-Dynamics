@@ -2,13 +2,7 @@
 import math
 import shutil
 
-# 6 of the 7 lattice systems (rhombohedral is not available)
-from ase.lattice.cubic import *
-from ase.lattice.tetragonal import *
-from ase.lattice.orthorhombic import *
-from ase.lattice.monoclinic import *
-from ase.lattice.triclinic import *
-from ase.lattice.hexagonal import *
+
 from ase.atom import *
 import ase.io
 
@@ -43,59 +37,6 @@ input_list = []
 #         return "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
 #     else:
 #         return potential
-
-
-# Init for ASE
-def init(Calculator_Check, 
-         Algorithm_Check, 
-         KIM_potential,
-         Symbol,
-         Defect_Check,
-         Impurity_ele_list,
-         Temperature,
-         Steps,
-         Interval,
-         Size_X,
-         Size_Y,
-         Size_Z,
-         API_Key,
-         PBC,
-         Directions,
-         Miller,
-         lc_a,
-         lc_b,
-         lc_c,
-         lc_alpha,
-         lc_beta,
-         lc_gamma):
-
-    """ Try to create an array of input arguments and list the arrays """
-
-    input_list = np.array([Calculator_Check, 
-                        Algorithm_Check, 
-                        KIM_potential,
-                        Symbol,
-                        Defect_Check,
-                        Impurity_ele_list,
-                        Temperature,
-                        Steps,
-                        Interval,
-                        Size_X,
-                        Size_Y,
-                        Size_Z,
-                        API_Key,
-                        PBC,
-                        Directions,
-                        Miller,
-                        lc_a,
-                        lc_b,
-                        lc_c,
-                        lc_alpha,
-                        lc_beta,
-                        lc_gamma])
-
-    return input_list
-
     
 
 

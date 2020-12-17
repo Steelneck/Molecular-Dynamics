@@ -14,6 +14,7 @@ warnings.warn = warn
 
 def main():  
     """ Takes all the data from User_Input.json """
+    input_list = []
     with open('User_Input.json') as json_file:
         Input = json.load(json_file)
         for row in Input['Data']:
@@ -31,6 +32,7 @@ def main():
             Size_Z = row["Size_Z"]
             API_Key = row["API_Key"]
             PBC = row["PBC"]
+            bravais_lattice = row["bravais_lattice"]
             Directions = row["Directions"]
             Miller = row["Miller"]
             lc_a=row["lc_a"]
@@ -40,28 +42,12 @@ def main():
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
 
-        simulation_mpi(Calculator_Check, 
-                        Algorithm_Check, 
-                        KIM_potential,
-                        Symbol,
-                        Defect_Check,
-                        Impurity_ele_list,
-                        Temperature,
-                        Steps,
-                        Interval,
-                        Size_X,
-                        Size_Y,
-                        Size_Z,
-                        API_Key,
-                        PBC,
-                        Directions,
-                        Miller,
-                        lc_a,
-                        lc_b,
-                        lc_c,
-                        lc_alpha,
-                        lc_beta,
-                        lc_gamma)
+            input_list.append([Calculator_Check, Algorithm_Check, KIM_potential, Symbol, 
+                                Defect_Check, Impurity_ele_list,Temperature,
+                                Steps, Interval, Size_X, Size_Y, Size_Z, API_Key,PBC,bravais_lattice,Directions, 
+                                Miller,lc_a,lc_b,lc_c,lc_a,lc_alpha,lc_beta,lc_gamma])
+
+        simulation_mpi(input_list)
 
 if __name__ == "__main__":
     main()
