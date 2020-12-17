@@ -4,6 +4,7 @@ from ase.atoms import *
 from pymatgen import Composition
 from ase import cell
 from datetime import datetime
+import glob, os
 """
 This is the interface to convert the simulation output to optimade format.
 
@@ -41,13 +42,14 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
         if atomSymbol not in elements:
             elements.append(atomSymbol)
     """
-    symbols_count_dict = atomobj.symbols.formula.count()
-    elements = sorted(list(symbols_count_dict.keys()))          # All elements as Chemical symbols in a list (only type)
+    symbols_count_item_list = sorted(atomobj.symbols.formula.count().items())   # Sorted list of items = [key, value]
+    elements = []
     element_ratios = []
-    for amount in symbols_count_dict.values():
-        element_ratios.append(float(amount/nsites))     # Ratio of each element in structure. Float-cast to ensure floats
+    for item in symbols_count_item_list:                # Key at item[0], value at item[1]
+      elements.append(item[0])
+      element_ratios.append(float(item[1]/nsites))      # Ratio of each element in structure. Float-cast to ensure floats
     
-    nelements = len(elements)                        # Number of _different_ elements
+    nelements = len(elements)                           # Number of _different_ elements
     Chemical_formula_anonymous = Comp.anonymized_formula
     Chemical_formula_descriptive = atomobj.get_chemical_formula()
     Chemical_formula_reduced = atomobj.get_chemical_formula()
@@ -91,8 +93,8 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["species"] = species_list
     data_dict["species_at_sites"] = species_at_sites
     data_dict["structure_features"] = []
-    data_dict["task_id"] = id
-    data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : id}]}}
+    data_dict["task_id"] = id                                                                       # Should these have unique id also?
+    data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : id}]}}   # Should these have unique id also?
 
 
     # Make JSON object
@@ -101,10 +103,47 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     unique_id = hashlib.md5(data_json.encode("utf-8")).hexdigest()
     data_dict["_id"] = unique_id
     # Add id to data object and recreate a json object to write to destinationfile
-    with open("Optimade/data_format_optimade.json", 'w') as json_data_file:
+    fileName = "Optimade/data_for_optimade_" + str(unique_id) + ".json"
+    with open(fileName, 'w') as json_data_file:
         json.dump([data_dict], json_data_file, indent=2)
 
-    print("Data for optimade is temporarly stored in 'Optimade/data_format_optimade.json'.")
+    json_data_file.close()
+
+    print("Data for optimade is temporarly stored in " + fileName + ".")
+
+
+def concatenateOptimadeDataFiles(run_id):
+  try:
+    if type(run_id) != str:
+      raise ValueError("Please provide the run_id as a string. Provided type where:", type(run_id))
+  except ValueError as e:
+    print(e)
+    pass
+
+  os.chdir(os.path.abspath("Optimade"))             # Changes directory to Optimade, holds for rest of function
+  allDataFiles = glob.glob("*.json")                # Extract all .json files in Optimade folder
+
+  # Extract existing concatenated files and remove them from allDataFiles list. We don't want to append those.
+  concatenatedFiles = [conc for conc in allDataFiles if "concatenated_data_for_optimade_" in conc]
+  for concFile in concatenatedFiles:
+    allDataFiles.remove(concFile)
+
+  allDataList = []                                  # Init a final list that will be written to concatenated file
+
+  for file in allDataFiles:                         # Open all files and append json data to final list.
+    with open(file) as json_data_file:
+      json_data = json.load(json_data_file)         
+      allDataList.append(json_data[0])              # Dict is stored in a list in each json file – extract first (and only) item
+    json_data_file.close()
+
+  targetFileName = "concatenated_data_for_optimade_" + str(run_id) + ".json"
+  with open(targetFileName, 'w') as targetFile:
+    json.dump(allDataList, targetFile, indent=2)    # Finally write concatenated data to target file
+  targetFile.close()
+
+  # Might want to move all files that where concatenated to a subfolder here. 
+
+    
 
 """
 [
