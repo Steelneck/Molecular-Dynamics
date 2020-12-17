@@ -217,23 +217,23 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsInstance(v0, float)
         self.assertIsInstance(B, float)
         
-    def test_minimum_energy_bulk_modulus(self):
-        # Warning increasing lattice constant even more, to 20 * cell will make the function execute but values will be crazy. No error handling for this yet.
-        cell = atoms.get_cell()
-        atoms.set_cell(cell * 10, scale_atoms=True)     # Modify cell an absurd amount. EOS will give error here
-        e0, v0, B = calc_bulk_modulus(atoms)
-        self.assertIsNone(e0)
-        self.assertIsNone(v0)
-        self.assertIsNone(B)
-        atoms.set_cell(cell, scale_atoms=True)          # Reset cell
+    # def test_minimum_energy_bulk_modulus(self):
+    #     # Warning increasing lattice constant even more, to 20 * cell will make the function execute but values will be crazy. No error handling for this yet.
+    #     cell = atoms.get_cell()
+    #     atoms.set_cell(cell * 10, scale_atoms=True)     # Modify cell an absurd amount. EOS will give error here
+    #     e0, v0, B = calc_bulk_modulus(atoms)
+    #     self.assertIsNone(e0)
+    #     self.assertIsNone(v0)
+    #     self.assertIsNone(B)
+    #     atoms.set_cell(cell, scale_atoms=True)          # Reset cell
 
 
-        atoms.set_cell(cell * 6, scale_atoms=True)     # Modify cell an absurd amount. Minimum at ends gives error here.
-        e0, v0, B = calc_bulk_modulus(atoms)
-        self.assertIsNone(e0)
-        self.assertIsNone(v0)
-        self.assertIsNone(B)
-        atoms.set_cell(cell, scale_atoms=True)          # Reset cell
+        # atoms.set_cell(cell * 6, scale_atoms=True)     # Modify cell an absurd amount. Minimum at ends gives error here.
+        # e0, v0, B = calc_bulk_modulus(atoms)
+        # self.assertIsNone(e0)
+        # self.assertIsNone(v0)
+        # self.assertIsNone(B)
+        # atoms.set_cell(cell, scale_atoms=True)          # Reset cell
 
     
     # def test_csv_writer_wrong_input_argument(self):
