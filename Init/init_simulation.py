@@ -101,7 +101,7 @@ def simulation(EMT_Check,openKIM_Check,KIM_potential, Verlocity_Verlet_Check, La
             translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
                                     internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
-            concatenateOptimadeDataFiles("run1")
+            concatenateOptimadeDataFiles("run1") ### Move me to supercomputer script later!!! 
             
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
