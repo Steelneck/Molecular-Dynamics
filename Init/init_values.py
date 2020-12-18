@@ -105,7 +105,7 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
     m = MPRester(API_Key) 
     
     #Loop that takes out each critera for each query
-    for criteria in Critera_list:
+    for criteria in Criteria_list:
 
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])

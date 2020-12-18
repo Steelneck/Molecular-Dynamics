@@ -57,7 +57,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     for atomobj in atoms:
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
-            dyn = VelocityVerlet(atomobj, time_step*units.fs) 
+            dyn = VelocityVerlet(atomobj, time_step*units.fs)
+            
         elif (Verlocity_Verlet_Check == False) and (Langevin_Check == True):
             dyn = Langevin(atomobj, time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
