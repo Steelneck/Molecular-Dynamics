@@ -27,6 +27,7 @@
             "Size_Z":6,
             "API_Key": "rXy9SNuvaCUyoVmTDjDT", 
             "PBC": [false, false, false],
+            "Bravais_lattice" : "FaceCenteredCubic",
             "Directions": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             "Miller" : [null, null, null],
             "lc_a": 5.256,
