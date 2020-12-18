@@ -57,7 +57,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     for atomobj in atoms:
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
-            dyn = VelocityVerlet(atomobj, 5*units.fs)  # 5 fs time step.
+            dyn = VelocityVerlet(atomobj, time_step*units.fs) 
         elif (Verlocity_Verlet_Check == False) and (Langevin_Check == True):
             dyn = Langevin(atomobj, time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
@@ -85,6 +85,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         print("Lattice constant a:", latticeConstant_a) 
         
         eq_index = calc.eq_test(atomobj, traj)
+        print(eq_index)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             MSD = calc.MSD_calc(atomobj, traj, -1, eq_index)
