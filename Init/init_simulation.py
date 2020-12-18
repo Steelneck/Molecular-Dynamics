@@ -15,8 +15,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list,
                         Vacancy, Impurity, Impurity_ele_list,
-                        Temperature, Steps, Interval,
-                        Size_X, Size_Y, Size_Z,PBC,Directions,Miller,
+                        Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
+                        PBC, Bravais_lattice,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
     
     """ Function that looks if the user wants to run ASE or Materials_project 
@@ -29,14 +29,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 atoms = init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                             LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
-                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            Size_X,Size_Y,Size_Z,PBC,Bravais_lattice, Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
         else:
             atoms = init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                             LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele_list, Temperature,
-                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            Size_X,Size_Y,Size_Z, PBC, Bravais_lattice, Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
     elif (Materials_project == True) and (ASE == False):
         if Impurity == True:

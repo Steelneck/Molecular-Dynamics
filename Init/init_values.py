@@ -3,6 +3,7 @@ import math
 import shutil
 # 6 of the 7 lattice systems (rhombohedral is not available)
 import ase.io
+import ase
 from ase.lattice.cubic import *
 from ase.lattice.tetragonal import *
 from ase.lattice.orthorhombic import *
@@ -43,7 +44,7 @@ def checkKIMpotential(potential):
 def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                             LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
-                            Size_X,Size_Y,Size_Z,PBC,Directions,Miller,
+                            Size_X,Size_Y,Size_Z,PBC,Bravais_lattice,Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
 
     Lattice_Const = set_lattice_const(lc_a,
@@ -54,7 +55,7 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                     lc_gamma)
 
     # Set up a crystals
-    atoms = set_lattice(FaceCenteredCubic,
+    atoms = set_lattice(getattr(ase.lattice.cubic, Bravais_lattice),
                     Lattice_Const,
                     Directions,
                     Miller,

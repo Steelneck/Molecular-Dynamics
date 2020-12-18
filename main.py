@@ -43,6 +43,7 @@ def main():
             Size_Y = row["Size_Y"]
             Size_Z = row["Size_Z"]
             PBC = row["PBC"]
+            Bravais_lattice = row["Bravais_lattice"]
             Directions = row["Directions"]
             Miller = row["Miller"]
             lc_a=row["lc_a"]
@@ -58,8 +59,8 @@ def main():
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
-                        Temperature, Steps, Interval,
-                        Size_X, Size_Y, Size_Z,PBC,Directions,Miller,
+                        Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
+                        PBC, Bravais_lattice,Directions,Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
 if __name__ == "__main__":
