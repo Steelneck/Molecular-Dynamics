@@ -8,4 +8,5 @@ __pycache__/
 Traj/.traj
 Visualization/*.csv
 Calculations/*.csv
+Json/*.json
 *.csv
