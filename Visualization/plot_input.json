@@ -1,0 +1,65 @@
+{
+    "Scatter plot, time evolution of single property":
+    [
+        {
+            "Property": "MSD",
+            "Plot check": true,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 0,
+	    "x-max": 80
+        }
+    ],
+    "Scatter plot, single property all simulations.":
+    [
+	{
+	    "Element": "Cu",
+            "Database": "ASE",
+            "Potential": "EMT",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property x-axis": "Int_T",
+            "Property y-axis": "MSD",
+	    "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 0,
+	    "x-max": 1000
+	}
+    ],
+    "Scatter plot, two properties for all elements":
+    [
+	{
+            "Database": "ASE",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property x-axis": "Int_T",
+            "Property y-axis": "L",
+	    "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 350,
+	    "x-max": 600
+	}
+    ],
+    "Histogram, single property from all simulations":
+    [
+	{
+	    "Element": "Cu",
+            "Database": "ASE",
+            "Potential": "EMT",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property": "MSD",
+	    "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 0,
+	    "x-max": 1000
+	}
+    ]
+}

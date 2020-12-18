@@ -5,6 +5,7 @@ import shutil
 from .init_values import *
 from tkinter import *
 import Calculations.calculations as calc
+import Json.write_json as write_json
 from asap3 import Trajectory
 from ase.gui import *
 
@@ -12,7 +13,7 @@ from ase.gui import *
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
-                        ASE, Symbol, Materials_project,API_Key,Criteria_list, 
+                        ASE, Symbol, Materials_project,API_Key,Criteria_list,
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
@@ -83,19 +84,17 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         
         print("Lattice constant a:", latticeConstant_a) 
         
-        # eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
-        eq_index = 150
-        if eq_index != 0:
-        #if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-            #calc.write_atom_properties(atoms, "Visualization/properties.csv", traj, eq_index)
-            
-            MSD = calc.MSD_calc(atomobj, traj, eq_index)
+        eq_index = calc.eq_test(atomobj, traj)
+        
+        if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
+            MSD = calc.MSD_calc(atomobj, traj, -1, eq_index)
             print("MSD = ", MSD, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index))
+            D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval, time_step)
             print("D = ", D, "[Å²/fs]")
             
             L = calc.Lindemann(traj, MSD)
+            print("Lindeman Criterion = ", L)
             
             SHC = calc.Specific_Heat(atomobj, traj, eq_index)
             print("C_p = ", SHC, "[J/K*Kg]")
@@ -112,7 +111,57 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-           
+            #Writes a .csv-file with time evolution of the mean square displacement
+            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
+
+            #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
+
+            database = ""
+            ele_symbol = ""
+            potential = ""
+            integrator = ""
+            
+            if Materials_project == True and ASE == False:
+                ele_symbol = Criteria_list[0]["elements"][0]
+            else:
+                ele_symbol = Symbol
+
+            if EMT_Check == False:
+                if KIM_potential == " ":
+                    potential = "Leonnard-Jones"
+                else:
+                  potential = KIM_potential
+            else:
+                potential = "EMT"
+
+            if Verlocity_Verlet_Check == True:
+                integrator = "Velocity-Verlet"
+            else:
+                integrator = "Langevin"
+                
+            if Materials_project == True:
+                database = "Materials Project"
+            else:
+                database = "ASE"
+
+            #Makes a simulation-specific json-file with all the relevant input and output.  
+            write_json.write_simulation_to_json(ele_symbol,
+                                                database,
+                                                potential,
+                                                integrator,
+                                                atomobj,
+                                                Temperature,
+                                                MSD,
+                                                D,
+                                                L,
+                                                SHC,
+                                                internalTemperature,
+                                                cohesiveEnergy,
+                                                internalPressure,
+                                                B_GPa,
+                                                latticeConstant_a,
+                                                Steps*time_step)
+
         else:
             print("System never reached equilibrium. No calculations are possible.")
 
