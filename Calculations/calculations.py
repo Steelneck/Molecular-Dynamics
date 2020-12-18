@@ -286,7 +286,6 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
-        print("Lattice constant a:", a0) 
         return(a0)
         #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
     except Exception as e:

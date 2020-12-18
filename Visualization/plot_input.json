@@ -38,7 +38,7 @@
             "Property x-axis": "Int_T",
             "Property y-axis": "MSD",
 	    "Plot check": true,
-	    "Scale axis check": true,
+	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,
 	    "x-min": 350,
