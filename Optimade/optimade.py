@@ -5,6 +5,7 @@ from pymatgen import Composition
 from ase import cell
 from datetime import datetime
 import glob, os
+import shutil
 """
 This is the interface to convert the simulation output to optimade format.
 
@@ -96,10 +97,9 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["task_id"] = id                                                                       # Should these have unique id also?
     data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : id}]}}   # Should these have unique id also?
 
-
     # Make JSON object
     data_json = json.dumps(data_dict)
-        # Create unique id from contents
+    # Create unique id
     unique_id = hashlib.md5(data_json.encode("utf-8")).hexdigest()
     data_dict["_id"] = unique_id
     # Add id to data object and recreate a json object to write to destinationfile
@@ -115,31 +115,59 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
 def concatenateOptimadeDataFiles(run_id):
   try:
     if type(run_id) != str:
-      raise ValueError("Please provide the run_id as a string. Provided type where:", type(run_id))
+      raise ValueError("Could not concatenate data files for Optimade. \n Please provide the run_id as a string. Provided type where:", type(run_id))
   except ValueError as e:
     print(e)
+    print("Saving concatenated file with run_id: TEMPORARY_ID. If you don't change filename until next run, this file will be overwritten.")
+    run_id = "TEMPORARY_ID"
     pass
 
   os.chdir(os.path.abspath("Optimade"))             # Changes directory to Optimade, holds for rest of function
   allDataFiles = glob.glob("*.json")                # Extract all .json files in Optimade folder
 
-  # Extract existing concatenated files and remove them from allDataFiles list. We don't want to append those.
-  concatenatedFiles = [conc for conc in allDataFiles if "concatenated_data_for_optimade_" in conc]
-  for concFile in concatenatedFiles:
-    allDataFiles.remove(concFile)
+  if allDataFiles:                                  # Python style to check non-empty list
 
-  allDataList = []                                  # Init a final list that will be written to concatenated file
+    # Extract existing concatenated files and remove them from allDataFiles list. We don't want to append those.
+    concatenatedFiles = [conc for conc in allDataFiles if "concatenated_data_for_optimade_" in conc]
+    for concFile in concatenatedFiles:
+      allDataFiles.remove(concFile)
 
-  for file in allDataFiles:                         # Open all files and append json data to final list.
-    with open(file) as json_data_file:
-      json_data = json.load(json_data_file)         
-      allDataList.append(json_data[0])              # Dict is stored in a list in each json file – extract first (and only) item
-    json_data_file.close()
+    # --- Create targetfile with concatenated data
+    fileFormat = ".json"
+    targetFileName = "concatenated_data_for_optimade_" + str(run_id)
 
-  targetFileName = "concatenated_data_for_optimade_" + str(run_id) + ".json"
-  with open(targetFileName, 'w') as targetFile:
-    json.dump(allDataList, targetFile, indent=2)    # Finally write concatenated data to target file
-  targetFile.close()
+    # Generate file extension (a number) if file already exists.
+    fileExtension = ""
+    if os.path.exists(targetFileName + fileFormat):
+      print("Concatenated file with run id:", str(run_id), "already exists. Appending file extension...")
+      
+      fileExtensionNumber = 1
+      # Loop until we find an unused file extension
+      while os.path.exists(targetFileName + fileExtension + fileFormat):
+        fileExtension = "_" + str(fileExtensionNumber)
+        fileExtensionNumber += 1
+    targetFile = targetFileName + fileExtension + fileFormat      # Set targetFileJSON with generated extension
+
+    # Create a folder to store all datafiles if folder does not exist already
+    sourceDataFolder = "Source_data_" + str(run_id) + fileExtension
+    if not os.path.exists(sourceDataFolder):
+      os.mkdir(sourceDataFolder)
+
+    allDataList = []                                  # Init a final list that will be written to concatenated file
+    for file in allDataFiles:                         # Open all files and append json data to final list.
+      with open(file) as json_data_file:
+        json_data = json.load(json_data_file)         
+        allDataList.append(json_data[0])              # Dict is stored in a list in each json file – extract first (and only) item
+        shutil.move(file, sourceDataFolder + "/" + file)
+      json_data_file.close()
+
+
+    print("Concatenated file is stored in Optimade/" + targetFile)
+    with open(targetFile, 'w') as targetFileJSON:
+      json.dump(allDataList, targetFileJSON, indent=2)            # Finally write concatenated data to target file
+    targetFileJSON.close()
+  else: 
+    print("No JSON data files in Optimade folder.")
 
   # Might want to move all files that where concatenated to a subfolder here. 
 
