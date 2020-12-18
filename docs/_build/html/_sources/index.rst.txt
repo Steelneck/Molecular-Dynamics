@@ -7,9 +7,9 @@ Welcome to TFYA92 CDIO Project Group 1's documentation!
 =======================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
 
-   _build/_sources/Calculations
+   _build/Calculations
 
 
 
