@@ -15,34 +15,27 @@ import json
 import time
 
 """Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
-def eq_traj(myAtoms, trajObject, superCellSize):
+def eq_test(myAtoms, trajObject):
     try:
-        t = 0
-        eq_index = 5
-        while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
-            P_tot_diff = 0
-            E_tot_diff = 0
-            V_diff = 0
-            for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
-                curr_element = t+i
-                next_element = t+i+1
-                E_tot_1 = trajObject[curr_element].get_total_energy() #Total energy of two consecutive timesteps
-                E_tot_2 = trajObject[next_element].get_total_energy()
-                P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
-                P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
-                V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
-                V_2 = trajObject[next_element].get_volume() * superCellSize 
-                V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
-                P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
-                E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
-            P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
-            V_diff_mean = V_diff/3
-            E_tot_diff_mean = E_tot_diff/3
-            if E_tot_diff_mean < 0.000000001 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
-                eq_index = t #saves index of first atom that has reached equilibrium.
+        tot_energy_curr = np.array([0])
+        tot_energy_next = np.empty([0])
+        mean_curr = 0
+        mean_next = 0
+        n_curr = 0
+        n_next = 10
+        eq_index = 0
+        while n_next < len(trajObject):
+            mean_curr = np.mean(tot_energy_curr)
+            for i in range(n_curr, n_next):
+                tot_energy_next = np.append([trajObject[i].get_total_energy()], tot_energy_next)
+            mean_next = np.mean(tot_energy_next)
+            if mean_next < mean_curr:
+                eq_index = n_next
                 break
-            t += 1
-        return eq_index
+            n_curr += 10
+            n_next += 10
+            tot_energy_curr = tot_energy_next
+        return(eq_index)
     except Exception as e:
         print("An error occured when calculating the checking the conditions for equilibrium:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -88,9 +81,9 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex, eq_index):
 
 """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
 
-def Self_diffuse(MSD, timeStepIndex, interval):
+def Self_diffuse(MSD, timeStepIndex, interval, time_step):
     try:
-        t = timeStepIndex/(5*interval) #Each timestep is 5 fs and each element of traj is taken in intervals.
+        t = timeStepIndex/(time_step*interval) #Each timestep is 5 fs and each element of traj is taken in intervals.
         D = MSD/(6*t) #How to connect mean squre displacement to self-diffusion coefficient. 
     except Exception as e:
         print("An error occured when calculating the self diffusion coefficient:")
@@ -103,7 +96,7 @@ def Self_diffuse(MSD, timeStepIndex, interval):
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
 def Lindemann(trajObject, MSD):
     try:
-        nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
+        nblist = FullNeighborList(10, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
         L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
@@ -336,7 +329,7 @@ def calc_bulk_modulus(atoms):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None, None, None)
 
-def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval):
+def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval, time_step):
     
     """Calculates the time evolution of a set of chosen properties (at the moment only MSD and Self diffusion) and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
     
@@ -349,7 +342,7 @@ def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, inte
         writer.writeheader() #Sets fieldnames as first rows in file.
         while t < eq_length: #Checks time evolution of chosen properties. When t reaches eq_length we will have reached the index of the trajectory.
             MSD = MSD_calc(myAtoms, trajObject,eq_index + t, eq_index) #Calculate MSD from equilibrium to time eq_index + t.
-            S = Self_diffuse(MSD, t, interval) #Calculate self diffusion coefficient at time t after equilibrium.
+            S = Self_diffuse(MSD, t, interval, time_step) #Calculate self diffusion coefficient at time t after equilibrium.
             writer.writerow({"Time" : t, "MSD" : MSD, "S" : S}) #Writes values at time t to csv-file. A new row is a new timestep.
             t += 1
     except Exception as e:

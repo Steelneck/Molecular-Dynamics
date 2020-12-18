@@ -11,7 +11,7 @@ from calculations import cohesive_energy
 from calculations import debye_temperature
 from calculations import calc_instantaneous_pressure
 from calculations import calc_internal_pressure
-from calculations import eq_traj
+from calculations import eq_test
 from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
@@ -88,13 +88,10 @@ class PropertyCalculationTests(unittest.TestCase):
 
     #eq_traj doesnt use atoms yet, so no point in testing that input
     def test_eq_calc_wrong_input_argument(self):
-        eq_trajObject = Trajectory("test_eq.traj", "w", atoms)
-        eq_traj1 = eq_traj(atoms, None, 3*3*3)
-        eq_traj3 = eq_traj(atoms, trajObject, None)
+        eq_test2 = eq_test(atoms, None)
 
         #All should return None
-        self.assertIsNone(eq_traj1)
-        self.assertIsNone(eq_traj3)
+        self.assertIsNone(eq_test2)
 
     """Unittests for calculation of mean square displacement"""
 
@@ -117,18 +114,20 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unittests for calculation of Self diffusion coefficient"""
 
     def test_self_diffuse_return_type(self):
-        self.assertIsInstance(Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), len(trajObject), 10), float)
+        self.assertIsInstance(Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), len(trajObject), 10, 5), float)
 
     #Self_diffuse doesnt use the time input yet so no point in testing it 
     def test_Self_diffuse_wrong_input_argument(self):
-        D1 = Self_diffuse(None, len(trajObject), 10)
-        D2 = Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), None, 10)
-        D3 = Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), len(trajObject), None)
+        D1 = Self_diffuse(None, len(trajObject), 10, 5)
+        D2 = Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), None, 10, 5)
+        D3 = Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), len(trajObject), None, 5)
+        D4 = Self_diffuse(MSD_calc(atoms, trajObject, -1, 1), len(trajObject), 10, None)
 
         #All should return None
         self.assertIsNone(D1)
         self.assertIsNone(D2)
         self.assertIsNone(D3)
+        self.assertIsNone(D4)
         
     def test_Lindemann_return_type(self):
         self.assertIsInstance(Lindemann(trajObject, MSD_calc(atoms, trajObject, -1, 1)), float)
@@ -240,11 +239,11 @@ class PropertyCalculationTests(unittest.TestCase):
 
     
     def test_csv_writer_wrong_input_argument(self):
-        csv1 = write_time_evolution_to_csv(None, "properties_test.csv", trajObject, 1, 10)
-        csv2 = write_time_evolution_to_csv(atoms, None, trajObject, 1, 10)
-        csv3 = write_time_evolution_to_csv(atoms, "properties_test.csv", None, 1, 10)
-        csv4 = write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, None, 10)
-        csv5 = write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, 1, None)
+        csv1 = write_time_evolution_to_csv(None, "properties_test.csv", trajObject, 1, 10, 5)
+        csv2 = write_time_evolution_to_csv(atoms, None, trajObject, 1, 10, 5)
+        csv3 = write_time_evolution_to_csv(atoms, "properties_test.csv", None, 1, 10, 5)
+        csv4 = write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, None, 10, 5)
+        csv5 = write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, 1, None, 5)
 
         self.assertIsNone(csv1)
         self.assertIsNone(csv2)
@@ -255,7 +254,7 @@ class PropertyCalculationTests(unittest.TestCase):
         
     def test_csv_writer_check_csv(self):
     #Check that the .csv-file exists and is not empty.
-         write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, 1, 10)
+         write_time_evolution_to_csv(atoms, "properties_test.csv", trajObject, 1, 10, 5)
          self.assertTrue(os.path.getsize("properties_test.csv") != 0)      
 
 if __name__ == '__main__':

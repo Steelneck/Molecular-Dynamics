@@ -84,23 +84,17 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         
         print("Lattice constant a:", latticeConstant_a) 
         
-        # eq_index = calc.eq_traj(atomobj, traj, Size_X * Size_Y * Size_Z)
-        eq_index = 20
+        eq_index = calc.eq_test(atomobj, traj)
         
-        if eq_index != 0:
-        #if os.path.getsize(trajFileName_eq) != 0: #If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-            
-            MSD = calc.MSD_calc(atomobj, traj, eq_index, -1)
+        if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
+            MSD = calc.MSD_calc(atomobj, traj, -1, eq_index)
             print("MSD = ", MSD, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval)
+            D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval, time_step)
             print("D = ", D, "[Å²/fs]")
             
             L = calc.Lindemann(traj, MSD)
-            if L>0.1:
-                print(L, "Melting according to Lindemann criterion.")
-            else:
-                print(L, "Not melting according to Lindemann criterion.")
+            print("Lindeman Criterion = ", L)
             
             SHC = calc.Specific_Heat(atomobj, traj, eq_index)
             print("C_p = ", SHC, "[J/K*Kg]")
@@ -118,7 +112,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
             #Writes a .csv-file with time evolution of the mean square displacement
-            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval)
+            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
 
             #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
@@ -166,7 +160,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 internalPressure,
                                                 B_GPa,
                                                 latticeConstant_a,
-                                                Steps*5)
+                                                Steps*time_step)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")

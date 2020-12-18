@@ -3,12 +3,12 @@
     [
         {
             "Property": "MSD",
-            "Plot check": false,
+            "Plot check": true,
 	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,
 	    "x-min": 0,
-	    "x-max": 1000
+	    "x-max": 80
         }
     ],
     "Scatter plot, single property all simulations.":
@@ -36,8 +36,8 @@
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
             "Property x-axis": "Int_T",
-            "Property y-axis": "MSD",
-	    "Plot check": true,
+            "Property y-axis": "L",
+	    "Plot check": false,
 	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,

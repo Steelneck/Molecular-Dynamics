@@ -145,7 +145,7 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                 if Verlocity_Verlet_Check == True:
                     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
                     Stationary(atoms) # Set linear momentum to zero
-
+                    #ZeroRotation(atoms) # Set angular momentum to zero
                 # Interatomic potential
                 if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
                     atoms.calc = EMT()
