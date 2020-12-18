@@ -15,7 +15,7 @@ from ase import units
 from ase.calculators.kim.kim import KIM
 
 # Algorithms and calculators for the simulation
-from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
+from ase.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary, ZeroRotation
 from asap3.md.verlet import VelocityVerlet
 from asap3.md.langevin import Langevin
 from asap3 import EMT
@@ -78,6 +78,7 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     if Verlocity_Verlet_Check == True:
         MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
         Stationary(atoms) # Set linear momentum to zero
+        ZeroRotation(atoms) # Set angular momentum to zero
 
     # Interatomic potential
     if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
@@ -146,7 +147,7 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                 if Verlocity_Verlet_Check == True:
                     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
                     Stationary(atoms) # Set linear momentum to zero
-                    #ZeroRotation(atoms) # Set angular momentum to zero
+                    ZeroRotation(atoms) # Set angular momentum to zero
                 # Interatomic potential
                 if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
                     atoms.calc = EMT()
