@@ -311,14 +311,27 @@ def debye_temperature(trajObject, MSD):
 
     return(avgDebye)
 
-def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
-    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
-        Calculates both a and c constant but those are equal for fcc cubic.
-        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
+def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice):
+    """ Calculates the lattice constants. 
+        IMPORTANT!: Only works for cubic crystals. 
+        WARNING: Might result in wrong values for wrong provided crystal structures.
+        Calculates both a and c constant but those are equal for cubic structures. 
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
+        This is based on the example from ASE wiki, thus calculates both a and c. """
     try: 
+
+        if bravaisLattice == "FaceCenteredCubic":
+            crystalStructure = "fcc"
+        elif bravaisLattice == "BodyCenteredCubic":
+            crystalStructure = "bcc"
+        elif bravaisLattice == "SimpleCubic":
+            crystalStructure = "sc"
+        else:
+            raise ValueError("Supported bravais lattice is not provided to lattice calculation function. Supported are: FaceCenteredCubic, BodyCenteredCubic and SimpleCubic.")
+
         # Make a good initial guess on the lattice constant
-        a0 = 3.52 / np.sqrt(2) 
-        c0 = np.sqrt(8 / 3.0) * a0
+        a0 = 3.52  
+        c0 = a0 
         
         fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
@@ -327,7 +340,7 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         eps = 0.01                                                              # A small deviation to generate a few more constants.
         for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
             for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-                at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
+                at = bulk(atomName, crystalStructure, a=a, c=c, cubic=True)     # Use bulk to build a cell. Only config is fcc, bcc or sc.
                 at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
                 traj.write(at)                                                  # Write bulk config to trajectory file
 
@@ -351,8 +364,8 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
+        #print("Lattice constants a:", a0, "| c:", c0, "\n") #Uncomment if we want to print c also
         return(a0)
-        #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
