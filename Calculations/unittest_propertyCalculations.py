@@ -5,7 +5,8 @@ from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
 
-from calculations import Specific_Heat
+from calculations import Heat_Capcity_NVE
+from calculations import Heat_Capcity_NVT
 from calculations import internal_temperature
 from calculations import cohesive_energy
 from calculations import debye_temperature
@@ -25,8 +26,6 @@ atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
                                   symbol="Cu",
                                   size=(3, 3, 3),
                                   pbc=True)
-
-not_bravice_lattice = 1
 
 #Attach calculator to the atoms object.
 atoms.calc = EMT()
@@ -48,11 +47,28 @@ class PropertyCalculationTests(unittest.TestCase):
  
     """Unittests for specific heat"""
     
-    def test_specific_heat(self):
-        self.assertIsInstance(Specific_Heat(atoms, trajObject, 1), numpy.float64)
+    def test_Heat_Capcity_NVE(self):
+        HCNVE1 = Heat_Capcity_NVE(atoms, trajObject, 1)
+        HCNVE2 = Heat_Capcity_NVE(1, trajObject, 1)
+        HCNVE3 = Heat_Capcity_NVE(atoms, 1, 1)
+        HCNVE4 = Heat_Capcity_NVE(atoms, trajObject, None)
         
-    def test_specific_heat_not_bravice_lattice(self):
-        self.assertFalse(Specific_Heat(not_bravice_lattice, trajObject, 1))
+        self.assertIsInstance(HCNVE1, numpy.float64)
+        self.assertIsNone(HCNVE2)
+        self.assertIsNone(HCNVE3)
+        self.assertIsNone(HCNVE4)
+
+
+    def test_Heat_Capcity_NVT(self):
+        HCNVT1 = Heat_Capcity_NVT(atoms, trajObject, 1)
+        HCNVT2 = Heat_Capcity_NVT(1, trajObject, 1)
+        HCNVT3 = Heat_Capcity_NVE(atoms, 1, 1)
+        HCNVT4 = Heat_Capcity_NVE(atoms, trajObject, None)
+
+        self.assertIsInstance(HCNVT1, numpy.float64)
+        self.assertIsNone(HCNVT2)
+        self.assertIsNone(HCNVT3)
+        self.assertIsNone(HCNVT4)
 
     """Unittests for instantaneous and internal pressure"""
     

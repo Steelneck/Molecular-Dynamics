@@ -98,8 +98,12 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             L = calc.Lindemann(traj, MSD)
             print("Lindeman Criterion = ", L)
             
-            SHC = calc.Specific_Heat(atomobj, traj, eq_index)
-            print("C_p = ", SHC, "[J/K*Kg]")
+            if Verlocity_Verlet_Check == True:
+                SHC = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
+                print("C_p = ", SHC, "[J/K*Kg]")
+            else:
+                SHC = calc.Heat_Capcity_NVT(atomobj, traj, eq_index)
+                print("C_p = ", SHC, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
