@@ -67,7 +67,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
         #Creates a unique name for every simulation run 
-        trajFileName = atomobj.get_chemical_formula() + '.traj'
+        trajFileName = atomobj.get_chemical_formula() + "_run" + i + '_.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
         dyn.attach(traj.write, Interval)
         dyn.run(Steps)
