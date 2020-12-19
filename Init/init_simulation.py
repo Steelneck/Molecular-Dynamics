@@ -114,7 +114,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
             translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                    #internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
+                                    internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
             concatenateOptimadeDataFiles("run1") ### Move me to supercomputer script later!!! 
             
