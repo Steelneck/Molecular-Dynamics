@@ -109,7 +109,6 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
 
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
-        print(data)
         if len(data) != 0:
             for i in range(len(data)):
             
@@ -117,9 +116,10 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                 space_group = ((data[i])['spacegroup'])['symbol']
                 crystal_structure = ((data[i])['spacegroup'])['crystal_system']
                 pretty_formula = str((data[i])['pretty_formula'])
+                print(pretty_formula)
             
                 # Function that skips the element if it not an FCC crystal
-                if space_group[0] != 'F' or crystal_structure != 'cubic':
+                if crystal_structure != 'cubic':
                     continue
                 
                 #Takes out the CIF information and creates a unique file

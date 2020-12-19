@@ -54,7 +54,10 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     else:
         raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
 
+    i = 0
     for atomobj in atoms:
+        print(i)
+        i =i+1
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
             dyn = VelocityVerlet(atomobj, time_step*units.fs)
@@ -85,9 +88,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         
         print("Lattice constant a:", latticeConstant_a) 
         
-        eq_index = calc.eq_test(atomobj, traj)
-        print(eq_index)
-        
+        #eq_index = calc.eq_test(atomobj, traj)
+        eq_index = 1
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             MSD = calc.MSD_calc(atomobj, traj, -1, eq_index)
             print("MSD = ", MSD, "[Å²]")
@@ -114,59 +116,59 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
             print("Internal Pressure:", internalPressure, "[eV / Å^3]")
             
-            e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
-            print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
+            # e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
+            # print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            #Writes a .csv-file with time evolution of the mean square displacement
-            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
+            # #Writes a .csv-file with time evolution of the mean square displacement
+            # calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
 
-            #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
+            # #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
-            database = ""
-            ele_symbol = ""
-            potential = ""
-            integrator = ""
+            # database = ""
+            # ele_symbol = ""
+            # potential = ""
+            # integrator = ""
             
-            if Materials_project == True and ASE == False:
-                ele_symbol = Criteria_list[0]["elements"][0]
-            else:
-                ele_symbol = Symbol
+            # if Materials_project == True and ASE == False:
+            #     ele_symbol = Criteria_list[0]["elements"][0]
+            # else:
+            #     ele_symbol = Symbol
 
-            if EMT_Check == False:
-                if KIM_potential == " ":
-                    potential = "Leonnard-Jones"
-                else:
-                  potential = KIM_potential
-            else:
-                potential = "EMT"
+            # if EMT_Check == False:
+            #     if KIM_potential == " ":
+            #         potential = "Leonnard-Jones"
+            #     else:
+            #       potential = KIM_potential
+            # else:
+            #     potential = "EMT"
 
-            if Verlocity_Verlet_Check == True:
-                integrator = "Velocity-Verlet"
-            else:
-                integrator = "Langevin"
+            # if Verlocity_Verlet_Check == True:
+            #     integrator = "Velocity-Verlet"
+            # else:
+            #     integrator = "Langevin"
                 
-            if Materials_project == True:
-                database = "Materials Project"
-            else:
-                database = "ASE"
+            # if Materials_project == True:
+            #     database = "Materials Project"
+            # else:
+            #     database = "ASE"
 
-            #Makes a simulation-specific json-file with all the relevant input and output.  
-            write_json.write_simulation_to_json(ele_symbol,
-                                                database,
-                                                potential,
-                                                integrator,
-                                                atomobj,
-                                                Temperature,
-                                                MSD,
-                                                D,
-                                                L,
-                                                SHC,
-                                                internalTemperature,
-                                                cohesiveEnergy,
-                                                internalPressure,
-                                                B_GPa,
-                                                latticeConstant_a,
-                                                Steps*time_step)
+            # #Makes a simulation-specific json-file with all the relevant input and output.  
+            # write_json.write_simulation_to_json(ele_symbol,
+            #                                     database,
+            #                                     potential,
+            #                                     integrator,
+            #                                     atomobj,
+            #                                     Temperature,
+            #                                     MSD,
+            #                                     D,
+            #                                     L,
+            #                                     SHC,
+            #                                     internalTemperature,
+            #                                     cohesiveEnergy,
+            #                                     internalPressure,
+            #                                     B_GPa,
+            #                                     latticeConstant_a,
+            #                                     Steps*time_step)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")
