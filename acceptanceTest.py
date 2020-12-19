@@ -1,5 +1,6 @@
 import sys, unittest, os, numpy
 from main import simulation
+import json
 
 """
 simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
