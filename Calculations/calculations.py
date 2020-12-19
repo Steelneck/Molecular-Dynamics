@@ -44,23 +44,77 @@ def eq_test(myAtoms, trajObject):
         return(None)
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(myAtoms, trajObject, eq_index):   
+def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):   
     try:
-        myAtoms.get_masses() # Tries if the attribute exists, skips except if it does
-    except AttributeError:
-        print("You have not entered a valid system.") # Message for user if no attribute
-        return False # Ends the function
-    eq_next = eq_index + 1  
-    bulk_mass=sum(myAtoms.get_masses())*units._amu
-    temp_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) - trajObject[eq_index].get_kinetic_energy() /len(trajObject[eq_index])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
-    pot_energy_diff = (trajObject[eq_next].get_potential_energy() /len(trajObject[eq_next]) 
-                        - trajObject[eq_index].get_potential_energy() /len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
+        
+        # Averaged kinetic energy squared
+        k_squared = 0
+        for i in range(eq_index, len(trajObject)):
+            k_squared += (trajObject[i].get_kinetic_energy())**2
+        avg_k_squared = k_squared/eq_length
 
-    kin_energy_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) 
-                            - trajObject[eq_index].get_kinetic_energy()/len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
+        # Averaged Kinetic energy
+        k = 0
+        for i in range(eq_index, len(trajObject)):
+            k_squared += (trajObject[i].get_kinetic_energy())**2 
+        avg_k = k_squared/eq_length
+
+        temp = 0
+        # Averaged temperature
+        for i in range(eq_index, len(trajObject)):
+            temp += (trajObject[i].get_temperature())
+        avg_temp = temp/eq_length
+        
+        # Mass of the crystal should this be included? 
+        bulk_mass=sum(myAtoms.get_masses())*units._amu
+
+        heat_capcity = ((1.5*len(myAtoms)*units.kB)*(1-((avg_k_squared-(avg_k**2)))/(1.5*(units.kB**2)*(avg_temp**2))))*1.602*10**(-19)
+
+    except Exception as e:
+        print("An error occured when calculating the heat capcity:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
     
-    heat_capacity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
-    return heat_capacity
+    return heat_capcity/bulk_mass
+
+def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
+    try:
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
+        
+        # Averaged kinetic energy squared
+        etot_squared = 0
+        for i in range(eq_index, len(trajObject)):
+            etot_squared += (trajObject[i].get_total_energy())**2
+        avg_etot_squared = etot_squared/eq_length
+
+        # Averaged Kinetic energy
+        etot = 0
+        for i in range(eq_index, len(trajObject)):
+            etot += (trajObject[i].get_total_energy())**2 
+        avg_etot = etot/eq_length
+
+        temp = 0
+        # Averaged temperature
+        for i in range(eq_index, len(trajObject)):
+            temp += (trajObject[i].get_temperature())
+        avg_temp = temp/eq_length
+        
+        # Mass of the crystal should this be included? 
+        bulk_mass=sum(myAtoms.get_masses())*units._amu
+
+        heat_capcity = (((units.kB*avg_temp**2)**(-1))*(avg_etot_squared-avg_etot**2))*1.602*10**(-19)
+
+    except Exception as e:
+        print("An error occured when calculating the heat capcity:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    return heat_capcity/bulk_mass
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
