@@ -90,21 +90,17 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         print(eq_index)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
-            MSD = calc.MSD_calc(atomobj, traj, -1, eq_index)
-            print("MSD = ", MSD, "[Å²]")
+            meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
+            print("MSD = ", meansSquareDisplacement, "[Å²]")
             
-            D = calc.Self_diffuse(MSD, (len(traj) - eq_index), Interval, time_step)
-            print("D = ", D, "[Å²/fs]")
+            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, time_step)
+            print("D = ", selfDiffusionCoffecient, "[Å²/fs]")
             
-            L = calc.Lindemann(traj, MSD)
-            print("Lindeman Criterion = ", L)
+            lindemann = calc.Lindemann(traj, meansSquareDisplacement)
+            print("Lindeman Criterion = ", lindemann)
             
-            if Verlocity_Verlet_Check == True:
-                SHC = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
-                print("C_p = ", SHC, "[J/K*Kg]")
-            else:
-                SHC = calc.Heat_Capcity_NVT(atomobj, traj, eq_index)
-                print("C_p = ", SHC, "[J/K*Kg]")
+            specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
+            print("C_p = ", specificHeatCapacity, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
@@ -163,10 +159,10 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 integrator,
                                                 atomobj,
                                                 Temperature,
-                                                MSD,
-                                                D,
-                                                L,
-                                                SHC,
+                                                meansSquareDisplacement,
+                                                selfDiffusionCoffecient,
+                                                lindemann,
+                                                specificHeatCapacity,
                                                 internalTemperature,
                                                 cohesiveEnergy,
                                                 internalPressure,
