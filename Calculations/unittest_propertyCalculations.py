@@ -189,16 +189,16 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unit tests for debye_temperature"""
     # Test for correct data type (float) returned
     def test_debye_temperature(self):
-        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1)), float)
+        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1),1), float)
 
     # Test for non-negative temperature value
     def test_debye_temperature_not_negative(self):
-        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1)), 0)
+        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1),1), 0)
 
     # Test for wrong input, expected return is None
     def test_debye_temperature_wrong_input_argument(self):
-        self.assertIsNone(debye_temperature(None, trajObject))
-        self.assertIsNone(debye_temperature(atoms, None))
+        self.assertIsNone(debye_temperature(None, trajObject,1))
+        self.assertIsNone(debye_temperature(atoms, None,1))
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
