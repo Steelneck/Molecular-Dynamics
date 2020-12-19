@@ -67,7 +67,7 @@ def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):
         avg_temp = temp/eq_length
         
         # Mass of the crystal should this be included? 
-        bulk_mass=sum(myAtoms.get_masses())*units._amu
+        # bulk_mass=sum(myAtoms.get_masses())*units._amu
 
         heat_capcity = ((1.5*len(myAtoms)*units.kB)*(1-((avg_k_squared-(avg_k**2)))/(1.5*(units.kB**2)*(avg_temp**2))))*1.602*10**(-19)
 
@@ -78,19 +78,19 @@ def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     
-    return heat_capcity/bulk_mass
+    return heat_capcity
 
 def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
     try:
         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         
-        # Averaged kinetic energy squared
+        # Averaged totalt energy squared
         etot_squared = 0
         for i in range(eq_index, len(trajObject)):
             etot_squared += (trajObject[i].get_total_energy())**2
         avg_etot_squared = etot_squared/eq_length
 
-        # Averaged Kinetic energy
+        # Averaged totalt energy
         etot = 0
         for i in range(eq_index, len(trajObject)):
             etot += (trajObject[i].get_total_energy())**2 
@@ -103,7 +103,7 @@ def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):
         avg_temp = temp/eq_length
         
         # Mass of the crystal should this be included? 
-        bulk_mass=sum(myAtoms.get_masses())*units._amu
+        #bulk_mass=sum(myAtoms.get_masses())*units._amu
 
         heat_capcity = (((units.kB*avg_temp**2)**(-1))*(avg_etot_squared-avg_etot**2))*1.602*10**(-19)
 
@@ -114,7 +114,7 @@ def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     
-    return heat_capcity/bulk_mass
+    return heat_capcity
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
