@@ -32,6 +32,7 @@ def main():
     responseCheck = True
     while responseCheck:
         if response == "yes" or response == "y":
+            cwd = os.getcwd()                                                               # Current working directory to change back to below
             os.chdir(os.path.abspath("Optimade"))                                           # Changes directory to Optimade, holds for rest of function
             allDataFiles = glob.glob("*.json")                                              # Extract all .json files in Optimade folder
             
@@ -58,23 +59,20 @@ def main():
             # Open target file in write mode and overwrite with updated data
             with open(optimadePath, 'w') as structureDataFile:
                 json.dump(structureData, structureDataFile, indent=2)                       # structureData should be on list format still.
-
+            
+            os.chdir(cwd)                                                                   # Change back to original directory
             print("\nTransfer complete, you may now run local optimade server to check success.")
             break
 
         elif response == "no" or response == "n":
+            os.chdir(cwd)                                                                   # Change back to original directory
             print("\nStopping transfer, re-run program if you want to try again.")
             break
         else:
             print("Please type yes/no.")
             response = input("All data in the files starting with 'concatenated_data_for_optimade_' in directory '/Optimade' will be transfered to provided JSON file: '" + optimadePath + "'. Make sure only desired runs are in /Optimade folder and target location is correct. Approve/deny transfer with yes/no:\n")
             continue
-    
 
-
-
-
-    
 
 if __name__ == "__main__":
     main()

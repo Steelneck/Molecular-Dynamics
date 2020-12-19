@@ -121,12 +121,17 @@ def concatenateOptimadeDataFiles(run_id):
     print("Saving concatenated file with run_id: TEMPORARY_ID. If you don't change filename until next run, this file will be overwritten.")
     run_id = "TEMPORARY_ID"
     pass
+  
+  # Optimade directory
+  optimadeDir = "Optimade/"
 
-  os.chdir(os.path.abspath("Optimade"))                           # Changes directory to Optimade, holds for rest of function
-  allDataFiles = glob.glob("*.json")                              # Extract all .json files in Optimade folder
+  # Filter out all .json files in Optimade directory
+  allDataFiles = []
+  for file in os.listdir(optimadeDir):
+    if file.endswith(".json"):
+      allDataFiles.append(file)
 
-  if allDataFiles:                                                # Python style to check non-empty list
-
+  if allDataFiles:                                                             # Python style to check non-empty list
     # Extract existing concatenated files and remove them from allDataFiles list. We don't want to append those.
     concatenatedFiles = [conc for conc in allDataFiles if "concatenated_data_for_optimade_" in conc]
     for concFile in concatenatedFiles:
@@ -138,126 +143,35 @@ def concatenateOptimadeDataFiles(run_id):
 
     # Generate file extension (a number) if file already exists.
     fileExtension = ""
-    if os.path.exists(targetFileName + fileFormat):
+    if os.path.exists(optimadeDir + targetFileName + fileFormat):
       print("Concatenated file with run id:", str(run_id), "already exists. Appending file extension...")
       fileExtensionNumber = 1
       # Loop until we find an unused file extension
-      while os.path.exists(targetFileName + fileExtension + fileFormat):
+      while os.path.exists(optimadeDir + targetFileName + fileExtension + fileFormat):
         fileExtension = "_" + str(fileExtensionNumber)
         fileExtensionNumber += 1
     
-    targetFile = targetFileName + fileExtension + fileFormat      # Set targetFileJSON with generated extension
+    targetFile = optimadeDir + targetFileName + fileExtension + fileFormat      # Set targetFileJSON with generated extension
     # ---
 
     # Create a folder to store all datafiles if folder does not exist already
-    sourceDataFolder = "Source_data_" + str(run_id) + fileExtension
+    sourceDataFolder = optimadeDir + "Source_data_" + str(run_id) + fileExtension
     if not os.path.exists(sourceDataFolder):
       os.mkdir(sourceDataFolder)
 
-    allDataList = []                                              # Init a final list that will be written to concatenated file
-    for file in allDataFiles:                                     # Open all files and append json data to final list.
-      with open(file) as json_data_file:
+    allDataList = []                                                            # Init a final list that will be written to concatenated file
+    for file in allDataFiles:                                                   # Open all files and append json data to final list.
+      with open(optimadeDir + file) as json_data_file:
         json_data = json.load(json_data_file)         
-        allDataList.append(json_data[0])                          # Dict is stored in a list in each json file – extract first (and only) item
-        shutil.move(file, sourceDataFolder + "/" + file)          # Move file to subdirectory to be stored.
+        allDataList.append(json_data[0])                                        # Dict is stored in a list in each json file – extract first (and only) item
+        shutil.move(optimadeDir + file, sourceDataFolder + "/" + file)          # Move file to subdirectory to be stored.
       json_data_file.close()
 
-    print("Concatenated file is stored in Optimade/" + targetFile)
+    print("Concatenated file is stored in: " + targetFile)
     with open(targetFile, 'w') as targetFileJSON:
-      json.dump(allDataList, targetFileJSON, indent=2)            # Finally write concatenated data to target file
+      json.dump(allDataList, targetFileJSON, indent=2)                          # Finally write concatenated data to target file
     targetFileJSON.close()
   else: 
     print("No JSON data files in Optimade folder.")
 
     
-
-"""
-[
-    {
-      "_id": {
-        "$oid": "5cfb441f053b174410700d02"
-      },
-      "mean_square_displacement": 12,
-      "self_diffusion": 12,
-      "lindemann": "meling",
-      "specific_heat": 12,
-      "internal_temperature": 12,
-      "cohesive_energy": 12,
-      "internal_pressure": 12,
-      "bulk_modulus": 12,
-      "cartesian_site_positions": [
-        [
-          0.17570227444196573,
-          0.17570227444196573,
-          0.17570227444196573
-        ]
-      ],
-      "dimension_types": [
-        1,
-        1,
-        1
-      ],
-      "nperiodic_dimensions": 3,
-      "elements": [
-        "Ac"
-      ],
-      "elements_ratios": [
-        1.0
-      ],
-      "formula_anonymous": "A",
-      "last_modified": {
-        "$date": "2019-06-08T05:13:37.331Z"
-      },
-      "lattice_vectors": [
-        [
-          1.666666666666666,
-          0,
-          0
-        ],
-        [
-          0,
-          9.888509716321765,
-          0
-        ],
-        [
-          0,
-          0,
-          0.28
-        ]
-      ],
-      "nelements": 1,
-      "nsites": 1,
-      "chemical_formula_descriptive" : "CuCu",
-      "chemical_formula_reduced" : "CuH",
-      "species": [
-        {
-          "chemical_symbols": [
-            "Ac"
-          ],
-          "concentration": [
-            1.0
-          ],
-          "name": "Ac"
-        }
-      ],
-      "species_at_sites": [
-        "Ac"
-      ],
-      "structure_features": [],
-      "task_id": "mpf_1",
-      "relationships": {
-        "references": {
-          "data": [
-            {
-              "type": "references",
-              "id": "Group1",
-
-            }
-          
-          ]
-      
-      }
-    }
-  }
-  ]
-"""
