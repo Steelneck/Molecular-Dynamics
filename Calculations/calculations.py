@@ -46,6 +46,7 @@ def eq_test(myAtoms, trajObject):
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
 def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):   
     try:
+        myAtoms.get_masses()
         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         
         # Averaged kinetic energy squared
@@ -82,6 +83,7 @@ def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):
 
 def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
     try:
+        myAtoms.get_masses()
         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         
         # Averaged totalt energy squared
