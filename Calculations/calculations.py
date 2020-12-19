@@ -29,7 +29,8 @@ def eq_test(myAtoms, trajObject):
             for i in range(n_curr, n_next):
                 tot_energy_next = np.append([trajObject[i].get_total_energy()], tot_energy_next)
             mean_next = np.mean(tot_energy_next)
-            if mean_next < mean_curr:
+            quotient = mean_curr/mean_next
+            if 0.98 < quotient < 1.02:
                 eq_index = n_next
                 break
             n_curr += 10
