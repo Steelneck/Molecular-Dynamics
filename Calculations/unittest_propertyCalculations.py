@@ -6,7 +6,7 @@ from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import Heat_Capcity_NVE
-from calculations import Heat_Capcity_NVT
+#from calculations import Heat_Capcity_NVT
 from calculations import internal_temperature
 from calculations import cohesive_energy
 from calculations import debye_temperature
@@ -59,16 +59,16 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(HCNVE4)
 
 
-    def test_Heat_Capcity_NVT(self):
-        HCNVT1 = Heat_Capcity_NVT(atoms, trajObject, 1)
-        HCNVT2 = Heat_Capcity_NVT(1, trajObject, 1)
-        HCNVT3 = Heat_Capcity_NVE(atoms, 1, 1)
-        HCNVT4 = Heat_Capcity_NVE(atoms, trajObject, None)
+    # def test_Heat_Capcity_NVT(self):
+    #     HCNVT1 = Heat_Capcity_NVT(atoms, trajObject, 1)
+    #     HCNVT2 = Heat_Capcity_NVT(1, trajObject, 1)
+    #     HCNVT3 = Heat_Capcity_NVE(atoms, 1, 1)
+    #     HCNVT4 = Heat_Capcity_NVE(atoms, trajObject, None)
 
-        self.assertIsInstance(HCNVT1, numpy.float64)
-        self.assertIsNone(HCNVT2)
-        self.assertIsNone(HCNVT3)
-        self.assertIsNone(HCNVT4)
+    #     self.assertIsInstance(HCNVT1, numpy.float64)
+    #     self.assertIsNone(HCNVT2)
+    #     self.assertIsNone(HCNVT3)
+    #     self.assertIsNone(HCNVT4)
 
     """Unittests for instantaneous and internal pressure"""
     
