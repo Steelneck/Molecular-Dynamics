@@ -5,6 +5,7 @@ import shutil
 from .init_values import *
 from tkinter import *
 import Calculations.calculations as calc
+from Optimade.optimade import translate_to_optimade, concatenateOptimadeDataFiles
 import Json.write_json as write_json
 from asap3 import Trajectory
 from ase.gui import *
@@ -117,6 +118,11 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
+            translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
+                                    internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
+
+            concatenateOptimadeDataFiles("run1") ### Move me to supercomputer script later!!! 
+            
             #Writes a .csv-file with time evolution of the mean square displacement
             calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
 
