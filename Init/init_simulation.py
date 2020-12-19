@@ -73,16 +73,16 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         
         traj = Trajectory(trajFileName)
 
-        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
 
         """ Could this work? """
         # if EMT_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
         # elif openKIM_Check == True:
         #     potential = checkKIMpotential(KIM_potential)
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, KIM(potential))
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, KIM(potential), Bravais_lattice)
         # elif Lennard_Jones_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True))
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice)
         
         print("Lattice constant a:", latticeConstant_a) 
         

@@ -16,7 +16,7 @@ from calculations import eq_test
 from calculations import MSD_calc
 from calculations import Self_diffuse
 from calculations import Lindemann
-from calculations import calc_lattice_constant_fcc_cubic
+from calculations import calc_lattice_constant_cubic
 from calculations import write_time_evolution_to_csv
 from calculations import calc_bulk_modulus
 
@@ -211,16 +211,18 @@ class PropertyCalculationTests(unittest.TestCase):
 
     """Unittests for calculation of Lattice Constant"""
     def test_lattice_constant_wrong_input_argument(self):
-        a1 = calc_lattice_constant_fcc_cubic(None, EMT())
-        a2 = calc_lattice_constant_fcc_cubic("not an atom", EMT())
-        a3 = calc_lattice_constant_fcc_cubic("Cu", None)
+        a1 = calc_lattice_constant_cubic(None, EMT(), "FaceCenteredCubic")
+        a2 = calc_lattice_constant_cubic("not an atom", EMT(), "FaceCenteredCubic")
+        a3 = calc_lattice_constant_cubic("Cu", None, "FaceCenteredCubic")
+        a4 = calc_lattice_constant_cubic("Cu", EMT(), None)
         
         self.assertIsNone(a1)
         self.assertIsNone(a2)
         self.assertIsNone(a3)
+        self.assertIsNone(a4)
     
     def test_lattice_constant_output_type(self):
-        self.assertIsInstance(calc_lattice_constant_fcc_cubic('Cu', EMT()), float)
+        self.assertIsInstance(calc_lattice_constant_cubic('Cu', EMT(), "FaceCenteredCubic"), float)
 
     """Unittests for calculation of Bulk Modulus"""
     def test_bulk_modulus_wrong_input_argument(self):
