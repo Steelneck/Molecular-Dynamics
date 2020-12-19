@@ -87,7 +87,6 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         print("Lattice constant a:", latticeConstant_a) 
         
         eq_index = calc.eq_test(atomobj, traj)
-        print(eq_index)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
@@ -125,14 +124,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
             database = ""
-            ele_symbol = ""
             potential = ""
             integrator = ""
-            
-            if Materials_project == True and ASE == False:
-                ele_symbol = Criteria_list[0]["elements"][0]
-            else:
-                ele_symbol = Symbol
 
             if EMT_Check == False:
                 if KIM_potential == " ":
@@ -153,8 +146,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 database = "ASE"
 
             #Makes a simulation-specific json-file with all the relevant input and output.  
-            write_json.write_simulation_to_json(ele_symbol,
-                                                database,
+            write_json.write_simulation_to_json(database,
                                                 potential,
                                                 integrator,
                                                 atomobj,

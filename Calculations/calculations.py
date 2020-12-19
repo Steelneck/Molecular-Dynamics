@@ -168,7 +168,7 @@ def Self_diffuse(MSD, timeStepIndex, interval, time_step):
 """Function that checks the Lindemann criterion which determines if the system is melting or not."""
 def Lindemann(trajObject, MSD):
     try:
-        nblist = FullNeighborList(10, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
+        nblist = FullNeighborList(trajObject[-1].get_cell_lengths_and_angles()[0]/2, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
         L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
