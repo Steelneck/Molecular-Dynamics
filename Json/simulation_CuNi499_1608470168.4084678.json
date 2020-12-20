@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "CuNi499",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=17.6)",
+            "a": 17.6,
+            "b": 17.6,
+            "c": 17.6,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5451.776,
+            "Initial Temperature": 900,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.05838217632821523,
+            "Self diffusion coefficient": 0.00034751295433461444,
+            "Lindemann Criterion": 0.1035972399889539,
+            "Specific Heat": 212.4302436314373,
+            "Internal Temperature": 559.6310586909964,
+            "Cohesive Energy": 4.362239789691134,
+            "Internal Pressure": 3.9041402011148535e-06,
+            "Bulk_modulus": 161.86734729656433,
+            "Lattice constant": 3.4914114204442335
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ni499Pt",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=17.6)",
+            "a": 17.6,
+            "b": 17.6,
+            "c": 17.6,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5451.776,
+            "Initial Temperature": 1000,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.10525855747574046,
+            "Self diffusion coefficient": 0.0006265390325936932,
+            "Lindemann Criterion": 0.13776491837795157,
+            "Specific Heat": 211.4824919263618,
+            "Internal Temperature": 748.600807313379,
+            "Cohesive Energy": 4.344022291562676,
+            "Internal Pressure": 4.260424293099308e-06,
+            "Bulk_modulus": 159.74838401086842,
+            "Lattice constant": 3.4914114204442335
+        }
+    ]
+}

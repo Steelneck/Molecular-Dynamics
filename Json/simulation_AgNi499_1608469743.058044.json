@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AgNi499",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=17.6)",
+            "a": 17.6,
+            "b": 17.6,
+            "c": 17.6,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5451.776,
+            "Initial Temperature": 500,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.08799499562988884,
+            "Self diffusion coefficient": 0.0005237797358921955,
+            "Lindemann Criterion": 0.12651470903257933,
+            "Specific Heat": 212.10994781410102,
+            "Internal Temperature": 587.6471458714523,
+            "Cohesive Energy": 4.3559354023036345,
+            "Internal Pressure": 8.572279382971277e-06,
+            "Bulk_modulus": 161.1294870266901,
+            "Lattice constant": 3.4914114204442335
+        }
+    ]
+}
