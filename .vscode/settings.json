@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": ["/Users/Jolle/TFYA92/CDIO---Grupp-1"],
+    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3",
+    "java.test.config": {}
+}
