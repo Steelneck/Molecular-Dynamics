@@ -12,8 +12,8 @@ from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase.atom import *
 from ase import units
-#from ase.calculators.kim.kim import KIM
-from asap3 import OpenKIMcalculator
+from ase.calculators.kim.kim import KIM
+#from asap3 import OpenKIMcalculator
 
 # Algorithms and calculators for the simulation
 from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
@@ -88,8 +88,8 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
         #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
         potential = checkKIMpotential(KIM_potential)
-        #atoms.calc = KIM(potential, options={"ase_neigh": True})
-        atoms.set_calculator(OpenKIMcalculator(potential))
+        atoms.calc = KIM(potential, options={"ase_neigh": True})
+        #atoms.set_calculator(OpenKIMcalculator(potential))
     elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
         atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
     else:
@@ -110,66 +110,63 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
 
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
-        print(data)
-        if len(data) != 0:
-            for i in range(len(data)):
+        for i in range(len(data)):
+        
+            # Takes out the space group and crystal structure query
+            space_group = ((data[i])['spacegroup'])['symbol']
+            crystal_structure = ((data[i])['spacegroup'])['crystal_system']
+            pretty_formula = str((data[i])['pretty_formula'])
+        
+            # Function that skips the element if it not a Cubic crystal
+            if crystal_structure != 'cubic':
+                continue
             
-                # Takes out the space group and crystal structure query
-                space_group = ((data[i])['spacegroup'])['symbol']
-                crystal_structure = ((data[i])['spacegroup'])['crystal_system']
-                pretty_formula = str((data[i])['pretty_formula'])
+            print(pretty_formula)
+            #Takes out the CIF information and creates a unique file
+            cif_Info=(data[i])["cif"]
+            f = open(pretty_formula + ".cif", "w+")
+            f.write(cif_Info)
+            f.close()
             
-                # Function that skips the element if it not an FCC crystal
-                if space_group[0] != 'F' or crystal_structure != 'cubic':
-                    continue
-                
-                #Takes out the CIF information and creates a unique file
-                cif_Info=(data[i])["cif"]
-                f = open(pretty_formula + ".cif", "w+")
-                f.write(cif_Info)
-                f.close()
-                
-                #Creates the atom object from the CIF information
-                atoms = ase.io.read(pretty_formula + ".cif")
-                atoms.set_pbc(PBC)
-                
-                #Creates a supercell
-                atoms = atoms*(Size_X,Size_Y,Size_Z)
+            #Creates the atom object from the CIF information
+            atoms = ase.io.read(pretty_formula + ".cif")
+            atoms.set_pbc(PBC)
+            
+            #Creates a supercell
+            atoms = atoms*(Size_X,Size_Y,Size_Z)
 
-                #places impurity in the crystal 
-                if Impurity == True:
-                    atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
-                    insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
+            #places impurity in the crystal 
+            if Impurity == True:
+                atom_pos = find_crystal_center(atoms) # Returns a center position in the crystal
+                insert_impurity(atoms, Impurity_ele, atom_pos) # Insert "foregin" atom in the crystal
 
-                #Places vacancy in the crytal
-                if Vacancy == True:
-                    create_vacancy(atoms) # Create a vacancy
+            #Places vacancy in the crytal
+            if Vacancy == True:
+                create_vacancy(atoms) # Create a vacancy
 
-                # Set the momenta corresponding to desired temperature when running Verlocity Verlet
-                if Verlocity_Verlet_Check == True:
-                    MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
-                    Stationary(atoms) # Set linear momentum to zero
-                    ZeroRotation(atoms) # Set angular momentum to zero
-                # Interatomic potential
-                if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
-                    atoms.calc = EMT()
-                elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
-                    #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
-                    potential = checkKIMpotential(KIM_potential)
-                    #atoms.calc = KIM(potential, options={"ase_neigh": True})
-                    atoms.set_calculator(OpenKIMcalculator(potential))
-                elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
-                        atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
+            # Set the momenta corresponding to desired temperature when running Verlocity Verlet
+            if Verlocity_Verlet_Check == True:
+                MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
+                Stationary(atoms) # Set linear momentum to zero
+                ZeroRotation(atoms) # Set angular momentum to zero
+            # Interatomic potential
+            if (EMT_Check == True) and (openKIM_Check == False) and (Lennard_Jones_Check == False):
+                atoms.calc = EMT()
+            elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
+                #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
+                potential = checkKIMpotential(KIM_potential)
+                atoms.calc = KIM(potential, options={"ase_neigh": True})
+                #atoms.set_calculator(OpenKIMcalculator(potential))
+            elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
+                    atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
 
-                else:
-                    raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
-                
-                #Moves the trajectory file to another folder after it has been used
-                shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
-                atoms_list.append(atoms)
-        else:
-            raise Exception("The query/queries returned no elements!") 
-    
+            else:
+                raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
+            
+            #Moves the trajectory file to another folder after it has been used
+            shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
+            atoms_list.append(atoms)
+
     # If atoms_list is empty raise an expetion and end program
     if len(atoms_list) == 0:
         raise Exception("The query/queries contains no FCC crystals")

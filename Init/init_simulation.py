@@ -56,7 +56,6 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         raise Exception("ASE=Materials_Project. Both cannot be true/false at the same time!")
     
     count = 0 # To get a unique name for all the files
-
     for atomobj in atoms:
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
@@ -141,7 +140,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 if KIM_potential == " ":
                     potential = "Leonnard-Jones"
                 else:
-                  potential = KIM_potential
+                    potential = KIM_potential
             else:
                 potential = "EMT"
 
