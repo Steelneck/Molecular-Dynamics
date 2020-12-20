@@ -6,7 +6,7 @@ from ase.md.verlet import VelocityVerlet
 from ase import units
 
 from calculations import Heat_Capcity_NVE
-#from calculations import Heat_Capcity_NVT
+from calculations import Heat_Capcity_NVT
 from calculations import internal_temperature
 from calculations import cohesive_energy
 from calculations import debye_temperature
@@ -59,16 +59,16 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(HCNVE4)
 
 
-    # def test_Heat_Capcity_NVT(self):
-    #     HCNVT1 = Heat_Capcity_NVT(atoms, trajObject, 1)
-    #     HCNVT2 = Heat_Capcity_NVT(1, trajObject, 1)
-    #     HCNVT3 = Heat_Capcity_NVE(atoms, 1, 1)
-    #     HCNVT4 = Heat_Capcity_NVE(atoms, trajObject, None)
+    def test_Heat_Capcity_NVT(self):
+        HCNVT1 = Heat_Capcity_NVT(atoms, trajObject, 1)
+        HCNVT2 = Heat_Capcity_NVT(1, trajObject, 1)
+        HCNVT3 = Heat_Capcity_NVE(atoms, 1, 1)
+        HCNVT4 = Heat_Capcity_NVE(atoms, trajObject, None)
 
-    #     self.assertIsInstance(HCNVT1, numpy.float64)
-    #     self.assertIsNone(HCNVT2)
-    #     self.assertIsNone(HCNVT3)
-    #     self.assertIsNone(HCNVT4)
+        self.assertIsInstance(HCNVT1, numpy.float64)
+        self.assertIsNone(HCNVT2)
+        self.assertIsNone(HCNVT3)
+        self.assertIsNone(HCNVT4)
 
     """Unittests for instantaneous and internal pressure"""
     
@@ -189,16 +189,16 @@ class PropertyCalculationTests(unittest.TestCase):
     """Unit tests for debye_temperature"""
     # Test for correct data type (float) returned
     def test_debye_temperature(self):
-        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1)), float)
+        self.assertIsInstance(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1),1), float)
 
     # Test for non-negative temperature value
     def test_debye_temperature_not_negative(self):
-        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1)), 0)
+        self.assertGreaterEqual(debye_temperature(trajObject, MSD_calc(atoms, trajObject, -1, 1),1), 0)
 
     # Test for wrong input, expected return is None
     def test_debye_temperature_wrong_input_argument(self):
-        self.assertIsNone(debye_temperature(None, trajObject))
-        self.assertIsNone(debye_temperature(atoms, None))
+        self.assertIsNone(debye_temperature(None, trajObject,1))
+        self.assertIsNone(debye_temperature(atoms, None,1))
 
     #Lindemann doesnt use the time input yet so no point in testing it 
     def test_Lindemann_wrong_input_argument(self):
