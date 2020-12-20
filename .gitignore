@@ -9,4 +9,3 @@ Traj/*.traj
 Visualization/properties.csv
 Visualization/sim_properties.csv
 Calculations/*.csv
-Json/*.json
