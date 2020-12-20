@@ -55,11 +55,6 @@
             "Structure": "CUB",
             "Property": "MSD",
 	    "Plot check": false,
-	    "Scale axis check": false,
-	    "y-min": 0,
-	    "y-max": 0,
-	    "x-min": 0,
-	    "x-max": 0
 	}
     ]
 }
