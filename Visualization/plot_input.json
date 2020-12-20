@@ -3,7 +3,7 @@
     [
         {
             "Property": "MSD",
-            "Plot check": true,
+            "Plot check": false,
 	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,
@@ -14,19 +14,19 @@
     "Scatter plot, single property all simulations.":
     [
 	{
-	    "Element": "Cu",
+	    "Element": "Cu864",
             "Database": "ASE",
             "Potential": "EMT",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
             "Property x-axis": "Int_T",
-            "Property y-axis": "MSD",
+            "Property y-axis": "SHC",
 	    "Plot check": false,
 	    "Scale axis check": false,
-	    "y-min": 0,
-	    "y-max": 0.1,
+	    "y-min": -1,
+	    "y-max": 1,
 	    "x-min": 0,
-	    "x-max": 1000
+	    "x-max": 0
 	}
     ],
     "Scatter plot, two properties for all elements":
@@ -35,9 +35,9 @@
             "Database": "ASE",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
-            "Property x-axis": "Int_T",
-            "Property y-axis": "L",
-	    "Plot check": false,
+            "Property x-axis": "Vol",
+            "Property y-axis": "Int_T",
+	    "Plot check": true,
 	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,
@@ -48,18 +48,13 @@
     "Histogram, single property from all simulations":
     [
 	{
-	    "Element": "Cu",
+	    "Element": "Cu864",
             "Database": "ASE",
             "Potential": "EMT",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
             "Property": "MSD",
-	    "Plot check": false,
-	    "Scale axis check": false,
-	    "y-min": 0,
-	    "y-max": 0.1,
-	    "x-min": 0,
-	    "x-max": 1000
+	    "Plot check": false
 	}
     ]
 }

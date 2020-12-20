@@ -34,20 +34,17 @@ def plot_prop_vs_time(jsonFileName):
             count += 1
         
         plt.scatter(x_list,y_list)
-
-        #Adds trendline to the plot.
-        z = np.polyfit(x_list, y_list, 1)
-        p = np.poly1d(z)
-        plt.plot(x_list, p(x_list), "r--")
-
+        
         plt.title(prop_str + " vs time scatter plot")
         plt.xlabel("Time [fs]")
         plt.ylabel(prop_str)
         
         #Set interval for the y-axis to not have the plot zoomed in too much.
         if scale_axis_check:
-            plt.ylim(y_min,y_max)
-            plt.xlim(x_min,x_max)
+            if x_min != x_max:
+                plt.xlim(x_min,x_max)
+            if y_min != y_max:
+                plt.ylim(y_min,y_max)
         
         if plot_check:
             plt.show()
@@ -119,8 +116,10 @@ def plot_prop_per_simulation(jsonFileName):
         plt.xlabel(prop1_str)
         plt.ylabel(prop2_str)
         if scale_axis_check:
-            plt.ylim(y_min,y_max)
-            plt.xlim(x_min,x_max)
+            if x_min != x_max:
+                plt.xlim(x_min,x_max)
+            if y_min != y_max:
+                plt.ylim(y_min,y_max)
         if plot_check:
             plt.show()
         plt.close()
@@ -236,8 +235,10 @@ def plot_prop_all_elements(jsonFileName):
         plt.xlabel(prop1_str)
         plt.ylabel(prop2_str)
         if scale_axis_check:
-            plt.ylim(y_min,y_max)
-            plt.xlim(x_min,x_max)
+            if x_min != x_max:
+                plt.xlim(x_min,x_max)
+            if y_min != y_max:
+                plt.ylim(y_min,y_max)
         plt.legend()
         if plot_check:
             plt.show()
@@ -270,12 +271,6 @@ def hist_prop_per_simulation(jsonFileName):
                 integrator = row["Integrator"]
                 potential = row["Potential"]
                 plot_check = row["Plot check"]
-                #The following makes it possible to scale the plot x- & y-axis
-                scale_axis_check = row["Scale axis check"]
-                y_min = row["y-min"]
-                y_max = row["y-max"]
-                x_min = row["x-min"]
-                x_max = row["x-max"]
             
         file = open("sim_properties.csv", "r")
         reader = csv.DictReader(file, delimiter=";")
@@ -292,9 +287,6 @@ def hist_prop_per_simulation(jsonFileName):
 
         plt.title(prop_str + " histogram")
         plt.xlabel(prop_str)
-        if scale_axis_check:
-            plt.ylim(y_min,y_max)
-            plt.xlim(x_min,x_max)
         if plot_check:
             plt.show()
         plt.close()
