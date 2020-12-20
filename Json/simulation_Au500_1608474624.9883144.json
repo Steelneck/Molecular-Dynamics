@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Au500",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=20.4)",
+            "a": 20.4,
+            "b": 20.4,
+            "c": 20.4,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 8489.664,
+            "Initial Temperature": 900,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.17365295221090565,
+            "Self diffusion coefficient": 0.0010336485250649146,
+            "Lindemann Criterion": 0.16369611991249028,
+            "Specific Heat": 63.311835114310995,
+            "Internal Temperature": 634.5140040139887,
+            "Cohesive Energy": 3.7144935216328707,
+            "Internal Pressure": -2.061737709631402e-06,
+            "Bulk_modulus": 164.30036816069494,
+            "Lattice constant": 3.8073118842989633
+        }
+    ]
+}
