@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AuCu499",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=18.05)",
+            "a": 18.05,
+            "b": 18.05,
+            "c": 18.05,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5880.735125000003,
+            "Initial Temperature": 1300,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.1534529992907078,
+            "Self diffusion coefficient": 0.0009134107100637369,
+            "Lindemann Criterion": 0.17073062315333865,
+            "Specific Heat": 195.42014925474402,
+            "Internal Temperature": 839.4282093955543,
+            "Cohesive Energy": 3.399966866035407,
+            "Internal Pressure": 3.486670363853789e-07,
+            "Bulk_modulus": 116.80026818261969,
+            "Lattice constant": 3.58690945865129
+        }
+    ]
+}

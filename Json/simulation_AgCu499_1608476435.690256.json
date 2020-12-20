@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AgCu499",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=18.05)",
+            "a": 18.05,
+            "b": 18.05,
+            "c": 18.05,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5880.735125000003,
+            "Initial Temperature": 1100,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.16138606006521866,
+            "Self diffusion coefficient": 0.0009606313099120158,
+            "Lindemann Criterion": 0.17597876944865998,
+            "Specific Heat": 195.96738627423068,
+            "Internal Temperature": 805.2545956228827,
+            "Cohesive Energy": 3.4019155631595344,
+            "Internal Pressure": 3.3629069300314016e-06,
+            "Bulk_modulus": 117.23467033462687,
+            "Lattice constant": 3.58690945865129
+        }
+    ]
+}
