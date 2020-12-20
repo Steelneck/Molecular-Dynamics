@@ -856,9 +856,9 @@
             "lc_beta":0,
             "lc_gamma":0,
             "run_Optimade": false,
-            "Op,timade_name": "run1"
+            "Optimade_name": "run1"
         },
-                {
+        {
             "EMT": false,
             "openKIM": true,
             "Lennard_Jones": false,
@@ -1287,7 +1287,7 @@
             "run_Optimade": false,
             "Optimade_name": "run1"
         },
-         {
+        {
             "EMT": false,
             "openKIM": true,
             "Lennard_Jones": false,
