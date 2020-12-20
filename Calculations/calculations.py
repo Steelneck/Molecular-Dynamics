@@ -351,7 +351,7 @@ def calc_bulk_modulus(atoms):
     Calculates the bulk modulus using Equation of State (EOS). Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures. 
     """
     try:
-        atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
+        atomsConfigName = str(atoms.get_chemical_formula())                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
         trajFileName = "Bulk_" + atomsConfigName + '.traj'
         cell = atoms.get_cell()                                 # Extract atoms cell, i.e. lattice constants to make small deviations in for-loop.
         traj = Trajectory(trajFileName, 'w')                    # Create a traj file for writing results to.
