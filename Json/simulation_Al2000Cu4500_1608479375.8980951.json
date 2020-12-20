@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al2000Cu4500",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=43.5073)",
+            "a": 43.50731,
+            "b": 43.50731,
+            "c": 43.50731,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 82354.37901630164,
+            "Initial Temperature": 300,
+            "Run time": 3000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.10811619408619463,
+            "Self diffusion coefficient": 0.0006435487743225871,
+            "Lindemann Criterion": 0.13414727471692056,
+            "Specific Heat": 238.45913377841254,
+            "Internal Temperature": 187.58878677434453,
+            "Cohesive Energy": 0.17041070345229234,
+            "Internal Pressure": -5.804682036655345e-08,
+            "Bulk_modulus": 78.23140682092478,
+            "Lattice constant": 3.7486362256057384
+        }
+    ]
+}
