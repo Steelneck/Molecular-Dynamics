@@ -78,7 +78,6 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
         latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
 
-
         # if EMT_Check == True:
         #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
         # elif openKIM_Check == True:
@@ -100,12 +99,13 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             print("Lindeman Criterion = ", lindemann)
+            
             if Verlocity_Verlet_Check == True:    
                 specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
-                print("C_p = ", specificHeatCapacity, "[J/K*Kg]")
+                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
             else:
                 specificHeatCapacity = calc.Heat_Capcity_NVT(atomobj, traj, eq_index)
-                print("C_p = ", specificHeatCapacity, "[J/K*Kg]")
+                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
