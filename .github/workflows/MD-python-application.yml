@@ -36,4 +36,4 @@ jobs:
       run: |
         python3 Calculations/unittest_propertyCalculations.py
         python3 Init/unittest_initfunctions.py
-        python3 Visualization/unittest_propertyVisualization.py
+        #python3 Visualization/unittest_propertyVisualization.py
