@@ -12,8 +12,8 @@ from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase.atom import *
 from ase import units
-from ase.calculators.kim.kim import KIM
-#from asap3 import OpenKIMcalculator
+#from ase.calculators.kim.kim import KIM
+from asap3 import OpenKIMcalculator
 
 # Algorithms and calculators for the simulation
 from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
@@ -88,8 +88,8 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
         #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
         potential = checkKIMpotential(KIM_potential)
-        atoms.calc = KIM(potential, options={"ase_neigh": True})
-        #atoms.set_calculator(OpenKIMcalculator(potential))
+        #atoms.calc = KIM(potential, options={"ase_neigh": True})
+        atoms.set_calculator(OpenKIMcalculator(potential))
     elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
         atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
     else:
@@ -156,8 +156,8 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                 elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
                     #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
                     potential = checkKIMpotential(KIM_potential)
-                    atoms.calc = KIM(potential, options={"ase_neigh": True})
-                    #atoms.set_calculator(OpenKIMcalculator(potential))
+                    #atoms.calc = KIM(potential, options={"ase_neigh": True})
+                    atoms.set_calculator(OpenKIMcalculator(potential))
                 elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
                         atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
 
