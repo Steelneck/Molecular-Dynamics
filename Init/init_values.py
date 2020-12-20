@@ -93,7 +93,7 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
         atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
     else:
-        raise Exception("Only one can true at the same time!")
+        raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
 
     atoms_list.append(atoms)
     return atoms_list
@@ -162,7 +162,7 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                         atoms.calc = LennardJones(list(dict.fromkeys(atoms.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
 
                 else:
-                    raise Exception("Only one can true at the same time!")
+                    raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
                 
                 #Moves the trajectory file to another folder after it has been used
                 shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")

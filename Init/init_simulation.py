@@ -14,11 +14,11 @@ from ase.gui import *
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
-                        ASE, Symbol, Materials_project,API_Key,Criteria_list,
+                        ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name):
     
     """ Function that looks if the user wants to run ASE or Materials_project 
         Checks if the simulation is going to add impurites or not
@@ -53,7 +53,9 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                 Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
-        raise Exception("ASE=Materials_Materials. Both cannot be true/false at the same time!")
+        raise Exception("ASE=Materials_Project. Both cannot be true/false at the same time!")
+    
+    count = 0 # To get a unique name for all the files
 
     for atomobj in atoms:
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
@@ -65,24 +67,24 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
         #Creates a unique name for every simulation run 
-        trajFileName = atomobj.get_chemical_formula() + '.traj'
+        trajFileName = atomobj.get_chemical_formula() +"_run" + str(count) +  '_.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
         dyn.attach(traj.write, Interval)
         dyn.run(Steps)
         traj.close()
-        
+        count = count + 1  
+
         traj = Trajectory(trajFileName)
 
-        latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
 
-        """ Could this work? """
         # if EMT_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, EMT())
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
         # elif openKIM_Check == True:
         #     potential = checkKIMpotential(KIM_potential)
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, KIM(potential))
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, KIM(potential), Bravais_lattice)
         # elif Lennard_Jones_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_fcc_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True))
+        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice)
         
         print("Lattice constant a:", latticeConstant_a) 
         
@@ -98,8 +100,12 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             print("Lindeman Criterion = ", lindemann)
             
-            specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
-            print("C_p = ", specificHeatCapacity, "[J/K*Kg]")
+            if Verlocity_Verlet_Check == True:    
+                specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
+                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
+            else:
+                specificHeatCapacity = calc.Heat_Capcity_NVT(atomobj, traj, eq_index)
+                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
@@ -110,13 +116,17 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             internalPressure = calc.calc_internal_pressure(atomobj, traj, eq_index, Size_X * Size_Y * Size_Z)
             print("Internal Pressure:", internalPressure, "[eV / Å^3]")
             
+            debyeTemperature = calc.debye_temperature(traj,meansSquareDisplacement,eq_index)
+            print("Debye temperature:", debyeTemperature, "[K]")
+
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                    internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
+            if run_Optimade == True:
+                translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
+                                        internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
-            concatenateOptimadeDataFiles("run1") ### Move me to supercomputer script later!!! 
+                concatenateOptimadeDataFiles(Optimade_name) ### Move me to supercomputer script later!!! 
             
             #Writes a .csv-file with time evolution of the mean square displacement
             calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)

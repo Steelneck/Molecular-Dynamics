@@ -14,7 +14,7 @@ import csv
 import json
 import time
 
-"""Function that takes all the atoms-objects after the system reaches equilibrium  (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
+"""Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
 def eq_test(myAtoms, trajObject):
     try:
         tot_energy_curr = np.array([0])
@@ -29,7 +29,8 @@ def eq_test(myAtoms, trajObject):
             for i in range(n_curr, n_next):
                 tot_energy_next = np.append([trajObject[i].get_total_energy()], tot_energy_next)
             mean_next = np.mean(tot_energy_next)
-            if mean_next < mean_curr:
+            quotient = mean_curr/mean_next
+            if 0.98 < quotient < 1.02:
                 eq_index = n_next
                 break
             n_curr += 10
@@ -47,46 +48,23 @@ def eq_test(myAtoms, trajObject):
 def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):   
     try:
         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
-        # Averaged Kinetic energy
-        delta_k = 0
-        for i in range(eq_index + 1, len(trajObject)):
-            delta_k += (trajObject[i].get_kinetic_energy()*1.602*10**(-19) - trajObject[i-1].get_kinetic_energy()*1.602*10**(-19)) 
-        avg_k = delta_k/(eq_length - 1)
-
-        # Averaged Kinetic energy
-        delta_t = 0
-        for i in range(eq_index + 1, len(trajObject)):
-            delta_t += (trajObject[i].get_temperature() - trajObject[i-1].get_temperature()) 
-        avg_t = delta_t/(eq_length - 1)
         
-        # Mass of the crystal should this be included? 
+        #Averaged kinetic energy, kinetic energy squared and temperature calculated
+        k = 0
+        k_squared = 0
+        temp = 0
+        for i in range(eq_index, len(trajObject)):
+            k += (trajObject[i].get_kinetic_energy())
+            k_squared += k**2
+            temp += (trajObject[i].get_temperature()) 
+        avg_k_squared = k_squared/eq_length
+        avg_k = k/eq_length
+        avg_temp = temp/eq_length
+        
+        # Mass of the crystal 
         bulk_mass=sum(myAtoms.get_masses())*units._amu
 
-        heat_capcity = avg_k/avg_t
-
-        """This solution shoudl work but dosent"""        
-        # # Averaged kinetic energy squared
-        # k_squared = 0
-        # for i in range(eq_index, len(trajObject)):
-        #     k_squared += (trajObject[i].get_kinetic_energy())**2
-        # avg_k_squared = k_squared/eq_length
-
-        # # Averaged Kinetic energy
-        # k = 0
-        # for i in range(eq_index, len(trajObject)):
-        #     k += (trajObject[i].get_kinetic_energy()) 
-        # avg_k = k/eq_length
-
-        # temp = 0
-        # # Averaged temperature
-        # for i in range(eq_index, len(trajObject)):
-        #     temp += (trajObject[i].get_temperature())
-        # avg_temp = temp/eq_length
-        
-        # # Mass of the crystal should this be included? 
-        # # bulk_mass=sum(myAtoms.get_masses())*units._amu
-
-        #heat_capcity = ((1.5*len(myAtoms)*units.kB)*((1-(((avg_k_squared-(avg_k**2)))/(1.5*(units.kB**2)*(avg_temp**2))))**(-1)))*1.602*10**(-19)
+        heat_capcity = ((1.5*len(myAtoms)*units.kB)*((1-((avg_k_squared-(avg_k**2))/(1.5*((units.kB**2)*(avg_temp**2))))**(-1))))*1.602*10**(-19)
 
     except Exception as e:
         print("An error occured when calculating the heat capcity:")
@@ -97,42 +75,35 @@ def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):
     
     return heat_capcity/bulk_mass
 
-# def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
-#     try:
-#         myAtoms.get_masses()
-#         eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
+def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
+    try:
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         
-#         # Averaged totalt energy squared
-#         etot_squared = 0
-#         for i in range(eq_index, len(trajObject)):
-#             etot_squared += (trajObject[i].get_total_energy())**2
-#         avg_etot_squared = etot_squared/eq_length
-
-#         # Averaged totalt energy
-#         etot = 0
-#         for i in range(eq_index, len(trajObject)):
-#             etot += (trajObject[i].get_total_energy())**2 
-#         avg_etot = etot/eq_length
-
-#         temp = 0
-#         # Averaged temperature
-#         for i in range(eq_index, len(trajObject)):
-#             temp += (trajObject[i].get_temperature())
-#         avg_temp = temp/eq_length
+        #Averaged total energy, total energy squared and temperature calculated
+        temp = 0
+        etot = 0
+        etot_squared = 0
+        for i in range(eq_index, len(trajObject)):
+            etot += (trajObject[i].get_total_energy())
+            etot_squared += etot**2
+            temp += (trajObject[i].get_temperature())
+        avg_etot = etot/eq_length
+        avg_etot_squared = etot_squared/eq_length
+        avg_temp = temp/eq_length
         
-#         # Mass of the crystal should this be included? 
-#         #bulk_mass=sum(myAtoms.get_masses())*units._amu
+        # Mass of the crystal 
+        bulk_mass=sum(myAtoms.get_masses())*units._amu
 
-#         heat_capcity = (((units.kB*avg_temp**2)**(-1))*(avg_etot_squared-avg_etot**2))*1.602*10**(-19)
+        heat_capcity = (((units.kB*avg_temp**2)**(-1))*(avg_etot_squared-avg_etot**2))*1.602*10**(-19)
 
-#     except Exception as e:
-#         print("An error occured when calculating the heat capcity:")
-#         exc_type, exc_obj, exc_traceBack = sys.exc_info()
-#         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
-#         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
-#         return(None)
+    except Exception as e:
+        print("An error occured when calculating the heat capcity:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
     
-#     return heat_capcity
+    return heat_capcity/bulk_mass
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
@@ -283,7 +254,7 @@ def cohesive_energy(atoms, trajObject, eq_index):
     
     return(avgEcoh)
 
-def debye_temperature(trajObject, MSD):
+def debye_temperature(trajObject, MSD, eq_index):
     """
     Calculates the Debye temperature of the system.
 
@@ -295,12 +266,14 @@ def debye_temperature(trajObject, MSD):
     Returns the average of a sum of samples over the Debye temperature of the system
     """
     try: 
-        eqDebye = 0
-        for n in range(1, len(trajObject)):
-            T = trajObject[n].get_temperature()                                # Set to system temperature                     
-            m = sum(trajObject[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
-            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*MSD))        # Sum Debye temperatures for each trajectory object
-        avgDebye = eqDebye/len(trajObject)                                     # Average sum over number of samples
+        print(units._hbar)
+        eq_length = len(trajObject) - eq_index
+        #eqDebye = 0
+        
+        T = trajObject[-1].get_temperature()                                                # Set to system temperature                     
+        m = sum(trajObject[-1].get_masses())*units._amu                                     # Set to sum of atom masses converted to kg
+        eqDebye = np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*1.602*10**(-19)*MSD))        # Sum Debye temperatures for each trajectory object
+        avgDebye = eqDebye                                                           # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the Debye temperature:")
@@ -311,14 +284,27 @@ def debye_temperature(trajObject, MSD):
 
     return(avgDebye)
 
-def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
-    """ Calculates the lattice constants. IMPORTANT!: Only works for FCC cubic crystals. 
-        Calculates both a and c constant but those are equal for fcc cubic.
-        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
+def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice):
+    """ Calculates the lattice constants. 
+        IMPORTANT!: Only works for cubic crystals. 
+        WARNING: Might result in wrong values for wrong provided crystal structures.
+        Calculates both a and c constant but those are equal for cubic structures. 
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
+        This is based on the example from ASE wiki, thus calculates both a and c. """
     try: 
+
+        if bravaisLattice == "FaceCenteredCubic":
+            crystalStructure = "fcc"
+        elif bravaisLattice == "BodyCenteredCubic":
+            crystalStructure = "bcc"
+        elif bravaisLattice == "SimpleCubic":
+            crystalStructure = "sc"
+        else:
+            raise ValueError("Supported bravais lattice is not provided to lattice calculation function. Supported are: FaceCenteredCubic, BodyCenteredCubic and SimpleCubic.")
+
         # Make a good initial guess on the lattice constant
-        a0 = 3.52 / np.sqrt(2) 
-        c0 = np.sqrt(8 / 3.0) * a0
+        a0 = 3.52  
+        c0 = a0 
         
         fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
@@ -327,7 +313,7 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         eps = 0.01                                                              # A small deviation to generate a few more constants.
         for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
             for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-                at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
+                at = bulk(atomName, crystalStructure, a=a, c=c, cubic=True)     # Use bulk to build a cell. Only config is fcc, bcc or sc.
                 at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
                 traj.write(at)                                                  # Write bulk config to trajectory file
 
@@ -351,8 +337,8 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
+        #print("Lattice constants a:", a0, "| c:", c0, "\n") #Uncomment if we want to print c also
         return(a0)
-        #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
