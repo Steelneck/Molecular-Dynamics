@@ -292,39 +292,22 @@ def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice, latti
         WARNING: Might result in wrong values for wrong provided crystal structures.
         Calculates both a and c constant but those are equal for cubic structures. 
         Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
-        This is based on the example from ASE wiki, thus calculates both a and c. """
+        This is based on the example from ASE wiki, thus calculates both a and c. 
+        Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object."""
     try: 
 
-        if bravaisLattice == "FaceCenteredCubic":
-            crystalStructure = "fcc"
-        elif bravaisLattice == "BodyCenteredCubic":
-            crystalStructure = "bcc"
-        elif bravaisLattice == "SimpleCubic":
-            crystalStructure = "sc"
-        else:
-            raise ValueError("Supported bravais lattice is not provided to lattice calculation function. Supported are: FaceCenteredCubic, BodyCenteredCubic and SimpleCubic.")
-
-        # Make a good initial guess on the lattice constant
-        a0 = 5
-        c0 = a0 
+        if latticeConstantA == 0:
+            raise ValueError("Please provide a latticeconstant close to experimental value.") 
+        if PBC is None:
+            raise ValueError("Please provide PBC True or False.") 
         
         fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
-        
-        """ First try, provide atomsObject as input argument to recreate.
-        atomsObjectCopy = atomsObject
-        originCell = atomsObjectCopy.get_cell()
 
-        for x in np.linspace(0.5, 2, 10):
-            atomsObjectCopy.set_cell(originCell * x, scale_atoms=True)
-            traj.write(atomsObjectCopy)
-
-        atomsObjectCopy.set_cell(originCell, scale_atoms=True)
-        """
         # Generate a few crystals. Have to scale since traj object has size demands.
         # Could not get it to work with the original atoms object so recreating it here.
-        eps = 0.1                                                              # A small deviation to generate a few more constants.
-        for a in latticeConstantA * np.linspace(1 - eps, 1 + eps, 30):
+        eps = 0.1                                                              
+        for a in latticeConstantA * np.linspace(1 - eps, 1 + eps, 30):          # A small deviation to generate a few more constants.
         
             if bravaisLattice == "FaceCenteredCubic":
                 at = FaceCenteredCubic(directions=directions, size=(sizeX,sizeX,sizeX), symbol=atomName, latticeconstant=a, pbc=PBC)
@@ -341,15 +324,6 @@ def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice, latti
             else:
                 raise ValueError("Supported bravais lattice is not provided to lattice calculation function. Supported are: FaceCenteredCubic, BodyCenteredCubic and SimpleCubic.")
 
-        """ Original 
-        # Generate 9 calculations of potential energy for different a and c values. 
-        eps = 0.01                                                              # A small deviation to generate a few more constants.
-        for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
-            for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-                at = bulk(atomName, crystalStructure, a=a, c=c, cubic=True)     # Use bulk to build a cell. Only config is fcc, bcc or sc.
-                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
-                traj.write(at)                                                  # Write bulk config to trajectory file
-        """
         # Now we can get the energies and lattice constants from the traj file
         configs = read(fileName + "@:")
         energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
@@ -370,7 +344,7 @@ def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice, latti
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
-        # Scale supercell side length to primitive unit cell
+        # Scale supercell length inverted to primitive unit cell
         a0 /= sizeX
         c0 /= sizeX
 

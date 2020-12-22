@@ -211,18 +211,26 @@ class PropertyCalculationTests(unittest.TestCase):
 
     """Unittests for calculation of Lattice Constant"""
     def test_lattice_constant_wrong_input_argument(self):
-        a1 = calc_lattice_constant_cubic(None, EMT(), "FaceCenteredCubic")
-        a2 = calc_lattice_constant_cubic("not an atom", EMT(), "FaceCenteredCubic")
-        a3 = calc_lattice_constant_cubic("Cu", None, "FaceCenteredCubic")
-        a4 = calc_lattice_constant_cubic("Cu", EMT(), None)
+        a1 = calc_lattice_constant_cubic(None, EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a2 = calc_lattice_constant_cubic("not an atom", EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a3 = calc_lattice_constant_cubic("Cu", None, "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a4 = calc_lattice_constant_cubic("Cu", EMT(), None, 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a5 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", None, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a6 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, None, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a7 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, 3, None, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        a8 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, 3, True, None)
         
         self.assertIsNone(a1)
         self.assertIsNone(a2)
         self.assertIsNone(a3)
         self.assertIsNone(a4)
+        self.assertIsNone(a5)
+        self.assertIsNone(a6)
+        self.assertIsNone(a7)
+        self.assertIsNone(a8)
     
     def test_lattice_constant_output_type(self):
-        self.assertIsInstance(calc_lattice_constant_cubic('Cu', EMT(), "FaceCenteredCubic"), float)
+        self.assertIsInstance(calc_lattice_constant_cubic('Cu', EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]), float)
 
     """Unittests for calculation of Bulk Modulus"""
     def test_bulk_modulus_wrong_input_argument(self):
