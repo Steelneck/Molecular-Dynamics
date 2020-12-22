@@ -76,18 +76,19 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
         traj = Trajectory(trajFileName)
 
-        latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
-
-        # if EMT_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
-        # elif openKIM_Check == True:
-        #     potential = checkKIMpotential(KIM_potential)
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, KIM(potential), Bravais_lattice)
-        # elif Lennard_Jones_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice)
+        if EMT_Check == True:
+            latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice, lc_a, Size_X, PBC, Directions)
+        elif openKIM_Check == True:
+            potential = checkKIMpotential(KIM_potential)
+            latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, KIM(potential), Bravais_lattice, lc_a, Size_X, PBC, Directions)
+        elif Lennard_Jones_Check == True:
+            latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice, lc_a, Size_X, PBC, Directions)
         
         print("Lattice constant a:", latticeConstant_a) 
         
+        ###!!! Set lattice constant here, or possebly only for relevant calculations. I believe pressure and temperature if I'm not mistaken.
+
+
         eq_index = calc.eq_test(atomobj, traj)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
