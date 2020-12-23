@@ -22,7 +22,7 @@ species
 """
 
 def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                    internalTemperature, cohesiveEnergy, internalPressure, bulkModulus, run_id):
+                                    internalTemperature, cohesiveEnergy, internalPressure, bulkModulus, lattice_constant_a, run_id):
     #Creates a cell from the atomobject
     cell = atomobj.cell
 
@@ -82,6 +82,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["cohesive_energy"] = cohesiveEnergy
     data_dict["internal_pressure"] = internalPressure
     data_dict["bulk_modulus"] = bulkModulus
+    data_dict["lattice_constant_a"] = lattice_constant_a
     data_dict["cartesian_site_positions"] = cartesian_site_positions.tolist()
     data_dict["dimension_types"] = dimension_types
     data_dict["nperiodic_dimensions"] = nperiodic_dimensions
