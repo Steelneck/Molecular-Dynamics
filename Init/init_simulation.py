@@ -84,12 +84,34 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         elif Lennard_Jones_Check == True:
             latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice, lc_a, Size_X, PBC, Directions)
         
-        print("Lattice constant a:", latticeConstant_a) 
+        print("Lattice constant a:", latticeConstant_a)
+        traj.close()
+
+        atom_opt = init_opt(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
+                LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
+                Vacancy, Impurity, Impurity_ele_list, Temperature,
+                Size_X,Size_Y,Size_Z, PBC, Bravais_lattice, Directions,Miller,
+                latticeConstant_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
+
+        atomobj = atom_opt[0]
+
+        dyn = VelocityVerlet(atomobj, time_step*units.fs)
+
+        trajFileName = atomobj.get_chemical_formula() +"_run" + "_opt_" + str(count) +  '_.traj'
+        traj_opt = Trajectory(trajFileName, "w", atomobj)
+        dyn.attach(traj_opt.write, Interval)
+        dyn.run(Steps)
+        traj_opt.close()
+        count = count + 1
+
+        traj_opt = Trajectory(trajFileName)
         
         ###!!! Set lattice constant here, or possebly only for relevant calculations. I believe pressure and temperature if I'm not mistaken.
 
+        # atomobj = atom_opt[0]
 
-        eq_index = calc.eq_test(atomobj, traj)
+        eq_index = calc.eq_test(atomobj, traj_opt)
+        print(eq_index)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
