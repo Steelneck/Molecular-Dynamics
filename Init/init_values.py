@@ -12,8 +12,7 @@ from ase.lattice.triclinic import *
 from ase.lattice.hexagonal import *
 from ase.atom import *
 from ase import units
-#from ase.calculators.kim.kim import KIM
-#from asap3 import OpenKIMcalculator
+from ase.calculators.kim.kim import KIM
 
 # Algorithms and calculators for the simulation
 from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
