@@ -12,7 +12,7 @@ from ase.gui import *
 
 
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                        LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
+                        LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
@@ -28,14 +28,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list: 
                 atoms = init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                            LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
+                            LJ_sigma, LJ_cutoff,Velocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
                             Size_X,Size_Y,Size_Z,PBC,Bravais_lattice, Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
         else:
             atoms = init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                            LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
+                            LJ_sigma, LJ_cutoff,Velocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele_list, Temperature,
                             Size_X,Size_Y,Size_Z, PBC, Bravais_lattice, Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
@@ -43,13 +43,13 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         if Impurity == True:
             for Impurity_ele in Impurity_ele_list:
                 atoms = init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
-                                LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
+                                LJ_sigma, LJ_cutoff,Velocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
 
         else:
             atoms = init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
-                                LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
+                                LJ_sigma, LJ_cutoff,Velocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele_list, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
@@ -58,11 +58,11 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     count = 0 # To get a unique name for all the files
 
     for atomobj in atoms:
-        if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
+        if (Velocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
             dyn = VelocityVerlet(atomobj, time_step*units.fs)
             
-        elif (Verlocity_Verlet_Check == False) and (Langevin_Check == True):
+        elif (Velocity_Verlet_Check == False) and (Langevin_Check == True):
             dyn = Langevin(atomobj, time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
@@ -100,7 +100,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             print("Lindeman Criterion = ", lindemann)
             
-            if Verlocity_Verlet_Check == True:    
+            if Velocity_Verlet_Check == True:    
                 specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
                 print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
             else:
@@ -145,7 +145,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             else:
                 potential = "EMT"
 
-            if Verlocity_Verlet_Check == True:
+            if Velocity_Verlet_Check == True:
                 integrator = "Velocity-Verlet"
             else:
                 integrator = "Langevin"

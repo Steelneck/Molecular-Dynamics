@@ -8,7 +8,7 @@
             "LJ_epsilon": [0.010323],
             "LJ_sigma":  [3.40],
             "LJ_cutoff": 6.625,
-            "Verlocity_Verlet": true,
+            "Velocity_Verlet": true,
             "Langevin" : false,
             "Langevin_friction" : 0.002,
             "Temperature": 300,

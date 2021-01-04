@@ -44,7 +44,7 @@ def checkKIMpotential(potential):
 
 # Init for ASE
 def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                            LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check, KIM_potential,Symbol,
+                            LJ_sigma, LJ_cutoff,Velocity_Verlet_Check, KIM_potential,Symbol,
                             Vacancy, Impurity, Impurity_ele, Temperature,
                             Size_X,Size_Y,Size_Z,PBC,Bravais_lattice,Directions,Miller,
                             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
@@ -77,7 +77,7 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         create_vacancy(atoms) # Create a vacancy
 
     # Set the momenta corresponding to desired temperature when running Verlocity Verlet
-    if Verlocity_Verlet_Check == True:
+    if Velocity_Verlet_Check == True:
         MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
         Stationary(atoms) # Set linear momentum to zero
         ZeroRotation(atoms) # Set angular momentum to zero
@@ -100,7 +100,7 @@ def init(EMT_Check, openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
 # Init for Materials project
 def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
-                                LJ_sigma, LJ_cutoff,Verlocity_Verlet_Check,KIM_potential,Criteria_list,
+                                LJ_sigma, LJ_cutoff,Velocity_Verlet_Check,KIM_potential,Criteria_list,
                                 Vacancy, Impurity, Impurity_ele, Temperature,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC):
     m = MPRester(API_Key) 
@@ -146,7 +146,7 @@ def init_MP(EMT_Check,openKIM_Check,Lennard_Jones_Check, LJ_epsilon,
                     create_vacancy(atoms) # Create a vacancy
 
                 # Set the momenta corresponding to desired temperature when running Verlocity Verlet
-                if Verlocity_Verlet_Check == True:
+                if Velocity_Verlet_Check == True:
                     MaxwellBoltzmannDistribution(atoms, Temperature * units.kB)
                     Stationary(atoms) # Set linear momentum to zero
                     ZeroRotation(atoms) # Set angular momentum to zero

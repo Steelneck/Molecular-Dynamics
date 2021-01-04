@@ -23,7 +23,7 @@ def main():
             LJ_epsilon = row["LJ_epsilon"]
             LJ_sigma = row["LJ_sigma"]
             LJ_cutoff = row["LJ_cutoff"]
-            Verlocity_Verlet_Check = row["Verlocity_Verlet"]
+            Velocity_Verlet_Check = row["Velocity_Verlet"]
             Langevin_Check = row["Langevin"]
             Langevin_friction = row["Langevin_friction"]
             time_step = row["time_step"]
@@ -57,7 +57,7 @@ def main():
 
 
             simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                        LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
+                        LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
