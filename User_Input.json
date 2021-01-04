@@ -12,7 +12,7 @@
             "Langevin" : false,
             "Langevin_friction" : 0.002,
             "Temperature": 300,
-            "time_step": 1,
+            "Time_step": 1,
             "Steps": 1000,
             "Interval": 10,
             "Size_X": 10,
@@ -40,7 +40,7 @@
             "Vacancy": false,
             "Impurity": false,
             "Impurity_ele_list": ["Au", "Ni"],
-            "run_Optimade": false,
+            "Run_Optimade": false,
             "Optimade_name": "run1"
         }
     ]

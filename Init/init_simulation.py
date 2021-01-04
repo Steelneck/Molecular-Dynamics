@@ -13,12 +13,12 @@ from ase.gui import *
 
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
-                        Langevin_Check, Langevin_friction, time_step, KIM_potential,
+                        Langevin_Check, Langevin_friction, Time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name):
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,Run_Optimade,Optimade_name):
     
     """ Function that looks if the user wants to run ASE or Materials_project 
         Checks if the simulation is going to add impurites or not
@@ -60,10 +60,10 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     for atomobj in atoms:
         if (Velocity_Verlet_Check == True) and (Langevin_Check == False):
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
-            dyn = VelocityVerlet(atomobj, time_step*units.fs)
+            dyn = VelocityVerlet(atomobj, Time_step*units.fs)
             
         elif (Velocity_Verlet_Check == False) and (Langevin_Check == True):
-            dyn = Langevin(atomobj, time_step*units.fs, units.kB*Temperature, Langevin_friction)
+            dyn = Langevin(atomobj, Time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
         #Creates a unique name for every simulation run 
@@ -94,7 +94,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
             print("MSD = ", meansSquareDisplacement, "[Å²]")
             
-            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, time_step)
+            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, Time_step)
             print("D = ", selfDiffusionCoffecient, "[Å²/fs]")
             
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
@@ -122,14 +122,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            if run_Optimade == True:
+            if Run_Optimade == True:
                 translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
                                         internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
                 concatenateOptimadeDataFiles(Optimade_name) ### Move me to supercomputer script later!!! 
             
             #Writes a .csv-file with time evolution of the mean square displacement
-            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
+            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, Time_step)
 
             #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
@@ -170,7 +170,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 internalPressure,
                                                 B_GPa,
                                                 latticeConstant_a,
-                                                Steps*time_step)
+                                                Steps*Time_step)
 
         else:
             print("System never reached equilibrium. No calculations are possible.")

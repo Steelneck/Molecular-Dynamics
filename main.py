@@ -26,7 +26,7 @@ def main():
             Velocity_Verlet_Check = row["Velocity_Verlet"]
             Langevin_Check = row["Langevin"]
             Langevin_friction = row["Langevin_friction"]
-            time_step = row["time_step"]
+            Time_step = row["Time_step"]
             KIM_potential = row["KIM_potential"]
             ASE = row["ASE"]
             Symbol = row["Symbol"]
@@ -52,18 +52,17 @@ def main():
             lc_alpha=row["lc_alpha"]
             lc_beta=row["lc_beta"]
             lc_gamma=row["lc_gamma"]
-            run_Optimade=row["run_Optimade"]
+            Run_Optimade=row["Run_Optimade"]
             Optimade_name = row["Optimade_name"]
-
 
             simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
-                        Langevin_Check, Langevin_friction, time_step, KIM_potential,
+                        Langevin_Check, Langevin_friction, Time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele_list,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name)
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,Run_Optimade,Optimade_name)
 
 if __name__ == "__main__":
     main()
