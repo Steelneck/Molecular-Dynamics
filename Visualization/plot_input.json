@@ -11,7 +11,7 @@
 	    "x-max": 80
         }
     ],
-    "Scatter plot, single property all simulations.":
+    "Scatter plot, two properties for a specific element":
     [
 	{
 	    "Element": "Cu864",

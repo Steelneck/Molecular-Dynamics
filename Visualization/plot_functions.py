@@ -69,7 +69,7 @@ def plot_prop_per_simulation(jsonFileName):
         #Load relevant data from input file "plot_input.json"
         with open(jsonFileName, "r") as json_file:
             data = json.load(json_file)
-            for row in data["Scatter plot, single property all simulations."]:
+            for row in data["Scatter plot, two properties for a specific element"]:
                 prop1_str = row["Property x-axis"]
                 prop2_str = row["Property y-axis"]
                 atomName = row["Element"]

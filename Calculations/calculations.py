@@ -266,7 +266,6 @@ def debye_temperature(trajObject, MSD, eq_index):
     Returns the average of a sum of samples over the Debye temperature of the system
     """
     try: 
-        print(units._hbar)
         eq_length = len(trajObject) - eq_index
         #eqDebye = 0
         
