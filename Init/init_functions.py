@@ -13,15 +13,13 @@ def set_lattice(Bravais,
                 Size_X,
                 Size_Y,
                 Size_Z,
-                Symbol,
-                Pbc):
+                Symbol):
     
     atoms = Bravais(latticeconstant=Lattice_Const,
                     directions=Directions,
                     miller=Miller,
                     symbol=Symbol,
-                    size=(Size_X, Size_Y, Size_Z),
-                    pbc=Pbc)
+                    size=(Size_X, Size_Y, Size_Z))
     return atoms
 
 # Handle choice of lattice constants

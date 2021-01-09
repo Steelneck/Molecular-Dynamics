@@ -35,7 +35,7 @@ def main():
             Criteria_list=row["Criteria_list"]
             Vacancy = row["Vacancy"]
             Impurity = row["Impurity"]
-            Impurity_ele_list=row["Impurity_ele_list"]
+            Impurity_ele=row["Impurity_ele"]
             Temperature = row["Temperature"]
             Steps = row["Steps"]
             Interval = row["Interval"]
@@ -54,16 +54,16 @@ def main():
             lc_gamma=row["lc_gamma"]
             run_Optimade=row["run_Optimade"]
             Optimade_name = row["Optimade_name"]
-
+            Optimzed_volume = row["Optimzed_volume"]
 
             simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
-                        Vacancy, Impurity, Impurity_ele_list,
+                        Vacancy, Impurity, Impurity_ele,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name)
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name,Optimzed_volume)
 
 if __name__ == "__main__":
     main()

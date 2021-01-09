@@ -12,13 +12,13 @@
             "Langevin_friction" : 0.002,
             "time_step" : 1,
             "KIM_potential": "",
-            "ASE": true,
-            "Materials_project": false,
-            "Symbol": "Cu",
-            "Criteria_list": [{ "elements" :{"$in" :["Cu", "Ni"]}, "nelements": 2 }],
+            "ASE": false,
+            "Materials_project": true,
+            "Symbol": "Ni",
+            "Criteria_list": [{ "elements" :["Ni"]}],
             "Vacancy": false,
             "Impurity": false,
-            "Impurity_ele_list": ["Au"],
+            "Impurity_ele": "Au",
             "Temperature": 300,
             "Steps": 1000,
             "Interval":10,
@@ -37,7 +37,8 @@
             "lc_beta":0,
             "lc_gamma":0,
             "run_Optimade": false,
-            "Optimade_name": "run1"
+            "Optimade_name": "run1",
+            "Optimzed_volume" : true
         }
 
     ]
