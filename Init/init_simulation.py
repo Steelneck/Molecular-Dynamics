@@ -54,8 +54,6 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                 Size_X,Size_Y,Size_Z,API_Key,PBC)
     else:
         raise Exception("ASE=Materials_Project. Both cannot be true/false at the same time!")
-    
-    count = 0 # To get a unique name for all the files
 
     for atomobj in atoms:
         if (Velocity_Verlet_Check == True) and (Langevin_Check == False):
@@ -66,29 +64,9 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             dyn = Langevin(atomobj, Time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
-        #Creates a unique name for every simulation run 
-        trajFileName = atomobj.get_chemical_formula() +"_run" + str(count) +  '_.traj'
-        traj = Trajectory(trajFileName, "w", atomobj)
-        dyn.attach(traj.write, Interval)
-        dyn.run(Steps)
-        traj.close()
-        count = count + 1  
 
-        traj = Trajectory(trajFileName)
-
-        latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
-
-        # if EMT_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, EMT(), Bravais_lattice)
-        # elif openKIM_Check == True:
-        #     potential = checkKIMpotential(KIM_potential)
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, KIM(potential), Bravais_lattice)
-        # elif Lennard_Jones_Check == True:
-        #     latticeConstant_a = calc.calc_lattice_constant_cubic(Symbol, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice)
         
-        print("Lattice constant a:", latticeConstant_a) 
-        
-        eq_index = calc.eq_test(atomobj, traj)
+        eq_index = calc.eq_test(atomobj)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
