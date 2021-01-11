@@ -56,29 +56,26 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
         # Run simulation with optimized volume.
         if Optimzed_volume == True:
-            print(atomobj.get_cell_lengths_and_angles())
-            a = (atomobj.get_cell_lengths_and_angles())[0]
-            #b = (atomobj.get_cell_lengths_and_angles())[1]
-            #c = (atomobj.get_cell_lengths_and_angles())[2]
+
+            # Save all the angles for the unit cell
             alpha = (atomobj.get_cell_lengths_and_angles())[3]
             beta = (atomobj.get_cell_lengths_and_angles())[4]
             gamma = (atomobj.get_cell_lengths_and_angles())[5]
 
-
+            #Calculates the optimal length for the lattice constant 
             if EMT_Check == True:
-                latticeConstant_a, latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), Bravais_lattice, a, alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), Bravais_lattice, alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif openKIM_Check == True:
                 potential = checkKIMpotential(KIM_potential)
-                latticeConstant_a, latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), Bravais_lattice,
-                                                                                         a, alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), Bravais_lattice,
+                                                                                         alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif Lennard_Jones_Check == True:
-                latticeConstant_a, latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
                                                                                         LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice, 
-                                                                                        a, alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
-
-            atomobj.set_cell([latticeConstant_a, latticeConstant_a, latticeConstant_c, alpha, beta, gamma])
-
-            print("Lattice constants a:", latticeConstant_a, "| c:", latticeConstant_c, "\n")
+                                                                                        alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+            # Updates the cell with the optimal lattice constant
+            atomobj.set_cell([latticeConstant_c, latticeConstant_c, latticeConstant_c, alpha, beta, gamma])
+            print("lattice constant:", latticeConstant_c, "\n")
 
         #Creates a supercell
         atomobj = atomobj*(Size_X,Size_Y,Size_Z)
@@ -216,7 +213,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 cohesiveEnergy,
                                                 internalPressure,
                                                 B_GPa,
-                                                latticeConstant_a,
+                                                latticeConstant_c,
                                                 Steps*time_step)
 
         else:

@@ -287,7 +287,7 @@ def debye_temperature(trajObject, MSD, eq_index):
 
     return(avgDebye)
 
-def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, latticeConstantA, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
+def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
     """ Calculates the lattice constants. 
         IMPORTANT!: Only works for cubic crystals. 
         WARNING: Might result in wrong values for wrong provided crystal structures.
@@ -297,6 +297,7 @@ def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, lattic
         Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object."""
     try: 
 
+        latticeConstantA = (myAtoms.get_cell_lengths_and_angles())[0]
         if latticeConstantA == 0:
             raise ValueError("Please provide a latticeconstant close to experimental value.") 
         if PBC is None:
@@ -306,14 +307,12 @@ def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, lattic
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
 
         # Generate a few crystals. Have to scale since traj object has size demands.
-        # Could not get it to work with the original atoms object so recreating it here.
         eps = 0.1                                                         
-        myAtoms.set_pbc(PBC)
-        myAtoms=myAtoms*(sizeX,sizeY,sizeZ)
-        myAtoms.calc = atomsCalculator     
+        myAtoms.set_pbc(PBC) #set the periodic boundary conditions
+        myAtoms=myAtoms*(sizeX,sizeY,sizeZ) # creates the supercell
+        myAtoms.calc = atomsCalculator     # Adds the calculator to the 
         for a in latticeConstantA * np.linspace(1 - eps, 1 + eps, 30):          # A small deviation to generate a few more constants.
-            print(a)
-            myAtoms.set_cell([a*sizeX, a*sizeY, a*sizeZ, angleAlpha, angleBeta, angleGamma], scale_atoms=True)
+            myAtoms.set_cell([a*sizeX, a*sizeY, a*sizeZ, angleAlpha, angleBeta, angleGamma], scale_atoms=True) # sets the new cell size. 
             traj.write(myAtoms)
 
         # Now we can get the energies and lattice constants from the traj file
@@ -340,7 +339,7 @@ def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, lattic
         a0 /= sizeX
         c0 /= sizeX
 
-        return(a0, c0)
+        return(c0)
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
