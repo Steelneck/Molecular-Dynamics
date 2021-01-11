@@ -64,14 +64,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
             #Calculates the optimal length for the lattice constant 
             if EMT_Check == True:
-                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), Bravais_lattice, alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif openKIM_Check == True:
                 potential = checkKIMpotential(KIM_potential)
-                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), Bravais_lattice,
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
                                                                                          alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif Lennard_Jones_Check == True:
                 latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
-                                                                                        LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), Bravais_lattice, 
+                                                                                        LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), 
                                                                                         alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             # Updates the cell with the optimal lattice constant
             atomobj.set_cell([latticeConstant_c, latticeConstant_c, latticeConstant_c, alpha, beta, gamma])
@@ -104,7 +104,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
             potential = checkKIMpotential(KIM_potential)
             atomobj.calc = KIM(potential, options={"ase_neigh": True})
-            #atoms.set_calculator(OpenKIMcalculator(potential))
+            #atomobj.set_calculator(OpenKIMcalculator(potential))
         elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
             atomobj.calc = LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
 

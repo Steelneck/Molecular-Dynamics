@@ -287,7 +287,7 @@ def debye_temperature(trajObject, MSD, eq_index):
 
     return(avgDebye)
 
-def calc_lattice_constant_cubic(myAtoms, atomsCalculator, bravaisLattice, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
+def calc_lattice_constant_cubic(myAtoms, atomsCalculator, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
     """ Calculates the lattice constants. 
         IMPORTANT!: Only works for cubic crystals. 
         WARNING: Might result in wrong values for wrong provided crystal structures.
