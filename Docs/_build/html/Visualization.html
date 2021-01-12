@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualization package &#8212; tfya92 2021 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="simulationreader module" href="simulationreader.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="visualization-package">
+<h1>Visualization package<a class="headerlink" href="#visualization-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Visualization.plot_functions">
+<span id="visualization-plot-functions-module"></span><h2>Visualization.plot_functions module<a class="headerlink" href="#module-Visualization.plot_functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="Visualization.plot_functions.hist_prop_per_simulation">
+<code class="sig-prename descclassname">Visualization.plot_functions.</code><code class="sig-name descname">hist_prop_per_simulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jsonFileName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.plot_functions.hist_prop_per_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that makes a histogram plot of a chosen property (prop_str) for atom with atomName and structure struct_str, simulated with database, integrator and potential.
+atomName, prop_str, struct_str, database, integrator, potential</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Visualization.plot_functions.plot_prop_all_elements">
+<code class="sig-prename descclassname">Visualization.plot_functions.</code><code class="sig-name descname">plot_prop_all_elements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jsonFileName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.plot_functions.plot_prop_all_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which plots two properties (specified by prop1_str and prop2_str taken from .csv-file sim_properties.csv) and creates a scatter plot of all atom-types and potentials separating them with colors and markers. Currently very ugly function but lack of time stops me from cleaning it up. It does the job.
+prop1_str, prop2_str, struct_str, database, integrator</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Visualization.plot_functions.plot_prop_per_simulation">
+<code class="sig-prename descclassname">Visualization.plot_functions.</code><code class="sig-name descname">plot_prop_per_simulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jsonFileName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.plot_functions.plot_prop_per_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functions that creates a scatterplot with prop_1 str on the x-axis and prop2_str on the y-axis for element with name atomName taken from database, simulated with integrator and potential. Not sure if this one will be necessary.</p>
+<p>atomName, struct_str, prop1_str, prop2_str, database, integrator, potential</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Visualization.plot_functions.plot_prop_vs_time">
+<code class="sig-prename descclassname">Visualization.plot_functions.</code><code class="sig-name descname">plot_prop_vs_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jsonFileName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.plot_functions.plot_prop_vs_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which plots the time evolution of property specified by input prop_str. csvFileName is the .csv-file where the time-evolution of the latest run simulation is saved.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Visualization.run_plot">
+<span id="visualization-run-plot-module"></span><h2>Visualization.run_plot module<a class="headerlink" href="#module-Visualization.run_plot" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Visualization.unittest_propertyVisualization">
+<span id="visualization-unittest-propertyvisualization-module"></span><h2>Visualization.unittest_propertyVisualization module<a class="headerlink" href="#module-Visualization.unittest_propertyVisualization" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests">
+<em class="property">class </em><code class="sig-prename descclassname">Visualization.unittest_propertyVisualization.</code><code class="sig-name descname">VisualizationTests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_all_elements_output">
+<code class="sig-name descname">test_all_elements_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_all_elements_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_all_elements_wrong_input">
+<code class="sig-name descname">test_all_elements_wrong_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_all_elements_wrong_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_hist_plot_output">
+<code class="sig-name descname">test_hist_plot_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_hist_plot_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_hist_plot_wrong_input">
+<code class="sig-name descname">test_hist_plot_wrong_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_hist_plot_wrong_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_per_simulation_output">
+<code class="sig-name descname">test_prop_per_simulation_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_per_simulation_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_per_simulation_wrong_input">
+<code class="sig-name descname">test_prop_per_simulation_wrong_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_per_simulation_wrong_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_vs_time_output">
+<code class="sig-name descname">test_prop_vs_time_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_vs_time_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_vs_time_wrong_input">
+<code class="sig-name descname">test_prop_vs_time_wrong_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Visualization.unittest_propertyVisualization.VisualizationTests.test_prop_vs_time_wrong_input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Visualization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Visualization" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">tfya92</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="acceptanceTest.html">acceptanceTest module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="calculations.html">calculations module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulationreader.html">simulationreader module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visualization package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Visualization.plot_functions">Visualization.plot_functions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Visualization.run_plot">Visualization.run_plot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Visualization.unittest_propertyVisualization">Visualization.unittest_propertyVisualization module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Visualization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="simulationreader.html" title="previous chapter">simulationreader module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, grupp1.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Visualization.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

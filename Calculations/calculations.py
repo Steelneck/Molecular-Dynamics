@@ -1,3 +1,9 @@
+"""
+calculations.py
+===============
+Functions for property calculations.
+"""
+
 import sys, os
 import csv
 import json
@@ -15,10 +21,19 @@ from ase.atom import *
 from ase import units
 from ase.data import atomic_masses, atomic_numbers
 
-"""Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) 
-   and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume.
-"""
 def eq_test(myAtoms, trajObject):
+    """Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) 
+    and writes them over to a new .traj-file. Goes through trajectoryFileName and writes to eq_trajectoryFileName.
+    
+    Note:
+        Uses SuperCellSize to calculate volume.
+    
+    Args:
+        myAtoms (Lattice)
+        trajObject (TrajectoryReader)
+
+    
+    """
     try:
         tot_energy_curr = np.array([0])
         tot_energy_next = np.empty([0])
@@ -227,9 +242,10 @@ def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
+def internal_temperature(myAtoms, trajObject, eq_index):
     """Calculates the internal temperature of the system in units of Kelvin by dividing `get_kinetic_energy`
     by the number of atoms to get the kinetic energy per atom (K in the equation below), then evaluating
-        T = 2*K / 3*kB
+    T = 2*K / 3*kB
     where kB is the Boltzmann constant.
     
     Args:
@@ -325,7 +341,7 @@ def debye_temperature(trajObject, MSD, eq_index):
     return(avgDebye)
 
 def calc_lattice_constant_cubic(myAtoms, atomsCalculator, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
-""" Calculates the lattice constants.
+    """ Calculates the lattice constants.
 
     Note:
         Only works for FCC cubic crystals.
@@ -392,7 +408,7 @@ def calc_lattice_constant_cubic(myAtoms, atomsCalculator, angleAlpha, angleBeta,
         return(None)
 
 def calc_bulk_modulus(atoms):
- """
+    """
     Calculates the bulk modulus using Equation of State (EOS).
 
     Args:

@@ -12,8 +12,13 @@
 #
 import os
 import sys
-#sys.path.insert(0, os.path.abspath('../Calculations'))
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../Calculations'))
+sys.path.insert(0, os.path.abspath('../Init'))
+sys.path.insert(0, os.path.abspath('../Json'))
+sys.path.insert(0, os.path.abspath('../Optimade'))
+sys.path.insert(0, os.path.abspath('../optimate-python-tools'))
+sys.path.insert(0, os.path.abspath('../Visualization'))
 
 
 # -- Project information -----------------------------------------------------
@@ -31,7 +36,7 @@ release = '2021'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon'
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.intersphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -1,16 +1,20 @@
-.. tfya92 documentation master file, created by
-   sphinx-quickstart on Mon Dec 21 16:37:34 2020.
+.. TFYA92 documentation master file, created by
+   sphinx-quickstart on Tue Jan 12 23:06:19 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to tfya92's documentation!
+Welcome to TFYA92's documentation!
 ==================================
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
+   modules
+   Calculations/modules
+   Json/modules
+   Optimade/modules
+   Visualization/modules
+   Init/modules
 
 Indices and tables
 ==================

@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>calculations module &#8212; tfya92 2021 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="acceptanceTest module" href="acceptanceTest.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-calculations">
+<span id="calculations-module"></span><h1>calculations module<a class="headerlink" href="#module-calculations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calculations-py">
+<h2>calculations.py<a class="headerlink" href="#calculations-py" title="Permalink to this headline">¶</a></h2>
+<p>Functions for property calculations.</p>
+<dl class="py function">
+<dt id="calculations.Heat_Capcity_NVE">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">Heat_Capcity_NVE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.Heat_Capcity_NVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="calculations.Heat_Capcity_NVT">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">Heat_Capcity_NVT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.Heat_Capcity_NVT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="calculations.Lindemann">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">Lindemann</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">MSD</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.Lindemann" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that checks the Lindemann criterion which determines if the system is melting or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajObject</strong> (<em>trajectoryReader</em>) – </p></li>
+<li><p><strong>MSD</strong> (<em>float</em>) – Mean square displacement returned by <cite>MSD_Calc</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.MSD_calc">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">MSD_calc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">timeStepIndex</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.MSD_calc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="calculations.Self_diffuse">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">Self_diffuse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">MSD</span></em>, <em class="sig-param"><span class="n">timeStepIndex</span></em>, <em class="sig-param"><span class="n">interval</span></em>, <em class="sig-param"><span class="n">time_step</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.Self_diffuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MSD</strong> (<em>float</em>) – Mean square displacement returned by <cite>MSD_Calc</cite></p></li>
+<li><p><strong>timeStepIndex</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.calc_bulk_modulus">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">calc_bulk_modulus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">atoms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.calc_bulk_modulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the bulk modulus using Equation of State (EOS).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p>
+</dd>
+</dl>
+<p>Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.calc_instantaneous_pressure">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">calc_instantaneous_pressure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">superCellSize</span></em>, <em class="sig-param"><span class="n">timeStepIndex</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.calc_instantaneous_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p></li>
+<li><p><strong>trajObject</strong> (<em>TrajectoryReader</em>) – </p></li>
+<li><p><strong>superCellSize</strong> (<em>int</em>) – The repetition of unit cell in each direction in 3D space.</p></li>
+<li><p><strong>timeStepIndex</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.calc_internal_pressure">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">calc_internal_pressure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em>, <em class="sig-param"><span class="n">superCellSize</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.calc_internal_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the internal pressure of the system in units of electronvolt the MD average of the instantaneous pressures.
+.. note:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trajObject</span> <span class="n">must</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">atoms</span> <span class="n">objects</span> <span class="n">when</span> <span class="n">the</span> <span class="n">system</span> <span class="n">has</span> <span class="n">reached</span> <span class="n">equilibrium</span><span class="p">,</span>
+<span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">get</span> <span class="n">internal</span> <span class="n">temperature</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">stable</span> <span class="n">crystal</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p></li>
+<li><p><strong>trajObject</strong> (<em>trajectoryReader</em>) – </p></li>
+<li><p><strong>eq_index</strong> (<em>int</em>) – </p></li>
+<li><p><strong>superCellSize</strong> (<em>int</em>) – the repetition of unit cell in each direction in 3D space.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.calc_lattice_constant_cubic">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">calc_lattice_constant_cubic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">atomsCalculator</span></em>, <em class="sig-param"><span class="n">angleAlpha</span></em>, <em class="sig-param"><span class="n">angleBeta</span></em>, <em class="sig-param"><span class="n">angleGamma</span></em>, <em class="sig-param"><span class="n">sizeX</span></em>, <em class="sig-param"><span class="n">sizeY</span></em>, <em class="sig-param"><span class="n">sizeZ</span></em>, <em class="sig-param"><span class="n">PBC</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.calc_lattice_constant_cubic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the lattice constants.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only works for FCC cubic crystals.
+Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
+This is based on the example from ASE wiki, thus calculates both a and c.
+Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atomName</strong> (<em>str</em>) – Name of atom to use in file name</p></li>
+<li><p><strong>atomsCalculator</strong> (<em>str</em>) – Calculator to be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a0 (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.cohesive_energy">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">cohesive_energy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.cohesive_energy" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires usage of the EAM calculator for reasonable output!</p>
+</div>
+<p>Calculates the cohesive energy of the system by dividing the potential energy of the system
+as returned by <cite>get_potential_energy</cite>, with the number of atoms which is given by the length of the atoms object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p></li>
+<li><p><strong>trajObject</strong> (<em>TrajectoryReader</em>) – </p></li>
+<li><p><strong>eq_index</strong> (<em>int</em>) – The index for the current equilibrium state</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sampled potential energy per atom (i.e. cohesive energy of material) in units of electronvolt per atom.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>avgEcoh (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.debye_temperature">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">debye_temperature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">MSD</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.debye_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Debye temperature of the system. Uses returns of functions <cite>get_temperature</cite>,
+get_masses() summed over all atoms and converted to kg, and <cite>MSD_calc</cite> to evaluate the equation</p>
+<p>Θ = √[(3*ℏ²*T)/(m*kB*&lt;r²&gt;)]</p>
+<p>where ℏ is the reduced Planck’s constant, T is the temperature, m is the bulk mass,
+kB is the Boltzmann constant and &lt;r²&gt; is the mean square displacement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajObject</strong> (<em>TrajectoryReader</em>) – </p></li>
+<li><p><strong>MSD</strong> (<em>float</em>) – Mean square displacement as returned by <cite>MSD_calc</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sampled Debye temperature in units of Kelvin.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>avgDebye (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.eq_test">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">eq_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.eq_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure)
+and writes them over to a new .traj-file. Goes through trajectoryFileName and writes to eq_trajectoryFileName.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Uses SuperCellSize to calculate volume.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p></li>
+<li><p><strong>trajObject</strong> (<em>TrajectoryReader</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.internal_temperature">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">internal_temperature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.internal_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the internal temperature of the system in units of Kelvin by dividing <cite>get_kinetic_energy</cite>
+by the number of atoms to get the kinetic energy per atom (K in the equation below), then evaluating
+T = 2*K / 3*kB
+where kB is the Boltzmann constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>myAtoms</strong> (<em>Lattice</em>) – </p></li>
+<li><p><strong>trajObject</strong> (<em>TrajectoryReader</em>) – </p></li>
+<li><p><strong>eq_index</strong> (<em>int</em>) – The index for the current equilibrium state</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sampled internal temperature in units of Kelvin.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>avgTemp (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="calculations.write_time_evolution_to_csv">
+<code class="sig-prename descclassname">calculations.</code><code class="sig-name descname">write_time_evolution_to_csv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">csvFileName</span></em>, <em class="sig-param"><span class="n">trajObject</span></em>, <em class="sig-param"><span class="n">eq_index</span></em>, <em class="sig-param"><span class="n">interval</span></em>, <em class="sig-param"><span class="n">time_step</span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculations.write_time_evolution_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the time evolution of a set of chosen properties (at the moment only MSD and Self diffusion) and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">tfya92</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="acceptanceTest.html">acceptanceTest module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">calculations module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calculations-py">calculations.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulationreader.html">simulationreader module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization.html">Visualization package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="acceptanceTest.html" title="previous chapter">acceptanceTest module</a></li>
+      <li>Next: <a href="main.html" title="next chapter">main module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, grupp1.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/calculations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
