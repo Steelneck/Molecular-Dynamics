@@ -1,57 +1,45 @@
-from ase import units
-from ase.data import atomic_masses, atomic_numbers
+import sys, os
+import csv
+import json
+import time
+
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
 
 from ase.calculators.eam import EAM
 from ase.build import bulk
 from ase.io import read
-import sys, os
 from ase.units import kJ
 from ase.eos import EquationOfState
+from ase.atom import *
+from ase import units
+from ase.data import atomic_masses, atomic_numbers
 
-import csv
-import datetime
-
-def eq_traj(myAtoms, trajObject, superCellSize):
-    """Takes all the atoms objects after the system has reached equilibrium (constant total energy, volume and pressure)
-    and writes them over to a new .traj file. Goes through the elements of trajObject and writes to eq_index.
-
-    Uses SuperCellSize to calculate volume.
-    
-    Parameters
-    ----------
-
-    """
-
+"""Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) 
+   and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume.
+"""
+def eq_test(myAtoms, trajObject):
     try:
-        t = 0
+        tot_energy_curr = np.array([0])
+        tot_energy_next = np.empty([0])
+        mean_curr = 0
+        mean_next = 0
+        n_curr = 0
+        n_next = 10
         eq_index = 0
-        while t < len(trajObject)-3: #Will check equilibrium conditions for atoms object and stop when equilibrium is reached.
-            P_tot_diff = 0
-            E_tot_diff = 0
-            V_diff = 0
-            for i in range(3): #Sums up offset of energy, pressure and volume between timesteps for three different values of i.
-                curr_element = t+i
-                next_element = t+i+1
-                E_tot_1 = trajObject[curr_element].get_total_energy() #Total energy of two consecutive timesteps
-                E_tot_2 = trajObject[next_element].get_total_energy()
-                P_inst_1 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, curr_element) #instantaneous pressure at two consecutive timesteps
-                P_inst_2 = calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, next_element) 
-                V_1 = trajObject[curr_element].get_volume() * superCellSize #Volume of the cell at time two consecutive timesteps
-                V_2 = trajObject[next_element].get_volume() * superCellSize 
-                V_diff += abs(V_2 - V_1) #Offset in volume between timesteps.
-                P_tot_diff += abs(P_inst_2 - P_inst_1) #Offset in pressure
-                E_tot_diff += abs(E_tot_2 - E_tot_1) #Offset in total energy
-            P_tot_diff_mean = P_tot_diff/3 #Mean values of three iterations
-            V_diff_mean = V_diff/3
-            E_tot_diff_mean = E_tot_diff/3
-            print(E_tot_diff_mean)
-            if E_tot_diff_mean < 0.001 : #Criteria for equilibrium. Still not checking P_tot_diff_mean
-                eq_index = t #saves index of first atom that has reached equilibrium.
+        while n_next < len(trajObject):
+            mean_curr = np.mean(tot_energy_curr)
+            for i in range(n_curr, n_next):
+                tot_energy_next = np.append([trajObject[i].get_total_energy()], tot_energy_next)
+            mean_next = np.mean(tot_energy_next)
+            quotient = mean_curr/mean_next
+            if 0.98 < quotient < 1.02:
+                eq_index = n_next
                 break
-            t += 1
-        return eq_index
+            n_curr += 10
+            n_next += 10
+            tot_energy_curr = tot_energy_next
+        return(eq_index)
     except Exception as e:
         print("An error occured when calculating the checking the conditions for equilibrium:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -60,30 +48,72 @@ def eq_traj(myAtoms, trajObject, superCellSize):
         return(None)
 
 # Calculates the specific heat and returns a numpy.float64 with dimensions J/(K*Kg)
-def Specific_Heat(myAtoms, trajObject, eq_index):   
+def Heat_Capcity_NVE(myAtoms, trajObject, eq_index):   
     try:
-        myAtoms.get_masses() # Tries if the attribute exists, skips except if it does
-    except AttributeError:
-        print("You have not entered a valid system.") # Message for user if no attribute
-        return False # Ends the function
-    eq_next = eq_index + 1  
-    bulk_mass=sum(myAtoms.get_masses())*units._amu
-    temp_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) - trajObject[eq_index].get_kinetic_energy() /len(trajObject[eq_index])) / (1.5 * units.kB)  #Temperature difference between two runs when system has reached equilibrium
-    pot_energy_diff = (trajObject[eq_next].get_potential_energy() /len(trajObject[eq_next]) 
-                        - trajObject[eq_index].get_potential_energy() /len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
+        
+        #Averaged kinetic energy, kinetic energy squared and temperature calculated
+        k = 0
+        k_squared = 0
+        temp = 0
+        for i in range(eq_index, len(trajObject)):
+            k += (trajObject[i].get_kinetic_energy())
+            k_squared += k**2
+            temp += (trajObject[i].get_temperature()) 
+        avg_k_squared = k_squared/eq_length
+        avg_k = k/eq_length
+        avg_temp = temp/eq_length
+        
+        # Mass of the crystal 
+        bulk_mass=sum(myAtoms.get_masses())*units._amu
 
-    kin_energy_diff = (trajObject[eq_next].get_kinetic_energy() /len(trajObject[eq_next]) 
-                            - trajObject[eq_index].get_kinetic_energy()/len(trajObject[eq_index])) # potential energy difference when ystem has reached equilibrium
+        heat_capcity = ((1.5*len(myAtoms)*units.kB)*((1-((avg_k_squared-(avg_k**2))/(1.5*((units.kB**2)*(avg_temp**2))))**(-1))))*1.602*10**(-19)
+
+    except Exception as e:
+        print("An error occured when calculating the heat capcity:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
     
-    heat_capacity = abs(((pot_energy_diff + kin_energy_diff)*(1.6021765*10**(-19)))/(temp_diff) / bulk_mass)
-    return heat_capacity
+    return heat_capcity/bulk_mass
+
+def Heat_Capcity_NVT(myAtoms, trajObject, eq_index):   
+    try:
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
+        
+        #Averaged total energy, total energy squared and temperature calculated
+        temp = 0
+        etot = 0
+        etot_squared = 0
+        for i in range(eq_index, len(trajObject)):
+            etot += (trajObject[i].get_total_energy())
+            etot_squared += etot**2
+            temp += (trajObject[i].get_temperature())
+        avg_etot = etot/eq_length
+        avg_etot_squared = etot_squared/eq_length
+        avg_temp = temp/eq_length
+        
+        # Mass of the crystal 
+        bulk_mass=sum(myAtoms.get_masses())*units._amu
+
+        heat_capcity = (((units.kB*avg_temp**2)**(-1))*(avg_etot_squared-avg_etot**2))*1.602*10**(-19)
+
+    except Exception as e:
+        print("An error occured when calculating the heat capcity:")
+        exc_type, exc_obj, exc_traceBack = sys.exc_info()
+        fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
+        print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
+        return(None)
+    
+    return heat_capcity/bulk_mass
 
 
 """Function to calculate and print the time average of the mean square displacement (MSD) at time t."""
-def MSD_calc(myAtoms, trajObject, timeStepIndex):
+def MSD_calc(myAtoms, trajObject, timeStepIndex, eq_index):
     try:
-        pos_t = trajObject[-1].get_positions() #position of atoms when system has reached equilibrium
-        pos_eq = trajObject[timeStepIndex].get_positions() #position of atoms at time t
+        pos_t = trajObject[timeStepIndex].get_positions() #position of atoms when system has reached equilibrium
+        pos_eq = trajObject[eq_index].get_positions() #position of atoms at time t
         diff = pos_t - pos_eq #displacement of all atoms from equilibrium to time t as a vector
         diff_sq = np.absolute(diff)**2 
         MSD = np.sum(diff_sq)/len(myAtoms) #Time averaged mean square displacement.
@@ -95,7 +125,9 @@ def MSD_calc(myAtoms, trajObject, timeStepIndex):
         return(None)
     return(MSD)
 
-def Self_diffuse(MSD, timeStepIndex):
+"""Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement."""
+
+def Self_diffuse(MSD, timeStepIndex, interval, time_step):
     """Function that  calculates the self-diffusion coefficient (D) at time t, based on the value of the mean square displacement.
     
     Args:
@@ -103,7 +135,8 @@ def Self_diffuse(MSD, timeStepIndex):
         timeStepIndex (int)
     """
     try:
-        D = 5*MSD/(6*timeStepIndex) #How to connect mean squre displacement to self-diffusion coefficient. Multiply by 5 because timestep is 5 fs.
+        t = timeStepIndex/(time_step*interval) #Each timestep is 5 fs and each element of traj is taken in intervals.
+        D = MSD/(6*t) #How to connect mean squre displacement to self-diffusion coefficient. 
     except Exception as e:
         print("An error occured when calculating the self diffusion coefficient:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -112,6 +145,7 @@ def Self_diffuse(MSD, timeStepIndex):
         return(None)
     return(D)
     
+"""Function that checks the Lindemann criterion which determines if the system is melting or not."""
 def Lindemann(trajObject, MSD):
     """Function that checks the Lindemann criterion which determines if the system is melting or not.
 
@@ -121,21 +155,16 @@ def Lindemann(trajObject, MSD):
 
     """
     try:
-        nblist = FullNeighborList(3.5, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
+        nblist = FullNeighborList(trajObject[-1].get_cell_lengths_and_angles()[0]/2, trajObject[-1]).get_neighbors(1, -1) #Returns 3 lists containing information about nearest neighbors. 3rd list is the square of the distance to the neighbors.
         d = np.sqrt(np.amin(nblist[2])) #distance to the nearest neighbor. Takes the minimum value of nblist.
-        L = MSD/d #Lindemann criterion. Expect melting when L>0.1
+        L = np.sqrt(MSD)/d #Lindemann criterion. Expect melting when L>0.1
     except Exception as e:
         print("An error occured when checking the Lindemann criterion:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
         fname = os.path.split(exc_traceBack.tb_frame.f_code.co_filename)[1]
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
-    if L > 0.1:
-        print("MELTING!")
-        return True 
-    else:
-        print("NOT MELTING!")
-        return False
+    return(L)
 
 def calc_instantaneous_pressure(myAtoms, trajObject, superCellSize, timeStepIndex):
     """ Calculates instantaneous pressure at time timeStepIndex * deltaT, i.e. P(n*deltaT).
@@ -179,8 +208,8 @@ def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
         superCellSize (int): the repetition of unit cell in each direction in 3D space.
     """
     try:  
-        iterationsInEqulibrium = len(trajObject) - eq_index              # Will be the amount of iterations in equilibrium
-        M = iterationsInEqulibrium                                       # M = (iterations * deltaT) / deltaT
+        iterationsInEqulibrium = len(trajObject) - eq_index                        # Will be the amount of iterations in equilibrium
+        M = iterationsInEqulibrium                                      # M = (iterations * deltaT) / deltaT
         
         # MD average
         allInstantPressures = 0
@@ -198,7 +227,6 @@ def calc_internal_pressure(myAtoms, trajObject, eq_index, superCellSize):
         print("An error occured in internal pressure function:", e)
         return(None)
 
-def internal_temperature(myAtoms, trajObject, eq_index):
     """Calculates the internal temperature of the system in units of Kelvin by dividing `get_kinetic_energy`
     by the number of atoms to get the kinetic energy per atom (K in the equation below), then evaluating
         T = 2*K / 3*kB
@@ -261,7 +289,7 @@ def cohesive_energy(myAtoms, trajObject, eq_index):
     
     return(avgEcoh)
 
-def debye_temperature(trajObject, MSD):
+def debye_temperature(trajObject, MSD, eq_index):
     """Calculates the Debye temperature of the system. Uses returns of functions `get_temperature`,
     get_masses() summed over all atoms and converted to kg, and `MSD_calc` to evaluate the equation
 
@@ -278,12 +306,14 @@ def debye_temperature(trajObject, MSD):
         avgDebye (float): Sampled Debye temperature in units of Kelvin.
     """
     try: 
-        eqDebye = 0
-        for n in range(1, len(trajObject)):
-            T = trajObject[n].get_temperature()                                # Set to system temperature                     
-            m = sum(trajObject[n].get_masses())*units._amu                     # Set to sum of atom masses converted to kg
-            eqDebye += np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*MSD))        # Sum Debye temperatures for each trajectory object
-        avgDebye = eqDebye/len(trajObject)                                     # Average sum over number of samples
+        print(units._hbar)
+        eq_length = len(trajObject) - eq_index
+        #eqDebye = 0
+        
+        T = trajObject[-1].get_temperature()                                                # Set to system temperature                     
+        m = sum(trajObject[-1].get_masses())*units._amu                                     # Set to sum of atom masses converted to kg
+        eqDebye = np.sqrt((3*(units._hbar**2)*T)/(m*units.kB*1.602*10**(-19)*MSD))        # Sum Debye temperatures for each trajectory object
+        avgDebye = eqDebye                                                           # Average sum over number of samples
     
     except Exception as e:
         print("An error occured when calculating the Debye temperature:")
@@ -294,36 +324,48 @@ def debye_temperature(trajObject, MSD):
 
     return(avgDebye)
 
-def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
-    """ Calculates the lattice constants.
+def calc_lattice_constant_cubic(myAtoms, atomsCalculator, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
+""" Calculates the lattice constants.
 
     Note:
-        Only works for FCC cubic crystals. 
-        Calculates both a and c constant but those are equal for fcc cubic.
-        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe."""
+        Only works for FCC cubic crystals.
+        Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
+        This is based on the example from ASE wiki, thus calculates both a and c. 
+        Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object.
+
+    Args:
+        atomName (str): Name of atom to use in file name
+        atomsCalculator (str): Calculator to be used
+
+    Returns:
+        a0 (float)
+    """
     try: 
-        # Make a good initial guess on the lattice constant
-        a0 = 3.52 / np.sqrt(2) 
-        c0 = np.sqrt(8 / 3.0) * a0
+        latticeConstantA = (myAtoms.get_cell_lengths_and_angles())[0]
+        if latticeConstantA == 0:
+            raise ValueError("Please provide a latticeconstant close to experimental value.") 
+        if PBC is None:
+            raise ValueError("Please provide PBC True or False.") 
         
-        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
+        fileName = "lattice_constant_" + myAtoms.get_chemical_formula() + ".traj"                              # Create filename from atomname.
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
 
-        # Generate 9 calculations of potential energy for different a and c values. 
-        eps = 0.01                                                              # A small deviation to generate a few more constants.
-        for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
-            for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-                at = bulk(atomName, 'fcc', a=a, c=c, cubic=True)                # Use bulk to build a cell. Only config is cubic fcc.
-                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
-                traj.write(at)                                                  # Write bulk config to trajectory file
+        # Generate a few crystals. Have to scale since traj object has size demands.
+        eps = 0.1                                                         
+        myAtoms.set_pbc(PBC) #set the periodic boundary conditions
+        myAtoms=myAtoms*(sizeX,sizeY,sizeZ) # creates the supercell
+        myAtoms.calc = atomsCalculator     # Adds the calculator to the 
+        for a in latticeConstantA * np.linspace(1 - eps, 1 + eps, 30):          # A small deviation to generate a few more constants.
+            myAtoms.set_cell([a*sizeX, a*sizeY, a*sizeZ, angleAlpha, angleBeta, angleGamma], scale_atoms=True) # sets the new cell size. 
+            traj.write(myAtoms)
 
         # Now we can get the energies and lattice constants from the traj file
         configs = read(fileName + "@:")
         energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
 
         # From the bulk builder we can do at.cell to get the constant: a at position 0,0 and constant: c at position 2,2
-        a = np.array([config.cell[0, 0] for config in configs])                 
-        c = np.array([config.cell[2, 2] for config in configs])
+        a = np.array([config.cell[0, 0] for config in configs])                  
+        c = np.array([config.cell[2, 2] for config in configs]) 
 
         # Fit the energy to lattice constants to the expression: 𝑝0+𝑝1𝑎+𝑝2𝑐+𝑝3𝑎^2+𝑝4𝑎𝑐+𝑝5𝑐^2
         functions = np.array([a**0, a, c, a**2, a * c, c**2])
@@ -337,8 +379,11 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
-        return(a0)
-        #print("Lattice constants a:", a0, "| c:", c0, "\n") Uncomment if we want to print c also
+        # Scale supercell length inverted to primitive unit cell
+        a0 /= sizeX
+        c0 /= sizeX
+
+        return(c0)
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
@@ -346,14 +391,14 @@ def calc_lattice_constant_fcc_cubic(atomName, atomsCalculator):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
 
-def calc_bulk_modulus(myAtoms):
-    """
+def calc_bulk_modulus(atoms):
+ """
     Calculates the bulk modulus using Equation of State (EOS).
 
     Args:
         myAtoms (Lattice)
 
-    Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures. 
+    Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures.
     """
     try:
         atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
@@ -392,20 +437,21 @@ def calc_bulk_modulus(myAtoms):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None, None, None)
 
-def write_atom_properties(myAtoms, csvFileName, trajObject, eq_index):
-    """calculates a set of chosen properties and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
+def write_time_evolution_to_csv(myAtoms, csvFileName, trajObject, eq_index, interval, time_step):
+    
+    """Calculates the time evolution of a set of chosen properties (at the moment only MSD and Self diffusion) and saves them to a csv-file (comma seperated values). The file is to be used to make plots of the results."""
+    
     try:
-        eq_length = len(trajObject) - eq_index
+        eq_length = len(trajObject) - eq_index #eq_length is the number of trajectory-objects that fulfill criteria for equilibrium
         file = open(csvFileName, "w", newline="")
-        fieldnames = ["Time", "MSD", "S"]                           #These will be the first rows in each column specifying the property."
-        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";") #makes a dictionary-writer for csv-files.
+        fieldnames = ["Time", "MSD", "S"] #These will be the first rows in each column specifying the property in that column."
+        writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";") #Makes a dictionary-writer for csv-files.
         t = 1
-        writer.writeheader()                                        #Sets fieldnames as first rows in file.
-        while t < eq_length:                                        #Checks time evolution of chosen properties.
-            time_after_eq = eq_length - t
-            MSD = MSD_calc(myAtoms, trajObject, time_after_eq)
-            S = Self_diffuse(MSD, t)
-            writer.writerow({"Time" : t, "MSD" : MSD, "S" : S})     #Writes values at time t to csv-file. A new row is a new timestep.
+        writer.writeheader() #Sets fieldnames as first rows in file.
+        while t < eq_length: #Checks time evolution of chosen properties. When t reaches eq_length we will have reached the index of the trajectory.
+            MSD = MSD_calc(myAtoms, trajObject,eq_index + t, eq_index) #Calculate MSD from equilibrium to time eq_index + t.
+            S = Self_diffuse(MSD, t, interval, time_step) #Calculate self diffusion coefficient at time t after equilibrium.
+            writer.writerow({"Time" : t, "MSD" : MSD, "S" : S}) #Writes values at time t to csv-file. A new row is a new timestep.
             t += 1
     except Exception as e:
         print("An error occured when writing values to .csv-file:")
