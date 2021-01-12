@@ -19,8 +19,7 @@ atoms = set_lattice(FaceCenteredCubic,
                     Size_X = 2,
                     Size_Y = 2,
                     Size_Z = 2,
-                    Symbol = 'Cu',
-                    Pbc = True)
+                    Symbol = 'Cu')
 
 al_cube = bulk('Al', 'fcc', a=3.6)
 cu_cube = bulk('Cu', 'fcc', a=3.6)
