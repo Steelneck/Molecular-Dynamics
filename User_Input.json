@@ -14,8 +14,8 @@
             "KIM_potential": "",
             "ASE": true,
             "Materials_project": false,
-            "Symbol": "Ni",
-            "Criteria_list": [{ "elements" :["Ni"]}],
+            "Symbol": "Cu",
+            "Criteria_list": [{ "elements" :["Cu"]}],
             "Vacancy": false,
             "Impurity": false,
             "Impurity_ele": "Au",
@@ -38,7 +38,7 @@
             "lc_gamma":0,
             "run_Optimade": false,
             "Optimade_name": "run1",
-            "Optimzed_volume" : true
+            "Optimzed_volume" : false
         }
 
     ]

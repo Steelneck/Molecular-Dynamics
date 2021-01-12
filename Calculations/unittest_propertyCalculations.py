@@ -211,14 +211,16 @@ class PropertyCalculationTests(unittest.TestCase):
 
     """Unittests for calculation of Lattice Constant"""
     def test_lattice_constant_wrong_input_argument(self):
-        a1 = calc_lattice_constant_cubic(None, EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a2 = calc_lattice_constant_cubic("not an atom", EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a3 = calc_lattice_constant_cubic("Cu", None, "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a4 = calc_lattice_constant_cubic("Cu", EMT(), None, 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a5 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", None, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a6 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, None, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a7 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, 3, None, [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        a8 = calc_lattice_constant_cubic("Cu", EMT(), "FaceCenteredCubic", 3.6, 3, True, None)
+        a1 = calc_lattice_constant_cubic(None, EMT(), 90, 90, 90, 1, 1, 1, [True,True,True])
+        a2 = calc_lattice_constant_cubic("not an atom", EMT(),90, 90, 90, 1, 1, 1, [True,True,True])
+        a3 = calc_lattice_constant_cubic(atoms, None, 90, 90, 90, 1, 1, 1, [True,True,True])
+        a4 = calc_lattice_constant_cubic(atoms, EMT(), None, 90, 90, 1, 1, 1, [True,True,True])
+        a5 = calc_lattice_constant_cubic(atoms, EMT(), 90, None, 90, 1, 1, 1, [True,True,True])
+        a6 = calc_lattice_constant_cubic(atoms, EMT(), 90, 90, None, 1, 1, 1, [True,True,True])
+        a7 = calc_lattice_constant_cubic(atoms, EMT(), 90, 90, 90, None, 1, 1, [True,True,True])
+        a8 = calc_lattice_constant_cubic(atoms, EMT(), 90, 90, 90, 1, None, 1, [True,True,True])
+        a9 = calc_lattice_constant_cubic(atoms, EMT(), 90, 90, 90, 1, 1, None, [True,True,True])
+        a10 = calc_lattice_constant_cubic(atoms, EMT(), 90, 90, 90, 1, 1, 1, None)
         
         self.assertIsNone(a1)
         self.assertIsNone(a2)
@@ -228,9 +230,11 @@ class PropertyCalculationTests(unittest.TestCase):
         self.assertIsNone(a6)
         self.assertIsNone(a7)
         self.assertIsNone(a8)
+        self.assertIsNone(a9)
+        self.assertIsNone(a10)
     
     def test_lattice_constant_output_type(self):
-        self.assertIsInstance(calc_lattice_constant_cubic('Cu', EMT(), "FaceCenteredCubic", 3.6, 3, True, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]), float)
+        self.assertIsInstance(calc_lattice_constant_cubic(atoms, EMT(), 90, 90, 90, 1, 1, 1, [True,True,True]), float)
 
     """Unittests for calculation of Bulk Modulus"""
     def test_bulk_modulus_wrong_input_argument(self):

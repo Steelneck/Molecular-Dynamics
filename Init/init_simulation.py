@@ -76,6 +76,9 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             # Updates the cell with the optimal lattice constant
             atomobj.set_cell([latticeConstant_c, latticeConstant_c, latticeConstant_c, alpha, beta, gamma])
             print("lattice constant:", latticeConstant_c, "\n")
+        else:
+            # The lattice constant is set to zero if Optimized_volume == false. This is implemented to make the visualization not crash!
+            latticeConstant_c = 0 
 
         #Creates a supercell
         atomobj = atomobj*(Size_X,Size_Y,Size_Z)
@@ -130,9 +133,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         traj = Trajectory(trajFileName)
         traj.close()
 
-
         eq_index = calc.eq_test(atomobj, traj)
-        print(eq_index)
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
