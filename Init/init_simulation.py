@@ -27,8 +27,8 @@ from asap3 import LennardJones
 
 
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
-                        LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
-                        Langevin_Check, Langevin_friction, time_step, KIM_potential,
+                        LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
+                        Langevin_Check, Langevin_friction, Time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
                         Vacancy, Impurity, Impurity_ele,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
@@ -40,6 +40,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         Impurites doesnt work with openKIM however
     """
     if (ASE == True) and (Materials_project == False):
+
         atoms = init(Symbol, Bravais_lattice, Directions, Miller,
                         lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma)
 
@@ -115,11 +116,12 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
 
         if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
+
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
-            dyn = VelocityVerlet(atomobj, time_step*units.fs)
+            dyn = VelocityVerlet(atomobj, Time_step*units.fs)
             
-        elif (Verlocity_Verlet_Check == False) and (Langevin_Check == True):
-            dyn = Langevin(atomobj, time_step*units.fs, units.kB*Temperature, Langevin_friction)
+        elif (Velocity_Verlet_Check == False) and (Langevin_Check == True):
+            dyn = Langevin(atomobj, Time_step*units.fs, units.kB*Temperature, Langevin_friction)
         else:
             raise Exception("Velocity_Verlet=Langevin. Both cannot be true/false at the same time!")
         #Creates a unique name for every simulation run 
@@ -139,13 +141,13 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
             print("MSD = ", meansSquareDisplacement, "[Å²]")
             
-            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, time_step)
+            selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, Time_step)
             print("D = ", selfDiffusionCoffecient, "[Å²/fs]")
             
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             print("Lindeman Criterion = ", lindemann)
             
-            if Verlocity_Verlet_Check == True:    
+            if Velocity_Verlet_Check == True:    
                 specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
                 print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
             else:
@@ -167,14 +169,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             e0, v0, B_GPa = calc.calc_bulk_modulus(atomobj)
             print('Bulk Modulus:', B_GPa, '[GPa]', '|', 'Minimum energy E =', e0, '[eV], at volume V =', v0, '[Å^3].')
 
-            if run_Optimade == True:
+            if Run_Optimade == True:
                 translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
                                         internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
 
                 concatenateOptimadeDataFiles(Optimade_name) ### Move me to supercomputer script later!!! 
             
             #Writes a .csv-file with time evolution of the mean square displacement
-            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, time_step)
+            calc.write_time_evolution_to_csv(atomobj, "Visualization/properties.csv", traj, eq_index, Interval, Time_step)
 
             #Parameters needed for write_simulation_to_json. These if-checks might not be necessary if I just save the boolean instead of the name.
 
@@ -190,7 +192,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             else:
                 potential = "EMT"
 
-            if Verlocity_Verlet_Check == True:
+            if Velocity_Verlet_Check == True:
                 integrator = "Velocity-Verlet"
             else:
                 integrator = "Langevin"
@@ -216,6 +218,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 B_GPa,
                                                 latticeConstant_c,
                                                 Steps*time_step)
+
 
         else:
             print("System never reached equilibrium. No calculations are possible.")

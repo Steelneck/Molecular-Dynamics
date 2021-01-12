@@ -32,6 +32,7 @@ def checkKIMpotential(potential):
 def init(Symbol, Bravais_lattice, Directions, Miller,
             lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma):
 
+
     Lattice_Const = set_lattice_const(lc_a,
                                     lc_b,
                                     lc_c,
@@ -69,6 +70,7 @@ def init_MP(Criteria_list, API_Key):
                 # Function that skips the element if it not Cubic
                 if crystal_structure != 'cubic':
                     continue
+                
                 
                 #Takes out the CIF information and creates a unique file
                 cif_Info=(data[i])["cif"]

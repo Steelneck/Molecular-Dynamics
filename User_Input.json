@@ -3,11 +3,12 @@
         {
             "EMT": true,
             "openKIM": false,
+            "KIM_potential": "",
             "Lennard_Jones": false,
-            "LJ_epsilon" : [0.010323],
-            "LJ_sigma" :  [3.40],
+            "LJ_epsilon": [0.010323],
+            "LJ_sigma":  [3.40],
             "LJ_cutoff": 6.625,
-            "Verlocity_Verlet": true,
+            "Velocity_Verlet": true,
             "Langevin" : false,
             "Langevin_friction" : 0.002,
             "time_step" : 1,
@@ -20,13 +21,15 @@
             "Impurity": false,
             "Impurity_ele": "Au",
             "Temperature": 300,
+            "Time_step": 1,
             "Steps": 1000,
-            "Interval":10,
-            "Size_X":5,
-            "Size_Y":5,
-            "Size_Z":5,
-            "API_Key": "rXy9SNuvaCUyoVmTDjDT",
+            "Interval": 10,
+            "Size_X": 10,
+            "Size_Y": 10,
+            "Size_Z": 10,
             "PBC": [true,true,true],
+            "ASE": true,
+            "Symbol": "Cu",
             "Bravais_lattice" : "FaceCenteredCubic",
             "Directions": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             "Miller" : [null, null, null],
@@ -40,6 +43,5 @@
             "Optimade_name": "run1",
             "Optimzed_volume" : false
         }
-
     ]
 }
