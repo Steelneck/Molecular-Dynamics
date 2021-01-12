@@ -54,7 +54,7 @@ def main():
             lc_gamma=row["lc_gamma"]
             Run_Optimade=row["Run_Optimade"]
             Optimade_name = row["Optimade_name"]
-            Optimzed_volume = row["Optimzed_volume"]
+            Optimized_volume = row["Optimized_volume"]
 
 
             simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
@@ -64,7 +64,7 @@ def main():
                         Vacancy, Impurity, Impurity_ele,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name,Optimzed_volume)
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,Run_Optimade,Optimade_name,Optimized_volume)
 
 
 if __name__ == "__main__":

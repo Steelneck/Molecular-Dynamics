@@ -33,7 +33,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         Vacancy, Impurity, Impurity_ele,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name,Optimzed_volume):
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,Run_Optimade,Optimade_name,Optimized_volume):
     
     """ Function that looks if the user wants to run ASE or Materials_project 
         Checks if the simulation is going to add impurites or not
@@ -56,7 +56,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     for atomobj in atoms:
 
         # Run simulation with optimized volume.
-        if Optimzed_volume == True:
+        if Optimized_volume == True:
 
             # Save all the angles for the unit cell
             alpha = (atomobj.get_cell_lengths_and_angles())[3]
@@ -97,7 +97,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             create_vacancy(atomobj) # Create a vacancy
 
         # Set the momenta corresponding to desired temperature when running Verlocity Verlet
-        if Verlocity_Verlet_Check == True:
+        if Velocity_Verlet_Check == True:
             MaxwellBoltzmannDistribution(atomobj, Temperature * units.kB)
             Stationary(atomobj) # Set linear momentum to zero
             ZeroRotation(atomobj) # Set angular momentum to zero
@@ -115,7 +115,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         else:
             raise Exception("Only one of EMT, OpenKim and Lennard_jones can be true!")
 
-        if (Verlocity_Verlet_Check == True) and (Langevin_Check == False):
+        if (Velocity_Verlet_Check == True) and (Langevin_Check == False):
 
             # We want to run MD with constant energy using the VelocityVerlet algorithm.
             dyn = VelocityVerlet(atomobj, Time_step*units.fs)
@@ -217,7 +217,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                                                 internalPressure,
                                                 B_GPa,
                                                 latticeConstant_c,
-                                                Steps*time_step)
+                                                Steps*Time_step)
 
 
         else:
