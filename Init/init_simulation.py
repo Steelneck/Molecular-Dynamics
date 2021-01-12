@@ -70,6 +70,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 potential = checkKIMpotential(KIM_potential)
                 latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
                                                                                          alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                # latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, OpenKIMcalculator(potential), 
+                #                                                                          alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif Lennard_Jones_Check == True:
                 latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
                                                                                         LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), 
