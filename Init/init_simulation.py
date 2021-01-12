@@ -78,7 +78,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             atomobj.set_cell([latticeConstant_c, latticeConstant_c, latticeConstant_c, alpha, beta, gamma])
             print("lattice constant:", latticeConstant_c, "\n")
         else:
-            # The lattice constant is set to zero if Optimized_volume == false. This is implemented to make the visualization not crash!
+            # The lattice constant is set to zero if Optimized_volume == false. This is implemented so that the visualization does not crash!
             latticeConstant_c = 0 
 
         #Creates a supercell
