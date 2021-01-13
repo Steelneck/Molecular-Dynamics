@@ -2,7 +2,7 @@ import csv, operator, sys, os, json
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_prop_vs_time(jsonFileName):
+def plot_prop_vs_time(jsonFileName, csvFileName):
     
     """
     Function which plots the time evolution of property specified by input prop_str. csvFileName is the .csv-file where the time-evolution of the latest run simulation is saved.
@@ -22,7 +22,7 @@ def plot_prop_vs_time(jsonFileName):
                 x_min = row["x-min"]
                 x_max = row["x-max"]
                 
-        file = open("properties.csv", "r")
+        file = open(csvFileName, "r")
         reader = csv.DictReader(file, delimiter=";")
         count = 1
         x_list = []
@@ -58,7 +58,7 @@ def plot_prop_vs_time(jsonFileName):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
 
-def plot_prop_per_simulation(jsonFileName):
+def plot_prop_per_simulation(jsonFileName, csvFileName):
     """
     Functions that creates a scatterplot with prop_1 str on the x-axis and prop2_str on the y-axis for element with name atomName taken from database, simulated with integrator and potential. Not sure if this one will be necessary.
 
@@ -85,7 +85,7 @@ def plot_prop_per_simulation(jsonFileName):
                 x_min = row["x-min"]
                 x_max = row["x-max"]
                 
-        file = open("sim_properties.csv", "r")
+        file = open(csvFileName, "r")
         reader = csv.DictReader(file, delimiter=";") #file is of dictionary format so the reader needs to be a dictreader. ";" separates the columns.
         count = 1
         x_list = []
@@ -132,7 +132,7 @@ def plot_prop_per_simulation(jsonFileName):
         print("Error type:", exc_type, "; Message:", e, "; In file:", fname, "; On line:", exc_traceBack.tb_lineno)
         return(None)
     
-def plot_prop_all_elements(jsonFileName):
+def plot_prop_all_elements(jsonFileName, csvFileName):
     """
     Function which plots two properties (specified by prop1_str and prop2_str taken from .csv-file sim_properties.csv) and creates a scatter plot of all atom-types and potentials separating them with colors and markers. Currently very ugly function but lack of time stops me from cleaning it up. It does the job.
     prop1_str, prop2_str, struct_str, database, integrator
@@ -156,7 +156,7 @@ def plot_prop_all_elements(jsonFileName):
                 x_min = row["x-min"]
                 x_max = row["x-max"]
             
-        file = open("sim_properties.csv", "r")
+        file = open(csvFileName, "r")
         marker_list = ["+", "o", "*", "x", "v", "d", "^", "s", "2"] #Make a list with markers that can be looped through when plotting multiple datatypes in the same scatterplot.
         x_list = []
         y_list = []
@@ -254,7 +254,7 @@ def plot_prop_all_elements(jsonFileName):
         return(None)
 
     
-def hist_prop_per_simulation(jsonFileName):
+def hist_prop_per_simulation(jsonFileName, csvFileName):
     """
     Function that makes a histogram plot of a chosen property (prop_str) for atom with atomName and structure struct_str, simulated with database, integrator and potential.
     atomName, prop_str, struct_str, database, integrator, potential
@@ -272,7 +272,7 @@ def hist_prop_per_simulation(jsonFileName):
                 potential = row["Potential"]
                 plot_check = row["Plot check"]
             
-        file = open("sim_properties.csv", "r")
+        file = open(csvFileName, "r")
         reader = csv.DictReader(file, delimiter=";")
         count = 1
         plot_list = []
