@@ -3,7 +3,7 @@
     [
         {
             "Property": "MSD",
-            "Plot check": false,
+            "Plot check": true,
 	    "Scale axis check": false,
 	    "y-min": 0,
 	    "y-max": 0.1,
@@ -14,14 +14,14 @@
     "Scatter plot, two properties for a specific element":
     [
 	{
-	    "Element": "Cu864",
+	    "Element": "Ag500",
             "Database": "ASE",
-            "Potential": "EMT",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
             "Property x-axis": "Int_T",
-            "Property y-axis": "SHC",
-	    "Plot check": false,
+            "Property y-axis": "MSD",
+	    "Plot check": true,
 	    "Scale axis check": false,
 	    "y-min": -1,
 	    "y-max": 1,
@@ -35,8 +35,8 @@
             "Database": "ASE",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
-            "Property x-axis": "Vol",
-            "Property y-axis": "Int_T",
+            "Property x-axis": "Int_T",
+            "Property y-axis": "MSD",
 	    "Plot check": true,
 	    "Scale axis check": false,
 	    "y-min": 0,
@@ -48,13 +48,13 @@
     "Histogram, single property from all simulations":
     [
 	{
-	    "Element": "Cu864",
+	    "Element": "Ag500",
             "Database": "ASE",
-            "Potential": "EMT",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
             "Integrator" : "Velocity-Verlet",
             "Structure": "CUB",
             "Property": "MSD",
-	    "Plot check": false
+	    "Plot check": true
 	}
     ]
 }
