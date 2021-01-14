@@ -1,8 +1,8 @@
 {
     "Data": [
         {
-            "EMT": true,
-            "openKIM": false,
+            "EMT": false,
+            "openKIM": true,
             "KIM_potential": "",
             "Lennard_Jones": false,
             "LJ_epsilon": [0.010323],
@@ -15,11 +15,11 @@
             "Time_step": 1,
             "Steps": 1000,
             "Interval": 10,
-            "Size_X": 10,
-            "Size_Y": 10,
-            "Size_Z": 10,
+            "Size_X": 5,
+            "Size_Y": 5,
+            "Size_Z": 5,
             "PBC": [true,true,true],
-            "ASE": true,
+            "ASE": false,
             "Symbol": "Cu",
             "Bravais_lattice" : "FaceCenteredCubic",
             "Directions": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
@@ -30,12 +30,10 @@
             "lc_alpha": 0,
             "lc_beta": 0,
             "lc_gamma": 0,
-            "Materials_project": false,
+            "Materials_project": true,
             "API_Key": "rXy9SNuvaCUyoVmTDjDT",
             "Criteria_list":[
-                            {"elements" :["Cu", "Fe"]},
-                            {"elements" :{"$all" :["Cu", "Fe"]}, "nelements": 3},
-                            {"elements" :{"$in" :["Cu", "Fe"]}, "nelements": 2 }
+                            {"elements" :{"$all" :["Cu"]}, "nelements": 3}
                             ],
             "Vacancy": false,
             "Impurity": false,

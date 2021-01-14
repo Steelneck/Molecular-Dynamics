@@ -13,7 +13,7 @@ from Optimade.optimade import translate_to_optimade, concatenateOptimadeDataFile
 
 from ase.gui import *
 from ase import units
-from ase.calculators.kim.kim import KIM
+#from ase.calculators.kim.kim import KIM
 
 # Algorithms and calculators for the simulation
 from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
@@ -23,7 +23,7 @@ from asap3.md.langevin import Langevin
 from asap3 import EMT
 from asap3 import Trajectory
 from asap3 import LennardJones
-#from asap3 import OpenKIMcalculator 
+from asap3 import OpenKIMcalculator 
 
 
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
@@ -52,7 +52,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         raise Exception("ASE=Materials_Project. Both cannot be true/false at the same time!")
     
     count = 0 # To get a unique name for all the files
-
+    print(len(atoms))
     for atomobj in atoms:
 
         # Run simulation with optimized volume.
@@ -68,14 +68,13 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif openKIM_Check == True:
                 potential = checkKIMpotential(KIM_potential)
-                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
+                #latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
+                #                                                                         alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, OpenKIMcalculator(potential), 
                                                                                          alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
-                # latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, OpenKIMcalculator(potential), 
-                #                                                                          alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             elif Lennard_Jones_Check == True:
                 latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
-                                                                                        LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), 
-                                                                                        alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                                                                                        LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
             # Updates the cell with the optimal lattice constant
             atomobj.set_cell([latticeConstant_c, latticeConstant_c, latticeConstant_c, alpha, beta, gamma])
             print("lattice constant:", latticeConstant_c, "\n")
@@ -108,9 +107,14 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             atomobj.calc = EMT()
         elif (EMT_Check == False) and (openKIM_Check == True) and (Lennard_Jones_Check == False):
             #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
-            potential = checkKIMpotential(KIM_potential)
-            atomobj.calc = KIM(potential, options={"ase_neigh": True})
-            #atomobj.set_calculator(OpenKIMcalculator(potential))
+            try:
+                potential = checkKIMpotential(KIM_potential)
+                #atomobj.calc = KIM(potential, options={"ase_neigh": True})
+                atomobj.set_calculator(OpenKIMcalculator(potential))
+            except:
+                print("set_calculator openKIM went wrong")
+                continue
+
         elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):
             atomobj.calc = LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True)
 
@@ -130,7 +134,11 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         trajFileName = atomobj.get_chemical_formula() +"_run" + str(count) +  '_.traj'
         traj = Trajectory(trajFileName, "w", atomobj)
         dyn.attach(traj.write, Interval)
-        dyn.run(Steps)
+        try:
+            dyn.run(Steps)
+        except:
+            print("dyn.run went wrong")
+            continue
         traj.close()
         count = count + 1  
 

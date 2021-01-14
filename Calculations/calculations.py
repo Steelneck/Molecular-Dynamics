@@ -352,8 +352,7 @@ def calc_bulk_modulus(atoms):
     Calculates the bulk modulus using Equation of State (EOS). Based on the volume, this can also be used for calculation of lattice constant for cubic crystal structures. 
     """
     try:
-        atomsConfigName = str(atoms.symbols)                    # Convert symbolsname to string, will make it as a 'molecule' notation, i.e chemical symbols + amount of atoms. 
-        trajFileName = "Bulk_" + atomsConfigName + '.traj'
+        trajFileName = "Bulk_" + str(atoms.get_chemical_formula()) + '.traj'
         cell = atoms.get_cell()                                 # Extract atoms cell, i.e. lattice constants to make small deviations in for-loop.
         traj = Trajectory(trajFileName, 'w')                    # Create a traj file for writing results to.
         measAmount = 10                                         # This is set to 10 from experimenting with different materials that yields an energy minimum between endpoints. 
@@ -377,7 +376,7 @@ def calc_bulk_modulus(atoms):
         if not (e0 < energies[0] and e0 < energies[-1]):        # Have to check that minmum is not an endpoint. Can replicate with bad lattice constant guess. 
             raise ValueError("Minumum is endpoint, use a different intervall. Or make a better guess on lattice constant.")
  
-        eos.plot(atomsConfigName + '_eos.png')                  # Saves an images of the plot. Might not want this?
+        eos.plot(str(atoms.get_chemical_formula()) + '_eos.png')                  # Saves an images of the plot. Might not want this?
 
         return(e0, v0, B_GPa)                                   # Return min E=e0 at volume V=v0 and Bulkmodulus with unit GPa
 
