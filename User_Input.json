@@ -1,8 +1,8 @@
 {
     "Data": [
         {
-            "EMT": false,
-            "openKIM": true,
+            "EMT": true,
+            "openKIM": false,
             "KIM_potential": "",
             "Lennard_Jones": false,
             "LJ_epsilon": [0.010323],
@@ -33,7 +33,18 @@
             "Materials_project": true,
             "API_Key": "rXy9SNuvaCUyoVmTDjDT",
             "Criteria_list":[
-                            {"elements" :{"$all" :["Cu"]}, "nelements": 3}
+                            {"elements" : ["Cu"]},
+                            {"elements" : ["Al"]},
+                            {"elements" : ["Ag"]},
+                            {"elements" : ["Ni"]},
+                            {"elements" : ["Au"]},
+                            {"elements" : ["Pd"]},
+                            {"elements" : ["Pt"]},
+                            {"elements" :{"$all" : ["Cu", "Al"]}, "nelements" : 2},
+                            {"elements" :{"$all" : ["Cu", "Ag"]}, "nelements" : 2},
+                            {"elements" :{"$all" : ["Cu", "Ni"]}, "nelements" : 2},
+                            {"elements" :{"$all" : ["Cu", "Au"]}, "nelements" : 2},
+                            {"elements" :{"$all" : ["Cu", "Pd"]}, "nelements" : 2}
                             ],
             "Vacancy": false,
             "Impurity": false,

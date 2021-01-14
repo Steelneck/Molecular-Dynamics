@@ -55,6 +55,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
     print(len(atoms))
     for atomobj in atoms:
         try: 
+            print(atomobj)
             # Run simulation with optimized volume.
             if Optimized_volume == True:
 
@@ -192,7 +193,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                     if KIM_potential == " ":
                         potential = "Leonnard-Jones"
                     else:
-                    potential = KIM_potential
+                        potential = KIM_potential
                 else:
                     potential = "EMT"
 
@@ -230,6 +231,6 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
             #Moves the trajectory file to another folder after it has been used
             shutil.move(trajFileName, "Traj/" + trajFileName)
         except:
-            print("dyn.run went wrong")
+            print("Something went wrong")
             continue
     atoms.clear()
