@@ -13,7 +13,7 @@ from Optimade.optimade import translate_to_optimade, concatenateOptimadeDataFile
 
 from ase.gui import *
 from ase import units
-#from ase.calculators.kim.kim import KIM
+from ase.calculators.kim.kim import KIM
 
 # Algorithms and calculators for the simulation
 from asap3.md.velocitydistribution import MaxwellBoltzmannDistribution, Stationary
@@ -23,7 +23,7 @@ from asap3.md.langevin import Langevin
 from asap3 import EMT
 from asap3 import Trajectory
 from asap3 import LennardJones
-from asap3 import OpenKIMcalculator 
+#from asap3 import OpenKIMcalculator 
 
 
 def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
@@ -69,10 +69,10 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                     latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, EMT(), alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
                 elif openKIM_Check == True:
                     potential = checkKIMpotential(KIM_potential)
-                    #latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
-                    #                                                                         alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
-                    latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, OpenKIMcalculator(potential), 
-                                                                                            alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                    latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, KIM(potential, options={"ase_neigh": True}), 
+                                                                                             alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
+                    #latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, OpenKIMcalculator(potential), 
+                     #                                                                       alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
                 elif Lennard_Jones_Check == True:
                     latticeConstant_c = calc.calc_lattice_constant_cubic(atomobj, LennardJones(list(dict.fromkeys(atomobj.get_atomic_numbers())), 
                                                                                             LJ_epsilon, LJ_sigma, rCut=LJ_cutoff, modified=True), alpha, beta, gamma, Size_X, Size_Y, Size_Z, PBC)
@@ -110,8 +110,8 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 #Sets the potential for openKIM. If none is given returns standard Lennard-Jones
 
                 potential = checkKIMpotential(KIM_potential)
-                #atomobj.calc = KIM(potential, options={"ase_neigh": True})
-                atomobj.set_calculator(OpenKIMcalculator(potential))
+                atomobj.calc = KIM(potential, options={"ase_neigh": True})
+                #atomobj.set_calculator(OpenKIMcalculator(potential))
 
 
             elif (EMT_Check == False) and (openKIM_Check == False) and (Lennard_Jones_Check == True):

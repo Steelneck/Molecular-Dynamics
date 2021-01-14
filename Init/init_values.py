@@ -60,32 +60,30 @@ def init_MP(Criteria_list, API_Key):
     for criteria in Criteria_list:
         #If there are no elements in data raise an exception and end program
         data = m.query(criteria, properties=['cif', 'spacegroup', 'pretty_formula'])
-        if len(data) != 0:
-            for i in range(len(data)):
+
+        for i in range(len(data)):
+        
+            # Takes out the space group and crystal structure query
+            crystal_structure = ((data[i])['spacegroup'])['crystal_system']
+            pretty_formula = str((data[i])['pretty_formula'])
+        
+            # Function that skips the element if it not Cubic
+            if crystal_structure != 'cubic':
+                continue
             
-                # Takes out the space group and crystal structure query
-                crystal_structure = ((data[i])['spacegroup'])['crystal_system']
-                pretty_formula = str((data[i])['pretty_formula'])
             
-                # Function that skips the element if it not Cubic
-                if crystal_structure != 'cubic':
-                    continue
-                
-                
-                #Takes out the CIF information and creates a unique file
-                cif_Info=(data[i])["cif"]
-                f = open(pretty_formula + ".cif", "w+")
-                f.write(cif_Info)
-                f.close()
-                
-                #Creates the atom object from the CIF information
-                atoms = ase.io.read(pretty_formula + ".cif")
-                
-                #Moves the trajectory file to another folder after it has been used
-                shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
-                atoms_list.append(atoms)
-        else:
-            raise Exception("The query/queries returned no elements!") 
+            #Takes out the CIF information and creates a unique file
+            cif_Info=(data[i])["cif"]
+            f = open(pretty_formula + ".cif", "w+")
+            f.write(cif_Info)
+            f.close()
+            
+            #Creates the atom object from the CIF information
+            atoms = ase.io.read(pretty_formula + ".cif")
+            
+            #Moves the trajectory file to another folder after it has been used
+            shutil.move(pretty_formula + ".cif", "CIF/" + pretty_formula + ".cif")
+            atoms_list.append(atoms)
     
     # If atoms_list is empty raise an expetion and end program
     if len(atoms_list) == 0:
