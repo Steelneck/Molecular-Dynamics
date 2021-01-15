@@ -722,7 +722,7 @@
                             {"elements" :{"$all" : ["Ag", "Pt"]}, "nelements" : 2},
                             {"elements" :{"$all" : ["Ni", "Au"]}, "nelements" : 2},
                             {"elements" :{"$all" : ["Ni", "Pt"]}, "nelements" : 2},
-                            {"elements" :{"$all" : ["Au", "Pt"]}, "nelements" : 2},
+                            {"elements" :{"$all" : ["Au", "Pt"]}, "nelements" : 2}
                             ],
             "Vacancy": false,
             "Impurity": true,
@@ -784,8 +784,7 @@
                             {"elements" :{"$all" : ["Ag", "Pd"]}, "nelements" : 2},
                             {"elements" :{"$all" : ["Ni", "Au"]}, "nelements" : 2},
                             {"elements" :{"$all" : ["Ni", "Pd"]}, "nelements" : 2},
-                            {"elements" :{"$all" : ["Au", "Pd"]}, "nelements" : 2},
-
+                            {"elements" :{"$all" : ["Au", "Pd"]}, "nelements" : 2}
                             ],
             "Vacancy": false,
             "Impurity": true,
