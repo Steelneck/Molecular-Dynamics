@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al499AuPt500",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=24.5872)",
+            "a": 24.587245000000003,
+            "b": 24.587245000000003,
+            "c": 24.587245000000003,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 14863.791557048735,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 1.166565269235266,
+            "Self diffusion coefficient": 0.02430344310906804,
+            "Lindemann Criterion": 0.46416537739829933,
+            "Specific Heat": 112.14034235949629,
+            "Internal Temperature": 625.4317884389218,
+            "Cohesive Energy": 0.3044898884883278,
+            "Internal Pressure": -1.185987423986812e-05,
+            "Bulk_modulus": 102.29839867208679,
+            "Lattice constant": 0
+        }
+    ]
+}

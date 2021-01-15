@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AuCu124",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=18.1063)",
+            "a": 12.8030946,
+            "b": 12.8030946,
+            "c": 12.8030946,
+            "Alpha": 60.00000000000001,
+            "Beta": 60.00000000000001,
+            "Gamma": 60.00000000000001,
+            "Volume": 1483.9862107102726,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.017060926360130596,
+            "Self diffusion coefficient": 0.00035543596583605407,
+            "Lindemann Criterion": 0.05276141082387559,
+            "Specific Heat": 192.99899925808788,
+            "Internal Temperature": 140.8835170525946,
+            "Cohesive Energy": 0.013789987751533459,
+            "Internal Pressure": -3.4551092693105653e-06,
+            "Bulk_modulus": 125.80087174080477,
+            "Lattice constant": 0
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Cu374NiPd125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=18.5736)",
+            "a": 18.573555,
+            "b": 18.573555,
+            "c": 18.573555,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 6407.448267967797,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.03420403238001384,
+            "Self diffusion coefficient": 0.000712584007916955,
+            "Lindemann Criterion": 0.0754575876201251,
+            "Specific Heat": 167.93952443259116,
+            "Internal Temperature": 233.81010116003202,
+            "Cohesive Energy": 0.01243028070723755,
+            "Internal Pressure": -1.8618681904669739e-06,
+            "Bulk_modulus": 135.27974223813703,
+            "Lattice constant": 0
+        }
+    ]
+}

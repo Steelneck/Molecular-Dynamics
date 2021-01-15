@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Au124Pd",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=16.6852)",
+            "a": 11.798184120000002,
+            "b": 11.798184120000002,
+            "c": 11.79818412,
+            "Alpha": 59.99999999999999,
+            "Beta": 59.99999999999999,
+            "Gamma": 60.00000000000001,
+            "Volume": 1161.2627901639548,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.06515907691055904,
+            "Self diffusion coefficient": 0.00135748076896998,
+            "Lindemann Criterion": 0.09380250263180799,
+            "Specific Heat": 63.54553159693618,
+            "Internal Temperature": 167.17633977781315,
+            "Cohesive Energy": 0.07852509835725366,
+            "Internal Pressure": 6.175516578220072e-06,
+            "Bulk_modulus": null,
+            "Lattice constant": 0
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Cu500",
+            "Database": "ASE",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=18.05)",
+            "a": 18.05,
+            "b": 18.05,
+            "c": 18.05,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5880.735125000003,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.013469978131331942,
+            "Self diffusion coefficient": 0.0002806245444027488,
+            "Lindemann Criterion": 0.04745453983160222,
+            "Specific Heat": 196.2407535578306,
+            "Internal Temperature": 150.88335209909997,
+            "Cohesive Energy": 0.018853663796260245,
+            "Internal Pressure": -9.528108721631572e-07,
+            "Bulk_modulus": 125.17731994516518,
+            "Lattice constant": 0
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ni125Pt375",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=19.3952)",
+            "a": 19.3952,
+            "b": 19.3952,
+            "c": 19.3952,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 7295.965756817409,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.02121569811844992,
+            "Self diffusion coefficient": 0.00044199371080104005,
+            "Lindemann Criterion": 0.054921188749205,
+            "Specific Heat": 77.46193963412887,
+            "Internal Temperature": 150.94579461043617,
+            "Cohesive Energy": 0.018927726847647614,
+            "Internal Pressure": 6.406009664923353e-07,
+            "Bulk_modulus": 245.88598861586382,
+            "Lattice constant": 0
+        }
+    ]
+}

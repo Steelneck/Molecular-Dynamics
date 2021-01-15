@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ag375Ni125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=19.9211)",
+            "a": 19.92105422504241,
+            "b": 19.92105422504241,
+            "c": 19.92105422504241,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 7905.6385241494645,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.03006948637157158,
+            "Self diffusion coefficient": 0.0006264476327410745,
+            "Lindemann Criterion": 0.06448697421250404,
+            "Specific Heat": 130.47742782251777,
+            "Internal Temperature": 155.0387051103653,
+            "Cohesive Energy": 0.12995056498164964,
+            "Internal Pressure": -1.7886315151573972e-07,
+            "Bulk_modulus": 106.30121880602903,
+            "Lattice constant": 3.9842108450084823
+        }
+    ]
+}

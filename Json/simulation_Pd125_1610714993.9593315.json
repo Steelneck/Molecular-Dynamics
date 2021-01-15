@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Pd125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=20.3139)",
+            "a": 14.364094308481338,
+            "b": 14.36409430848134,
+            "c": 14.36409430848134,
+            "Alpha": 60.00000000000001,
+            "Beta": 59.99999999999999,
+            "Gamma": 59.99999999999999,
+            "Volume": 2095.6547965808772,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.08491031175293545,
+            "Self diffusion coefficient": 0.0017689648281861553,
+            "Lindemann Criterion": 0.10636284309804245,
+            "Specific Heat": 117.18017948567307,
+            "Internal Temperature": 156.3536821983779,
+            "Cohesive Energy": 0.15567706497524764,
+            "Internal Pressure": 3.2585437078070276e-06,
+            "Bulk_modulus": 171.05954159311048,
+            "Lattice constant": 2.8728188616962678
+        }
+    ]
+}

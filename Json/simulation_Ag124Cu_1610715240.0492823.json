@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ag124Cu",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=16.6422)",
+            "a": 11.767806800000002,
+            "b": 11.7678068,
+            "c": 11.7678068,
+            "Alpha": 59.999999999999986,
+            "Beta": 59.99999999999999,
+            "Gamma": 59.99999999999999,
+            "Volume": 1152.3159974732619,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.02384968827518402,
+            "Self diffusion coefficient": 0.0004968685057330004,
+            "Lindemann Criterion": 0.05535004176423004,
+            "Specific Heat": 115.9882293531393,
+            "Internal Temperature": 140.8062626868797,
+            "Cohesive Energy": 0.04448428448146942,
+            "Internal Pressure": 8.721054514038447e-07,
+            "Bulk_modulus": null,
+            "Lattice constant": 0
+        }
+    ]
+}

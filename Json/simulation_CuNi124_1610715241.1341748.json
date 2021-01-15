@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "CuNi124",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=17.529)",
+            "a": 12.3948677,
+            "b": 12.394867699999999,
+            "c": 12.394867699999999,
+            "Alpha": 59.999999999999986,
+            "Beta": 59.999999999999986,
+            "Gamma": 59.999999999999986,
+            "Volume": 1346.513428418923,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.010465690886355357,
+            "Self diffusion coefficient": 0.00021803522679906994,
+            "Lindemann Criterion": 0.042580308801653324,
+            "Specific Heat": 212.3249304390522,
+            "Internal Temperature": 147.60850336322426,
+            "Cohesive Energy": 0.017204030024662382,
+            "Internal Pressure": 1.3354659843305724e-06,
+            "Bulk_modulus": 167.92524061596814,
+            "Lattice constant": 0
+        }
+    ]
+}
