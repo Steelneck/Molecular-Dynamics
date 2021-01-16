@@ -33,8 +33,8 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     id = 0                                                  # Init an id, changes below.
     
 
-    # Creates anonymous formula
-    comp_dict = Comp.to_reduced_dict #Composition in dictionary format
+    #Composition in dictionary format
+    comp_dict = Comp.to_reduced_dict 
     number_list = []
 
     # Creates a list out the numbers in the dictionary and sorts it from biggest to lowest 
