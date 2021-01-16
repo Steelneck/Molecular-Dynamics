@@ -77,7 +77,6 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
       element_ratios.append(float(item[1]/nsites))      # Ratio of each element in structure. Float-cast to ensure floats
     
     nelements = len(elements)                           # Number of _different_ elements
-    Chemical_formula_anonymous = Comp.anonymized_formula
     Chemical_formula_descriptive = atomobj.get_chemical_formula()
     Chemical_formula_reduced = atomobj.get_chemical_formula()
     dimension_types = [1,1,1]
