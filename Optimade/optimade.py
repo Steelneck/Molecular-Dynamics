@@ -6,6 +6,7 @@ from ase import cell
 from datetime import datetime
 import glob, os
 import shutil
+import string
 """
 This is the interface to convert the simulation output to optimade format.
 
@@ -20,7 +21,6 @@ species
 
 
 """
-
 def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
                                     internalTemperature, cohesiveEnergy, internalPressure, bulkModulus):
     #Creates a cell from the atomobject
@@ -34,6 +34,31 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     # Creates a timestamp in iso format 
     local_time = datetime.now()
     local_time.isoformat()
+
+    #Composition in dictionary format
+    comp_dict = Comp.as_dict()
+    number_list = []
+
+    # Creates a list out the numbers in the dictionary and sorts it from biggest to lowest 
+    for key in comp_dict:
+      number_list.append(comp_dict[key])
+    number_list.sort(reverse=True)
+
+    # Creates an alphabetic list
+    alphabet_string = string.ascii_uppercase
+    alphabet_list = list(alphabet_string)
+
+    reduced_formula_list = []
+
+    # Creates the anonymous formula
+    for i in range(len(number_list)):
+      if number_list[i] == 1:
+        reduced_formula_list.append(alphabet_list[i])
+      else:
+        temp_str = str(int(number_list[i]))
+        reduced_formula_list.append(alphabet_list[i] + temp_str)
+    anonymous_formula = "".join(reduced_formula_list)
+
 
     """
     One method if formula is depricated as stated in ase documentation, however the method below is cleaner.
@@ -51,7 +76,6 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
       element_ratios.append(float(item[1]/nsites))      # Ratio of each element in structure. Float-cast to ensure floats
     
     nelements = len(elements)                           # Number of _different_ elements
-    Chemical_formula_anonymous = Comp.anonymized_formula
     Chemical_formula_descriptive = atomobj.get_chemical_formula()
     Chemical_formula_reduced = atomobj.get_chemical_formula()
     dimension_types = [1,1,1]
@@ -84,7 +108,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["nperiodic_dimensions"] = nperiodic_dimensions
     data_dict["elements"] = elements
     data_dict["elements_ratios"] = element_ratios
-    data_dict["formula_anonymous"] = Chemical_formula_anonymous
+    data_dict["formula_anonymous"] = anonymous_formula
     data_dict["last_modified"] = { "$date" : local_time.isoformat() + "Z"}
     data_dict["lattice_vectors"] = lattice_vectors.tolist()
     data_dict["nelements"] = nelements
