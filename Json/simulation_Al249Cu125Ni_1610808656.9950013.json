@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al249Cu125Ni",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=28.8455)",
+            "a": 20.396884,
+            "b": 20.396884000000004,
+            "c": 20.396884,
+            "Alpha": 59.99999999999999,
+            "Beta": 59.999999999999986,
+            "Gamma": 59.99999999999999,
+            "Volume": 6000.3485727212665,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 3.7767464897262957,
+            "Self diffusion coefficient": 0.0786822185359645,
+            "Lindemann Criterion": 0.7861001803068591,
+            "Specific Heat": 317.6805719809935,
+            "Internal Temperature": 1042.3417771507286,
+            "Cohesive Energy": 0.3291587421537638,
+            "Internal Pressure": -5.9428290040648325e-08,
+            "Bulk_modulus": 42.811513342168865,
+            "Lattice constant": 0
+        }
+    ]
+}

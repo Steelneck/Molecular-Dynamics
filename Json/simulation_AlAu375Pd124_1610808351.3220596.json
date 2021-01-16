@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AlAu375Pd124",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=20.5786)",
+            "a": 20.578590000000002,
+            "b": 20.578590000000002,
+            "c": 20.578590000000002,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 8714.587675770497,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.06735443931943914,
+            "Self diffusion coefficient": 0.0014032174858216488,
+            "Lindemann Criterion": 0.09940948198722235,
+            "Specific Heat": 71.59809243744719,
+            "Internal Temperature": 201.43718207491042,
+            "Cohesive Energy": 0.07800788693665005,
+            "Internal Pressure": -9.808360409854094e-07,
+            "Bulk_modulus": 167.17975798061022,
+            "Lattice constant": 0
+        }
+    ]
+}

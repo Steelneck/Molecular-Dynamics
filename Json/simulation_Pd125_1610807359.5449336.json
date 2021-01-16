@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Pd125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "FCC(a=19.7853)",
+            "a": 13.990340999999999,
+            "b": 13.990340999999999,
+            "c": 13.990340999999999,
+            "Alpha": 59.99999999999999,
+            "Beta": 59.99999999999999,
+            "Gamma": 59.99999999999999,
+            "Volume": 1936.287770389967,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.006496406263614423,
+            "Self diffusion coefficient": 0.0010827343772690705,
+            "Lindemann Criterion": 0.029647459980564856,
+            "Specific Heat": 32633530.144251984,
+            "Internal Temperature": 50.317852706114664,
+            "Cohesive Energy": 0.034598438528141214,
+            "Internal Pressure": 1.346259158893667e-05,
+            "Bulk_modulus": 178.46022201592427,
+            "Lattice constant": 0
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al10499NiPt2500",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=94.5362)",
+            "a": 66.84715275,
+            "b": 66.84715275,
+            "c": 66.84715274999999,
+            "Alpha": 59.999999999999986,
+            "Beta": 59.999999999999986,
+            "Gamma": 59.99999999999999,
+            "Volume": 211219.37045405942,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.18134608660218152,
+            "Self diffusion coefficient": 0.0037780434708787817,
+            "Lindemann Criterion": 0.1662934269970741,
+            "Specific Heat": 210.25166057192007,
+            "Internal Temperature": 376.2133386907332,
+            "Cohesive Energy": 0.09485207186248125,
+            "Internal Pressure": 9.047797564956993e-07,
+            "Bulk_modulus": 55.4235670381454,
+            "Lattice constant": 0
+        }
+    ]
+}

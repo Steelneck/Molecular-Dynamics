@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al4000Ni3000",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "BCC(a=57.0004)",
+            "a": 49.363768449999995,
+            "b": 49.363768449999995,
+            "c": 49.363768449999995,
+            "Alpha": 109.47122063,
+            "Beta": 109.47122063,
+            "Gamma": 109.47122063,
+            "Volume": 92598.30324960564,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 1.6523392735686286,
+            "Self diffusion coefficient": 0.0344237348660131,
+            "Lindemann Criterion": 0.5637416341439945,
+            "Specific Heat": 222285591099.43887,
+            "Internal Temperature": 701.7741531277846,
+            "Cohesive Energy": 0.4177036399932207,
+            "Internal Pressure": 3.963715029754383e-06,
+            "Bulk_modulus": 61.54447793238377,
+            "Lattice constant": 0
+        }
+    ]
+}

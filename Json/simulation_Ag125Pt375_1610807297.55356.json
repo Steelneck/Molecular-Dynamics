@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ag125Pt375",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=20.0342)",
+            "a": 20.03422,
+            "b": 20.03422,
+            "c": 20.03422,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 8041.134300575908,
+            "Initial Temperature": 20,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.0014929158753521365,
+            "Self diffusion coefficient": 3.110241406983618e-05,
+            "Lindemann Criterion": 0.013887881139962345,
+            "Specific Heat": 71.96624727292739,
+            "Internal Temperature": 9.962273519282828,
+            "Cohesive Energy": 0.06240277799582157,
+            "Internal Pressure": -1.6121842540874752e-07,
+            "Bulk_modulus": 222.3454238828156,
+            "Lattice constant": 0
+        }
+    ]
+}
