@@ -6,6 +6,7 @@ from ase import cell
 from datetime import datetime
 import glob, os
 import shutil
+import string
 """
 This is the interface to convert the simulation output to optimade format.
 
@@ -30,6 +31,31 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     # Extract all data from atoms object
     Comp = Composition(atomobj.get_chemical_formula())
     id = 0                                                  # Init an id, changes below.
+    
+
+    # Creates anonymous formula
+    comp_dict = Comp.to_reduced_dict #Composition in dictionary format
+    number_list = []
+
+    # Creates a list out the numbers in the dictionary and sorts it from biggest to lowest 
+    for key in comp_dict:
+      number_list.append(comp_dict[key])
+    number_list.sort(reverse=True)
+
+    # Creates an alphabetic list
+    alphabet_string = string.ascii_uppercase
+    alphabet_list = list(alphabet_string)
+
+    reduced_formula_list = []
+
+    # Creates the anonymous formula
+    for i in range(len(number_list)):
+      if number_list[i] == 1:
+        reduced_formula_list.append(alphabet_list[i])
+      else:
+        temp_str = str(int(number_list[i]))
+        reduced_formula_list.append(alphabet_list[i] + temp_str)
+    anonymous_formula = "".join(reduced_formula_list)
 
     # Creates a timestamp in iso format 
     local_time = datetime.now()
@@ -84,7 +110,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["nperiodic_dimensions"] = nperiodic_dimensions
     data_dict["elements"] = elements
     data_dict["elements_ratios"] = element_ratios
-    data_dict["formula_anonymous"] = Chemical_formula_anonymous
+    data_dict["formula_anonymous"] = anonymous_formula
     data_dict["last_modified"] = { "$date" : local_time.isoformat() + "Z"}
     data_dict["lattice_vectors"] = lattice_vectors.tolist()
     data_dict["nelements"] = nelements
