@@ -34,7 +34,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     
 
     #Composition in dictionary format
-    comp_dict = Comp.to_reduced_dict 
+    comp_dict = Comp.as_dict()
     number_list = []
 
     # Creates a list out the numbers in the dictionary and sorts it from biggest to lowest 
@@ -56,6 +56,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
         temp_str = str(int(number_list[i]))
         reduced_formula_list.append(alphabet_list[i] + temp_str)
     anonymous_formula = "".join(reduced_formula_list)
+    print(anonymous_formula)
 
     # Creates a timestamp in iso format 
     local_time = datetime.now()
