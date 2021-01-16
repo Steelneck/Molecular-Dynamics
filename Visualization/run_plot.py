@@ -21,7 +21,7 @@ Structures: Look in the sim_properties.csv too see which structures are saved.
 
 #Run plot functions. If multiple are active they will appear one after another.
 
-plot_prop_vs_time("plot_input.json")
-plot_prop_per_simulation("plot_input.json")
-plot_prop_all_elements("plot_input.json")
-hist_prop_per_simulation("plot_input.json")
+plot_prop_vs_time("plot_input.json", "properties.csv")
+plot_prop_per_simulation("plot_input.json", "sim_properties.csv")
+plot_prop_all_elements("plot_input.json", "sim_properties.csv")
+hist_prop_per_simulation("plot_input.json", "sim_properties.csv")

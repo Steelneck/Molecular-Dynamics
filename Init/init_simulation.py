@@ -141,20 +141,20 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
         
         if eq_index != 0:#If-statement that checks if we ever reached equilibrium. Returns a message if the traj-file is empty, otherwise does calculations.
             meansSquareDisplacement = calc.MSD_calc(atomobj, traj, -1, eq_index)
-            print("MSD = ", meansSquareDisplacement, "[Å²]")
+            print("Mean square displacement = ", meansSquareDisplacement, "[Å²]")
             
             selfDiffusionCoffecient = calc.Self_diffuse(meansSquareDisplacement, (len(traj) - eq_index), Interval, Time_step)
-            print("D = ", selfDiffusionCoffecient, "[Å²/fs]")
+            print("Self diffusion coefficient = ", selfDiffusionCoffecient, "[Å²/fs]")
             
             lindemann = calc.Lindemann(traj, meansSquareDisplacement)
             print("Lindeman Criterion = ", lindemann)
             
             if Velocity_Verlet_Check == True:    
                 specificHeatCapacity = calc.Heat_Capcity_NVE(atomobj, traj, eq_index)
-                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
+                print("Specific heat capacity = ", specificHeatCapacity, "[J/K*Kg]")
             else:
                 specificHeatCapacity = calc.Heat_Capcity_NVT(atomobj, traj, eq_index)
-                print("C_v = ", specificHeatCapacity, "[J/K*Kg]")
+                print("Specific heat capacity = ", specificHeatCapacity, "[J/K*Kg]")
             
             internalTemperature = calc.internal_temperature(atomobj, traj, eq_index)
             print("Internal temperature:", internalTemperature, "[K]")
