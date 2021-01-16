@@ -82,8 +82,6 @@ def main():
             result = comm.recv(source=i, tag=0)
 
 
-
-
 def run_algorithm(atomobj):
 
         # # Run simulation with optimized volume.
