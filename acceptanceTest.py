@@ -7,10 +7,10 @@ simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                         LJ_sigma, LJ_cutoff, Verlocity_Verlet_Check, 
                         Langevin_Check, Langevin_friction, time_step, KIM_potential,
                         ASE, Symbol, Materials_project,API_Key,Criteria_list, 
-                        Vacancy, Impurity, Impurity_ele_list,
+                        Vacancy, Impurity, Impurity_ele,
                         Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
                         PBC, Bravais_lattice,Directions,Miller,
-                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name)
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,run_Optimade,Optimade_name,Optimzed_volume)
 """
 
 """ 
@@ -28,33 +28,33 @@ class acceptanceTests(unittest.TestCase):
                          False, 0.002, 5, "", True, "Cu", False,"rXy9SNuvaCUyoVmTDjDT",[{"elements" : ["Cu"]}], 
                         False, False, "Ni", 300, 10000, 100,5, 5, 5,
                         [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
         with self.assertRaises(Exception): 
             simulation(True,False, True, [0.010323], [3.40], 6.625, True, 
                         False, 0.002, 5, "", True, "Cu", False,"rXy9SNuvaCUyoVmTDjDT",[{"elements" : ["Cu"]}], 
                         False, False, "Ni", 300, 10000, 100,5, 5, 5,
                         [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
         with self.assertRaises(Exception): 
             simulation(True,False, False, [0.010323], [3.40], 6.625, True, 
                         True, 0.002, 5, "", True, "Cu", False,"rXy9SNuvaCUyoVmTDjDT",[{"elements" : ["Cu"]}], 
                         False, False, "Ni", 300, 10000, 100,5, 5, 5,
                         [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
         with self.assertRaises(Exception): 
             simulation(True,False, False, [0.010323], [3.40], 6.625, True, 
                         False, 0.002, 5, "", True, "Cu", True,"rXy9SNuvaCUyoVmTDjDT",[{"elements" : ["Cu"]}], 
                         False, False, "Ni", 300, 10000, 100,5, 5, 5,
                         [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
 
     """ Sees that an FCC run with copper calculated with EMT() returns float numbers """  
     def test_system_returns_values(self):
         simulation(True,False, False, [0.010323], [3.40], 6.625, True, 
                         False, 0.002, 5, "", True, "Cu", False,"rXy9SNuvaCUyoVmTDjDT",[{"elements" : ["Cu"]}], 
-                        False, False, "Ni", 300, 10000, 100,5, 5, 5,
+                        False, False, "Ni", 300, 1000, 10, 5, 5, 5,
                         [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                        [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
 
 
         filename = "Json/simulation_Cu"
@@ -80,9 +80,9 @@ class acceptanceTests(unittest.TestCase):
         simulation(False,False, True, [0.010323],
                 [3.40], 6.625, True, False, 0.002, 1, "",
                 True, "Ar", False ,"rXy9SNuvaCUyoVmTDjDT", [{"elements" : ["Cu"]}], 
-                False, False, ["Cu"], 300, 20000, 100, 15, 15, 15,
+                False, False, "Cu", 300, 20000, 100, 15, 15, 15,
                 [True,True,True], "FaceCenteredCubic", [[1, 0, 0], [0, 1, 0],
-                [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1")
+                [0, 0, 1]], [None, None, None],5.256,0,0,0,0,0,False,"run1", False)
     
         filename = "Json/simulation_Ar"
 

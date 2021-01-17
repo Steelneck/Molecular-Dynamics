@@ -1,20 +1,23 @@
-from ase import units
-from ase.data import atomic_masses, atomic_numbers
+import sys, os
+import csv
+import json
+import time
+
 import numpy as np
 from asap3 import Trajectory, FullNeighborList
 
 from ase.calculators.eam import EAM
 from ase.build import bulk
 from ase.io import read
-import sys, os
 from ase.units import kJ
 from ase.eos import EquationOfState
+from ase.atom import *
+from ase import units
+from ase.data import atomic_masses, atomic_numbers
 
-import csv
-import json
-import time
-
-"""Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume."""
+"""Function that takes all the atoms-objects after the system reaches equilibrium (constant total energy, volume and pressure) 
+   and writes them over to a new .traj-file. Goes through trajectoryFileName and writes too eq_trajectoryFileName. Uses SuperCellSize to calculate volume.
+"""
 def eq_test(myAtoms, trajObject):
     try:
         tot_energy_curr = np.array([0])
@@ -266,7 +269,6 @@ def debye_temperature(trajObject, MSD, eq_index):
     Returns the average of a sum of samples over the Debye temperature of the system
     """
     try: 
-        print(units._hbar)
         eq_length = len(trajObject) - eq_index
         #eqDebye = 0
         
@@ -284,46 +286,41 @@ def debye_temperature(trajObject, MSD, eq_index):
 
     return(avgDebye)
 
-def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice):
+def calc_lattice_constant_cubic(myAtoms, atomsCalculator, angleAlpha, angleBeta, angleGamma, sizeX, sizeY, sizeZ, PBC):
     """ Calculates the lattice constants. 
         IMPORTANT!: Only works for cubic crystals. 
         WARNING: Might result in wrong values for wrong provided crystal structures.
         Calculates both a and c constant but those are equal for cubic structures. 
         Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
-        This is based on the example from ASE wiki, thus calculates both a and c. """
+        This is based on the example from ASE wiki, thus calculates both a and c. 
+        Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object."""
     try: 
 
-        if bravaisLattice == "FaceCenteredCubic":
-            crystalStructure = "fcc"
-        elif bravaisLattice == "BodyCenteredCubic":
-            crystalStructure = "bcc"
-        elif bravaisLattice == "SimpleCubic":
-            crystalStructure = "sc"
-        else:
-            raise ValueError("Supported bravais lattice is not provided to lattice calculation function. Supported are: FaceCenteredCubic, BodyCenteredCubic and SimpleCubic.")
-
-        # Make a good initial guess on the lattice constant
-        a0 = 3.52  
-        c0 = a0 
+        latticeConstantA = (myAtoms.get_cell_lengths_and_angles())[0]
+        if latticeConstantA == 0:
+            raise ValueError("Please provide a latticeconstant close to experimental value.") 
+        if PBC is None:
+            raise ValueError("Please provide PBC True or False.") 
         
-        fileName = "lattice_" + atomName + ".traj"                              # Create filename from atomname.
+        fileName = "lattice_constant_" + myAtoms.get_chemical_formula() + ".traj"                              # Create filename from atomname.
         traj = Trajectory(fileName, 'w')                                        # Create a traj file to store the results from calculations.
 
-        # Generate 9 calculations of potential energy for different a and c values. 
-        eps = 0.01                                                              # A small deviation to generate a few more constants.
-        for a in a0 * np.linspace(1 - eps, 1 + eps, 3):
-            for c in c0 * np.linspace(1 - eps, 1 + eps, 3):
-                at = bulk(atomName, crystalStructure, a=a, c=c, cubic=True)     # Use bulk to build a cell. Only config is fcc, bcc or sc.
-                at.calc = atomsCalculator                                       # Assign calculator that is in original atoms object.                        
-                traj.write(at)                                                  # Write bulk config to trajectory file
+        # Generate a few crystals. Have to scale since traj object has size demands.
+        eps = 0.1                                                         
+        myAtoms.set_pbc(PBC) #set the periodic boundary conditions
+        myAtoms=myAtoms*(sizeX,sizeY,sizeZ) # creates the supercell
+        myAtoms.calc = atomsCalculator     # Adds the calculator to the 
+        for a in latticeConstantA * np.linspace(1 - eps, 1 + eps, 30):          # A small deviation to generate a few more constants.
+            myAtoms.set_cell([a*sizeX, a*sizeY, a*sizeZ, angleAlpha, angleBeta, angleGamma], scale_atoms=True) # sets the new cell size. 
+            traj.write(myAtoms)
 
         # Now we can get the energies and lattice constants from the traj file
         configs = read(fileName + "@:")
         energies = [config.get_potential_energy() for config in configs]        # Get the atoms objects from traj file. 
 
         # From the bulk builder we can do at.cell to get the constant: a at position 0,0 and constant: c at position 2,2
-        a = np.array([config.cell[0, 0] for config in configs])                 
-        c = np.array([config.cell[2, 2] for config in configs])
+        a = np.array([config.cell[0, 0] for config in configs])                  
+        c = np.array([config.cell[2, 2] for config in configs]) 
 
         # Fit the energy to lattice constants to the expression: 𝑝0+𝑝1𝑎+𝑝2𝑐+𝑝3𝑎^2+𝑝4𝑎𝑐+𝑝5𝑐^2
         functions = np.array([a**0, a, c, a**2, a * c, c**2])
@@ -337,8 +334,11 @@ def calc_lattice_constant_cubic(atomName, atomsCalculator, bravaisLattice):
         p2 = np.array([(2 * p[3], p[4]), (p[4], 2 * p[5])])
         a0, c0 = np.linalg.solve(p2.T, -p1)
 
-        #print("Lattice constants a:", a0, "| c:", c0, "\n") #Uncomment if we want to print c also
-        return(a0)
+        # Scale supercell length inverted to primitive unit cell
+        a0 /= sizeX
+        c0 /= sizeX
+
+        return(c0)
     except Exception as e:
         print("An error occured when calculating the lattice constant:")
         exc_type, exc_obj, exc_traceBack = sys.exc_info()
