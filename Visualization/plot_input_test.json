@@ -1,0 +1,61 @@
+{
+    "Scatter plot, time evolution of single property":
+    [
+        {
+            "Property": "MSD",
+            "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 0,
+	    "x-max": 80
+        }
+    ],
+    "Scatter plot, two properties for a specific element":
+    [
+	{
+	    "Element": "Cu500",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property x-axis": "Int_T",
+            "Property y-axis": "SHC",
+	    "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": -1,
+	    "y-max": 1,
+	    "x-min": 0,
+	    "x-max": 0
+	}
+    ],
+    "Scatter plot, two properties for all elements":
+    [
+	{
+            "Database": "ASE",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property x-axis": "Vol",
+            "Property y-axis": "Int_T",
+	    "Plot check": false,
+	    "Scale axis check": false,
+	    "y-min": 0,
+	    "y-max": 0.1,
+	    "x-min": 350,
+	    "x-max": 600
+	}
+    ],
+    "Histogram, single property from all simulations":
+    [
+	{
+	    "Element": "Cu500",
+            "Database": "ASE",
+            "Potential": "EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001",
+            "Integrator" : "Velocity-Verlet",
+            "Structure": "CUB",
+            "Property": "MSD",
+	    "Plot check": false
+	}
+    ]
+}
+

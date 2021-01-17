@@ -1,49 +1,71 @@
 """Demonstrates molecular dynamics with constant energy."""
 
-from ase.lattice.cubic import FaceCenteredCubic
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
-from ase.md.verlet import VelocityVerlet
-from ase import units
+from Init.init_simulation import *
+import json
 
-def main():
-        
-    # Use Asap for a huge performance increase if it is installed
-    use_asap = True
+""" Ignore the parallel rank deprecation warning """
 
-    if use_asap:
-        from asap3 import EMT
-        size = 10
-    else:
-        from ase.calculators.emt import EMT
-        size = 3
-        
-    # Set up a crystal
-    atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-                            symbol="Cu",
-                            size=(size, size, size),
-                            pbc=True)
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 
-    # Describe the interatomic interactions with the Effective Medium Theory
-    atoms.calc = EMT()
+""" Main """
 
-    # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, 300 * units.kB)
+def main():  
+    """ Takes all the data from User_Input.json """
+    with open('User_Input.json') as json_file:
+        Input = json.load(json_file)
+        for row in Input['Data']:
+            EMT_Check = row["EMT"]
+            openKIM_Check = row["openKIM"]
+            Lennard_Jones_Check = row["Lennard_Jones"]
+            LJ_epsilon = row["LJ_epsilon"]
+            LJ_sigma = row["LJ_sigma"]
+            LJ_cutoff = row["LJ_cutoff"]
+            Velocity_Verlet_Check = row["Velocity_Verlet"]
+            Langevin_Check = row["Langevin"]
+            Langevin_friction = row["Langevin_friction"]
+            Time_step = row["Time_step"]
+            KIM_potential = row["KIM_potential"]
+            ASE = row["ASE"]
+            Symbol = row["Symbol"]
+            Materials_project = row["Materials_project"]
+            API_Key = row["API_Key"]
+            Criteria_list=row["Criteria_list"]
+            Vacancy = row["Vacancy"]
+            Impurity = row["Impurity"]
+            Impurity_ele=row["Impurity_ele"]
+            Temperature = row["Temperature"]
+            Steps = row["Steps"]
+            Interval = row["Interval"]
+            Size_X = row["Size_X"]
+            Size_Y = row["Size_Y"]
+            Size_Z = row["Size_Z"]
+            PBC = row["PBC"]
+            Bravais_lattice = row["Bravais_lattice"]
+            Directions = row["Directions"]
+            Miller = row["Miller"]
+            lc_a=row["lc_a"]
+            lc_b=row["lc_b"]
+            lc_c=row["lc_c"]
+            lc_alpha=row["lc_alpha"]
+            lc_beta=row["lc_beta"]
+            lc_gamma=row["lc_gamma"]
+            Run_Optimade=row["Run_Optimade"]
+            Optimade_name = row["Optimade_name"]
+            Optimized_volume = row["Optimized_volume"]
 
-    # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
 
+            simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
+                        LJ_sigma, LJ_cutoff, Velocity_Verlet_Check, 
+                        Langevin_Check, Langevin_friction, Time_step, KIM_potential,
+                        ASE, Symbol, Materials_project,API_Key,Criteria_list, 
+                        Vacancy, Impurity, Impurity_ele,
+                        Temperature, Steps, Interval,Size_X, Size_Y, Size_Z,
+                        PBC, Bravais_lattice,Directions,Miller,
+                        lc_a,lc_b,lc_c,lc_alpha,lc_beta,lc_gamma,Run_Optimade,Optimade_name,Optimized_volume)
 
-    def printenergy(a=atoms):  # store a reference to atoms in the definition.
-        """Function to print the potential, kinetic and total energy."""
-        epot = a.get_potential_energy() / len(a)
-        ekin = a.get_kinetic_energy() / len(a)
-        print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
-            'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
-
-    # Now run the dynamics
-    dyn.attach(printenergy, interval=10)
-    printenergy()
-    dyn.run(200)
 
 if __name__ == "__main__":
     main()

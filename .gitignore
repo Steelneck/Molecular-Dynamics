@@ -1,0 +1,12 @@
+.github/
+*/__pycache__/
+*.traj
+kim.log
+*.png
+Calculations/__pycache__/*
+__pycache__/
+Traj/*.traj
+Visualization/properties.csv
+Visualization/sim_properties.csv
+Calculations/*.csv
+Json/*.json
