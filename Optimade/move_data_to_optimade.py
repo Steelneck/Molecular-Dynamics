@@ -31,8 +31,8 @@ def main():
     # Check that response is either yes, no, y, n. Could not come up with a way not to copy code as following, without creating loop holes. 
     responseCheck = True
     while responseCheck:
+        cwd = os.getcwd()                                                               # Current working directory to change back to below
         if response == "yes" or response == "y":
-            cwd = os.getcwd()                                                               # Current working directory to change back to below
             os.chdir(os.path.abspath("Optimade"))                                           # Changes directory to Optimade, holds for rest of function
             allDataFiles = glob.glob("*.json")                                              # Extract all .json files in Optimade folder
             

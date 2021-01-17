@@ -23,7 +23,7 @@ species
 """
 
 def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                    internalTemperature, cohesiveEnergy, internalPressure, bulkModulus):
+                                    internalTemperature, cohesiveEnergy, internalPressure, bulkModulus, lattice_constant_a, run_id):
     #Creates a cell from the atomobject
     cell = atomobj.cell
 
@@ -88,6 +88,11 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     species_at_sites = atomobj.get_chemical_symbols()
     species_list = []
     
+    if type(run_id) is not str:
+      run_id = "TEMPORARY_RUN_ID"
+      print("Argument run_id was not provided as a string, thus is set to:", run_id)
+
+
     for x in elements:
       species_list.append({"chemical_symbols" : [x], "concentration" : [element_amount_dict[x]], "name": x})
 
@@ -105,6 +110,7 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["cohesive_energy"] = cohesiveEnergy
     data_dict["internal_pressure"] = internalPressure
     data_dict["bulk_modulus"] = bulkModulus
+    data_dict["lattice_constant_a"] = lattice_constant_a
     data_dict["cartesian_site_positions"] = cartesian_site_positions.tolist()
     data_dict["dimension_types"] = dimension_types
     data_dict["nperiodic_dimensions"] = nperiodic_dimensions
@@ -120,8 +126,8 @@ def translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffeci
     data_dict["species"] = species_list
     data_dict["species_at_sites"] = species_at_sites
     data_dict["structure_features"] = []
-    data_dict["task_id"] = id                                                                       # Should these have unique id also?
-    data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : id}]}}   # Should these have unique id also?
+    data_dict["task_id"] = run_id + "_" + datetime.now().strftime("%Y-%m-%d_%H:%M:%S")        
+    data_dict["relationships"] = {"references" : {"data" : [{"type" : "references", "id" : "Data_Generated_by_Software_from_Group1_TFYA92_2020"}]}}
 
     # Make JSON object
     data_json = json.dumps(data_dict)

@@ -176,7 +176,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
                 if Run_Optimade == True:
                     translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                            internalTemperature, cohesiveEnergy, internalPressure, B_GPa)
+                                            internalTemperature, cohesiveEnergy, internalPressure, B_GPa, latticeConstant_a, Optimade_name)
 
                     concatenateOptimadeDataFiles(Optimade_name) ### Move me to supercomputer script later!!! 
                 
