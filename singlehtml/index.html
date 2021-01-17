@@ -86,8 +86,19 @@ Don’t forget to store your .json files! Do this command (if you are in the mai
 
 </div>
 </div>
-<span id="document-Root/simulationreader"></span><div class="section" id="simulationreader-module">
-<h3>simulationreader module<a class="headerlink" href="#simulationreader-module" title="Permalink to this headline">¶</a></h3>
+<span id="document-Root/simulationreader"></span><div class="section" id="module-simulationreader">
+<span id="simulationreader-module"></span><h3>simulationreader module<a class="headerlink" href="#module-simulationreader" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="simulationreader-py">
+<h4>simulationreader.py<a class="headerlink" href="#simulationreader-py" title="Permalink to this headline">¶</a></h4>
+<p>Module for input and output management.</p>
+<dl class="py function">
+<dt id="simulationreader.write_json_to_csv">
+<code class="sig-prename descclassname">simulationreader.</code><code class="sig-name descname">write_json_to_csv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simulationreader.write_json_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that loops through the Json directory which contains input and output (as .json-files)
+from all simulations and saves all data in a .csv-file which will be used for visualization.</p>
+</dd></dl>
+
+</div>
 </div>
 </div>
 </div>
@@ -660,11 +671,66 @@ While this works for the simulation it is still not the original crystal.</p>
 
 </div>
 </div>
-<span id="document-init/init_simulation"></span><div class="section" id="init-simulation-module">
-<h3>init_simulation module<a class="headerlink" href="#init-simulation-module" title="Permalink to this headline">¶</a></h3>
+<span id="document-init/init_simulation"></span><div class="section" id="module-init_simulation">
+<span id="init-simulation-module"></span><h3>init_simulation module<a class="headerlink" href="#module-init_simulation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="init-simulation-py">
+<h4>init_simulation.py<a class="headerlink" href="#init-simulation-py" title="Permalink to this headline">¶</a></h4>
+<p>Functions for initiating the simulation environment based on choice of parameters.</p>
+<dl class="py function">
+<dt id="init_simulation.simulation">
+<code class="sig-prename descclassname">init_simulation.</code><code class="sig-name descname">simulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">EMT_Check</span></em>, <em class="sig-param"><span class="n">openKIM_Check</span></em>, <em class="sig-param"><span class="n">Lennard_Jones_Check</span></em>, <em class="sig-param"><span class="n">LJ_epsilon</span></em>, <em class="sig-param"><span class="n">LJ_sigma</span></em>, <em class="sig-param"><span class="n">LJ_cutoff</span></em>, <em class="sig-param"><span class="n">Velocity_Verlet_Check</span></em>, <em class="sig-param"><span class="n">Langevin_Check</span></em>, <em class="sig-param"><span class="n">Langevin_friction</span></em>, <em class="sig-param"><span class="n">Time_step</span></em>, <em class="sig-param"><span class="n">KIM_potential</span></em>, <em class="sig-param"><span class="n">ASE</span></em>, <em class="sig-param"><span class="n">Symbol</span></em>, <em class="sig-param"><span class="n">Materials_project</span></em>, <em class="sig-param"><span class="n">API_Key</span></em>, <em class="sig-param"><span class="n">Criteria_list</span></em>, <em class="sig-param"><span class="n">Vacancy</span></em>, <em class="sig-param"><span class="n">Impurity</span></em>, <em class="sig-param"><span class="n">Impurity_ele</span></em>, <em class="sig-param"><span class="n">Temperature</span></em>, <em class="sig-param"><span class="n">Steps</span></em>, <em class="sig-param"><span class="n">Interval</span></em>, <em class="sig-param"><span class="n">Size_X</span></em>, <em class="sig-param"><span class="n">Size_Y</span></em>, <em class="sig-param"><span class="n">Size_Z</span></em>, <em class="sig-param"><span class="n">PBC</span></em>, <em class="sig-param"><span class="n">Bravais_lattice</span></em>, <em class="sig-param"><span class="n">Directions</span></em>, <em class="sig-param"><span class="n">Miller</span></em>, <em class="sig-param"><span class="n">lc_a</span></em>, <em class="sig-param"><span class="n">lc_b</span></em>, <em class="sig-param"><span class="n">lc_c</span></em>, <em class="sig-param"><span class="n">lc_alpha</span></em>, <em class="sig-param"><span class="n">lc_beta</span></em>, <em class="sig-param"><span class="n">lc_gamma</span></em>, <em class="sig-param"><span class="n">Run_Optimade</span></em>, <em class="sig-param"><span class="n">Optimade_name</span></em>, <em class="sig-param"><span class="n">Optimized_volume</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init_simulation.simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that looks if the user wants to run ASE or Materials_project.
+Checks if the simulation is going to add impurites or not</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Impurites doesnt work with openKIM</p>
 </div>
-<span id="document-init/init_values"></span><div class="section" id="init-values-module">
-<h3>init_values module<a class="headerlink" href="#init-values-module" title="Permalink to this headline">¶</a></h3>
+</dd></dl>
+
+</div>
+</div>
+<span id="document-init/init_values"></span><div class="section" id="module-init_values">
+<span id="init-values-module"></span><h3>init_values module<a class="headerlink" href="#module-init_values" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="init-values-py">
+<h4>init_values.py<a class="headerlink" href="#init-values-py" title="Permalink to this headline">¶</a></h4>
+<p>Functions for initiating the simulation environment.</p>
+<dl class="py function">
+<dt id="init_values.checkKIMpotential">
+<code class="sig-prename descclassname">init_values.</code><code class="sig-name descname">checkKIMpotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init_values.checkKIMpotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assigns Lennard-Jones to the potential string if it is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>potential</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>potential (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init_values.init">
+<code class="sig-prename descclassname">init_values.</code><code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Symbol</span></em>, <em class="sig-param"><span class="n">Bravais_lattice</span></em>, <em class="sig-param"><span class="n">Directions</span></em>, <em class="sig-param"><span class="n">Miller</span></em>, <em class="sig-param"><span class="n">lc_a</span></em>, <em class="sig-param"><span class="n">lc_b</span></em>, <em class="sig-param"><span class="n">lc_c</span></em>, <em class="sig-param"><span class="n">lc_alpha</span></em>, <em class="sig-param"><span class="n">lc_beta</span></em>, <em class="sig-param"><span class="n">lc_gamma</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init_values.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates the ASE calculator, setting up crystal lattice according to chosen parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>atoms_list (Lattice)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="init_values.init_MP">
+<code class="sig-prename descclassname">init_values.</code><code class="sig-name descname">init_MP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Criteria_list</span></em>, <em class="sig-param"><span class="n">API_Key</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init_values.init_MP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates the materials project according to list of criteria and API key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>atoms_list (Lattice)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 </div>
 <span id="document-init/unittest_initfunctions"></span><div class="section" id="module-unittest_initfunctions">
 <span id="unittest-initfunctions-module"></span><h3>unittest_initfunctions module<a class="headerlink" href="#module-unittest_initfunctions" title="Permalink to this headline">¶</a></h3>
