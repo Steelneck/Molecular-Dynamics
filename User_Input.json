@@ -67,7 +67,7 @@
             "Impurity_ele": "Au",
             "Run_Optimade": true,
             "Optimade_name": "run1",
-            "Optimized_volume" : false
+            "Optimized_volume" : true
         }
     ]
 }
