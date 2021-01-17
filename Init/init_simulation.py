@@ -81,7 +81,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
                 print("lattice constant:", latticeConstant_c, "\n")
             else:
                 # The lattice constant is set to zero if Optimized_volume == false. This is implemented so that the visualization does not crash!
-                latticeConstant_c = 0 
+                latticeConstant_c = (atomobj.get_cell_lengths_and_angles())[0]
 
             #Creates a supercell
             atomobj = atomobj*(Size_X,Size_Y,Size_Z)
@@ -176,7 +176,7 @@ def simulation(EMT_Check,openKIM_Check, Lennard_Jones_Check, LJ_epsilon,
 
                 if Run_Optimade == True:
                     translate_to_optimade(atomobj, meansSquareDisplacement, selfDiffusionCoffecient, lindemann , specificHeatCapacity, 
-                                            internalTemperature, cohesiveEnergy, internalPressure, B_GPa, latticeConstant_a, Optimade_name)
+                                            internalTemperature, cohesiveEnergy, internalPressure, B_GPa, latticeConstant_c, Optimade_name)
 
                     concatenateOptimadeDataFiles(Optimade_name) ### Move me to supercomputer script later!!! 
                 
