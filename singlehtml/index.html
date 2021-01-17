@@ -72,7 +72,7 @@ Don’t forget to store your .json files! Do this command (if you are in the mai
 <span id="main-module"></span><h3>main module<a class="headerlink" href="#module-main" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="main-py">
 <h4>main.py<a class="headerlink" href="#main-py" title="Permalink to this headline">¶</a></h4>
-<p>Demonstrates molecular dynamics with constant energy.</p>
+<p>Main module for executing the simulation. Demonstrates molecular dynamics with either constant temperature or constant energy, depending on user configuration.</p>
 <dl class="py function">
 <dt id="main.main">
 <code class="sig-prename descclassname">main.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.main" title="Permalink to this definition">¶</a></dt>
@@ -253,8 +253,8 @@ Don’t forget to store your .json files! Do this command (if you are in the mai
 <dd><p>Calculates the lattice constants.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Only works for FCC cubic crystals.
-Only calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
+<p>Works for FCC, BCC cubic crystals.
+Calculates for pure one atom crystals. Modification for defect systems might have to be made, using the original atoms object maybe.
 This is based on the example from ASE wiki, thus calculates both a and c.
 Version 1.0 did not work for atoms not part of EMT because the size was to small to write to trajectory object.</p>
 </div>
@@ -624,7 +624,7 @@ While this works for the simulation it is still not the original crystal.</p>
 <dl class="py function">
 <dt id="init_functions.insert_impurity">
 <code class="sig-prename descclassname">init_functions.</code><code class="sig-name descname">insert_impurity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">myAtoms</span></em>, <em class="sig-param"><span class="n">symbol</span></em>, <em class="sig-param"><span class="n">atom_pos</span></em><span class="sig-paren">)</span><a class="headerlink" href="#init_functions.insert_impurity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inserts an impurity at a chosen position in the lattice.</p>
+<dd><p>Inserts an impurity at the center position in the lattice.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
