@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ni500",
+            "Database": "ASE",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=17.6)",
+            "a": 17.6,
+            "b": 17.6,
+            "c": 17.6,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5451.776,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.010521698195310993,
+            "Self diffusion coefficient": 0.00021920204573564568,
+            "Lindemann Criterion": 0.042810160522392275,
+            "Specific Heat": 212.46536962469204,
+            "Internal Temperature": 144.31694567114988,
+            "Cohesive Energy": 0.01858287292648265,
+            "Internal Pressure": -7.934041353000094e-07,
+            "Bulk_modulus": 167.9487979465025,
+            "Lattice constant": 3.52
+        }
+    ]
+}

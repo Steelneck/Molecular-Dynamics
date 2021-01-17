@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al125Pd375",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "CUB(a=19.5469)",
+            "a": 19.54693,
+            "b": 19.54693,
+            "c": 19.54693,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 7468.539342716455,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.004271024083001527,
+            "Self diffusion coefficient": 8.897966839586513e-05,
+            "Lindemann Criterion": 0.023844362258669722,
+            "Specific Heat": 33802851274.43523,
+            "Internal Temperature": 33.713993120055605,
+            "Cohesive Energy": 0.04919641740202951,
+            "Internal Pressure": -1.7585879131806762e-06,
+            "Bulk_modulus": 115.27124174014433,
+            "Lattice constant": 3.909386
+        }
+    ]
+}

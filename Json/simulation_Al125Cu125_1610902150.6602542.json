@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al125Cu125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=15.3224)",
+            "a": 15.322438384745993,
+            "b": 15.322438384745993,
+            "c": 15.322438384745993,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 3597.3579255358163,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.259651011036357,
+            "Self diffusion coefficient": 0.005409396063257438,
+            "Lindemann Criterion": 0.2012926532520099,
+            "Specific Heat": 275.503235408952,
+            "Internal Temperature": 180.46001121504338,
+            "Cohesive Energy": 0.17992767705100576,
+            "Internal Pressure": 2.1039346998513537e-06,
+            "Bulk_modulus": 59.46255335619096,
+            "Lattice constant": 3.0644876769491987
+        }
+    ]
+}

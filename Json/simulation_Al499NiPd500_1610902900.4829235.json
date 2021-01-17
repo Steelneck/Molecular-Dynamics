@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al499NiPd500",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=24.5437)",
+            "a": 24.543685000000004,
+            "b": 24.543685000000004,
+            "c": 24.543685000000004,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 14784.931112990605,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 1.0822793352408593,
+            "Self diffusion coefficient": 0.022547486150851236,
+            "Lindemann Criterion": 0.43328429158286325,
+            "Specific Heat": 186.87024262737032,
+            "Internal Temperature": 466.72021872167977,
+            "Cohesive Energy": 0.23488637762565032,
+            "Internal Pressure": -3.5132956535693142e-06,
+            "Bulk_modulus": 73.92544148612123,
+            "Lattice constant": 4.908737
+        }
+    ]
+}

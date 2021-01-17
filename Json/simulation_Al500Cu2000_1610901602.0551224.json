@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al500Cu2000",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "CUB(a=31.4606)",
+            "a": 31.460555,
+            "b": 31.460555,
+            "c": 31.460555,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 31138.60406818556,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.01031586186363955,
+            "Self diffusion coefficient": 0.00021491378882582395,
+            "Lindemann Criterion": 0.04313540893940039,
+            "Specific Heat": 1771893798999.5146,
+            "Internal Temperature": 48.47093089248848,
+            "Cohesive Energy": 0.19116876967143767,
+            "Internal Pressure": -4.4421330464449556e-07,
+            "Bulk_modulus": 84.83178869322315,
+            "Lattice constant": 6.292111
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Ni125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "BCC(a=14.4741)",
+            "a": 12.53493549512801,
+            "b": 12.534935495128009,
+            "c": 12.534935495128009,
+            "Alpha": 109.47122063,
+            "Beta": 109.47122063,
+            "Gamma": 109.47122063,
+            "Volume": 1516.1578525149762,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.19197111014944643,
+            "Self diffusion coefficient": 0.003999398128113467,
+            "Lindemann Criterion": 0.1789301045319364,
+            "Specific Heat": 212.46536556941996,
+            "Internal Temperature": 212.48464078077717,
+            "Cohesive Energy": 0.16246017659112874,
+            "Internal Pressure": -2.3034988637988625e-06,
+            "Bulk_modulus": 164.37295874079328,
+            "Lattice constant": 2.506987099025602
+        }
+    ]
+}

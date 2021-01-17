@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AgAl1999Cu4500",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=43.5073)",
+            "a": 43.50731,
+            "b": 43.50731,
+            "c": 43.50731,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 82354.37901630164,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.11182066437572434,
+            "Self diffusion coefficient": 0.0023295971744942572,
+            "Lindemann Criterion": 0.1350835774141835,
+            "Specific Heat": 238.40240404571324,
+            "Internal Temperature": 204.42711341055187,
+            "Cohesive Energy": 0.17433718521654884,
+            "Internal Pressure": -3.3573820029124666e-06,
+            "Bulk_modulus": 77.98690202002372,
+            "Lattice constant": 8.701462
+        }
+    ]
+}

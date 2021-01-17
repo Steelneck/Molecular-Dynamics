@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al125Ni375",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "CUB(a=17.8054)",
+            "a": 17.80542,
+            "b": 17.80542,
+            "c": 17.80542,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 5644.905387258983,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.003108689297372272,
+            "Self diffusion coefficient": 6.476436036192234e-05,
+            "Lindemann Criterion": 0.022540233755125167,
+            "Specific Heat": 1713339293868.6672,
+            "Internal Temperature": 33.53829158593519,
+            "Cohesive Energy": 0.2806938517841103,
+            "Internal Pressure": -1.7589270853445386e-06,
+            "Bulk_modulus": 104.20879741137485,
+            "Lattice constant": 3.561084
+        }
+    ]
+}

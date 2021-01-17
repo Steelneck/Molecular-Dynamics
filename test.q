@@ -7,9 +7,9 @@
 #SBATCH -n 2
 #SBATCH --exclusive
 #
-module load impi/.2018.1.163
 module load Python/3.8.3-anaconda-2020.07-extras-nsc1
-
-time mpirun python3 MPI_run.py
+module load impi/.2018.1.163-eb
+source activate tfya92
+mpirun python3 MPI_run.py
 
 echo "job completed"

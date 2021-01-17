@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AgNi124",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=17.529)",
+            "a": 12.3948677,
+            "b": 12.394867699999999,
+            "c": 12.394867699999999,
+            "Alpha": 59.999999999999986,
+            "Beta": 59.999999999999986,
+            "Gamma": 59.999999999999986,
+            "Volume": 1346.513428418923,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.010206319293788572,
+            "Self diffusion coefficient": 0.00021263165195392858,
+            "Lindemann Criterion": 0.04182950399054445,
+            "Specific Heat": 211.050776703454,
+            "Internal Temperature": 158.54945575026468,
+            "Cohesive Energy": 0.014263835993842035,
+            "Internal Pressure": -3.885754083515666e-06,
+            "Bulk_modulus": 166.71236732132996,
+            "Lattice constant": 2.47897354
+        }
+    ]
+}

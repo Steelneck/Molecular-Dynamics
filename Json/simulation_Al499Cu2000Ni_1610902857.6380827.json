@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Al499Cu2000Ni",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=31.4606)",
+            "a": 31.460555,
+            "b": 31.460555,
+            "c": 31.460555,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 31138.60406818556,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.1797696017699953,
+            "Self diffusion coefficient": 0.0037452000368749017,
+            "Lindemann Criterion": 0.1803808533539814,
+            "Specific Heat": 221.71107203209863,
+            "Internal Temperature": 230.1466395525962,
+            "Cohesive Energy": 0.20949620992899226,
+            "Internal Pressure": -1.5734676583862911e-06,
+            "Bulk_modulus": 84.70619758522047,
+            "Lattice constant": 6.292111
+        }
+    ]
+}

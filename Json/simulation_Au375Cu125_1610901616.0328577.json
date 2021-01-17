@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Au375Cu125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "CUB(a=20.2664)",
+            "a": 20.26643,
+            "b": 20.26643,
+            "c": 20.26643,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 8323.994009212862,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.01017628848306522,
+            "Self diffusion coefficient": 0.00021200601006385875,
+            "Lindemann Criterion": 0.0363297436427843,
+            "Specific Heat": 16953952738.793938,
+            "Internal Temperature": 34.67755815388158,
+            "Cohesive Energy": 0.04917160256199392,
+            "Internal Pressure": 1.142609368087892e-07,
+            "Bulk_modulus": 161.86155677362026,
+            "Lattice constant": 4.053286
+        }
+    ]
+}

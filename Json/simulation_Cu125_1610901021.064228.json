@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Cu125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "FCC(a=18.1063)",
+            "a": 12.8030946,
+            "b": 12.8030946,
+            "c": 12.8030946,
+            "Alpha": 60.00000000000001,
+            "Beta": 60.00000000000001,
+            "Gamma": 60.00000000000001,
+            "Volume": 1483.9862107102726,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.017222230959239315,
+            "Self diffusion coefficient": 0.0003587964783174857,
+            "Lindemann Criterion": 0.05325578803993898,
+            "Specific Heat": 196.2407499670533,
+            "Internal Temperature": 150.99054527539818,
+            "Cohesive Energy": 0.020234856910241846,
+            "Internal Pressure": -5.859970638915165e-06,
+            "Bulk_modulus": 125.23532447508809,
+            "Lattice constant": 2.56061892
+        }
+    ]
+}

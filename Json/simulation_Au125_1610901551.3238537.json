@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Au125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Langevin",
+            "Lattice structure": "FCC(a=16.6852)",
+            "a": 11.798184120000002,
+            "b": 11.798184120000002,
+            "c": 11.79818412,
+            "Alpha": 59.99999999999999,
+            "Beta": 59.99999999999999,
+            "Gamma": 60.00000000000001,
+            "Volume": 1161.2627901639548,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.01214496463166335,
+            "Self diffusion coefficient": 0.00025302009649298647,
+            "Lindemann Criterion": 0.0380304465820569,
+            "Specific Heat": 5746013178.679964,
+            "Internal Temperature": 33.82425649833261,
+            "Cohesive Energy": 0.062218452529681466,
+            "Internal Pressure": 1.2291914729969468e-06,
+            "Bulk_modulus": null,
+            "Lattice constant": 2.94954603
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "AgCu374Pd125",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=18.5736)",
+            "a": 18.573555,
+            "b": 18.573555,
+            "c": 18.573555,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 6407.448267967797,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.04873024144501979,
+            "Self diffusion coefficient": 0.0010152133634379124,
+            "Lindemann Criterion": 0.08791746960224577,
+            "Specific Heat": 167.7173847339787,
+            "Internal Temperature": 296.6871516719187,
+            "Cohesive Energy": 0.018570766011481988,
+            "Internal Pressure": 4.4575356045774716e-06,
+            "Bulk_modulus": 134.18466283687494,
+            "Lattice constant": 3.714711
+        }
+    ]
+}

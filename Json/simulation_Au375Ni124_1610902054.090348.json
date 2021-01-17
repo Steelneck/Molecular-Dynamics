@@ -1,0 +1,33 @@
+{
+    "Simulation input": [
+        {
+            "Chemical formula": "Au375Ni124",
+            "Database": "Materials Project",
+            "Potential": "EMT",
+            "Integrator": "Velocity-Verlet",
+            "Lattice structure": "CUB(a=20.1408)",
+            "a": 20.14084,
+            "b": 20.14084,
+            "c": 20.14084,
+            "Alpha": 90.0,
+            "Beta": 90.0,
+            "Gamma": 90.0,
+            "Volume": 8170.200948024946,
+            "Initial Temperature": 300,
+            "Run time": 1000
+        }
+    ],
+    "Simulation output": [
+        {
+            "Mean Square Displacement": 0.09271361798964284,
+            "Self diffusion coefficient": 0.0019315337081175592,
+            "Lindemann Criterion": 0.1175352810685137,
+            "Specific Heat": 76.690325641516,
+            "Internal Temperature": 405.2931475293621,
+            "Cohesive Energy": 0.15161495248031992,
+            "Internal Pressure": 2.3161777693140236e-06,
+            "Bulk_modulus": 158.46406953917506,
+            "Lattice constant": 4.028168
+        }
+    ]
+}
